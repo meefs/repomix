@@ -88,6 +88,12 @@
             },
             "includeDiffs": {
               "type": "boolean"
+            },
+            "includeLogs": {
+              "type": "boolean"
+            },
+            "includeLogsCount": {
+              "type": "number"
             }
           },
           "additionalProperties": false
