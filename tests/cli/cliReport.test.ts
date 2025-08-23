@@ -46,6 +46,7 @@ describe('cliReport', () => {
         safeFilePaths: [],
         gitDiffTokenCount: 0,
         gitLogTokenCount: 0,
+        skippedFiles: [],
       };
 
       reportSummary(packResult, config);
@@ -71,6 +72,7 @@ describe('cliReport', () => {
         safeFilePaths: [],
         gitDiffTokenCount: 0,
         gitLogTokenCount: 0,
+        skippedFiles: [],
       };
 
       reportSummary(packResult, config);

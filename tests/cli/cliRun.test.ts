@@ -99,6 +99,7 @@ describe('cliRun', () => {
         suspiciousGitLogResults: [],
         processedFiles: [],
         safeFilePaths: [],
+        skippedFiles: [],
       } satisfies PackResult,
     });
     vi.mocked(initAction.runInitAction).mockResolvedValue();
@@ -154,6 +155,7 @@ describe('cliRun', () => {
         suspiciousGitLogResults: [],
         processedFiles: [],
         safeFilePaths: [],
+        skippedFiles: [],
       } satisfies PackResult,
     });
     vi.mocked(versionAction.runVersionAction).mockResolvedValue();

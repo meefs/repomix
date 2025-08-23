@@ -42,7 +42,7 @@ describe('packager', () => {
         emptyDirPaths: [],
       }),
       sortPaths: vi.fn().mockImplementation((paths) => paths),
-      collectFiles: vi.fn().mockResolvedValue(mockRawFiles),
+      collectFiles: vi.fn().mockResolvedValue({ rawFiles: mockRawFiles, skippedFiles: [] }),
       processFiles: vi.fn().mockReturnValue(mockProcessedFiles),
       validateFileSafety: vi.fn().mockResolvedValue({
         safeFilePaths: mockFilePaths,
@@ -118,5 +118,6 @@ describe('packager', () => {
       'file1.txt': 10,
       [file2Path]: 10,
     });
+    expect(result.skippedFiles).toEqual([]);
   });
 });

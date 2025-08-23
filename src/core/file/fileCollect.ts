@@ -4,7 +4,15 @@ import { logger } from '../../shared/logger.js';
 import { initTaskRunner } from '../../shared/processConcurrency.js';
 import type { RepomixProgressCallback } from '../../shared/types.js';
 import type { RawFile } from './fileTypes.js';
-import type { FileCollectTask } from './workers/fileCollectWorker.js';
+import type { FileCollectResult, FileCollectTask, SkippedFileInfo } from './workers/fileCollectWorker.js';
+
+export interface FileCollectResults {
+  rawFiles: RawFile[];
+  skippedFiles: SkippedFileInfo[];
+}
+
+// Re-export SkippedFileInfo for external use
+export type { SkippedFileInfo } from './workers/fileCollectWorker.js';
 
 export const collectFiles = async (
   filePaths: string[],
@@ -14,8 +22,8 @@ export const collectFiles = async (
   deps = {
     initTaskRunner,
   },
-): Promise<RawFile[]> => {
-  const taskRunner = deps.initTaskRunner<FileCollectTask, RawFile | null>(
+): Promise<FileCollectResults> => {
+  const taskRunner = deps.initTaskRunner<FileCollectTask, FileCollectResult>(
     filePaths.length,
     new URL('./workers/fileCollectWorker.js', import.meta.url).href,
   );
@@ -50,7 +58,19 @@ export const collectFiles = async (
     const duration = Number(endTime - startTime) / 1e6;
     logger.trace(`File collection completed in ${duration.toFixed(2)}ms`);
 
-    return results.filter((file): file is RawFile => file !== null);
+    const rawFiles: RawFile[] = [];
+    const skippedFiles: SkippedFileInfo[] = [];
+
+    for (const result of results) {
+      if (result.rawFile) {
+        rawFiles.push(result.rawFile);
+      }
+      if (result.skippedFile) {
+        skippedFiles.push(result.skippedFile);
+      }
+    }
+
+    return { rawFiles, skippedFiles };
   } catch (error) {
     logger.error('Error during file collection:', error);
     throw error;

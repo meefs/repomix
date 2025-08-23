@@ -50,6 +50,7 @@ describe('remoteAction functions', () => {
                 safeFilePaths: [],
                 gitDiffTokenCount: 0,
                 gitLogTokenCount: 0,
+                skippedFiles: [],
               },
               config: createMockConfig(),
             } satisfies DefaultActionRunnerResult;
@@ -92,6 +93,7 @@ describe('remoteAction functions', () => {
                 safeFilePaths: [],
                 gitDiffTokenCount: 0,
                 gitLogTokenCount: 0,
+                skippedFiles: [],
               },
               config: createMockConfig(),
             } satisfies DefaultActionRunnerResult;
@@ -137,6 +139,7 @@ describe('remoteAction functions', () => {
                 safeFilePaths: [],
                 gitDiffTokenCount: 0,
                 gitLogTokenCount: 0,
+                skippedFiles: [],
               },
               config: createMockConfig(),
             } satisfies DefaultActionRunnerResult;
@@ -182,6 +185,7 @@ describe('remoteAction functions', () => {
                   safeFilePaths: [],
                   gitDiffTokenCount: 0,
                   gitLogTokenCount: 0,
+                  skippedFiles: [],
                 },
                 config: createMockConfig(),
               } satisfies DefaultActionRunnerResult;

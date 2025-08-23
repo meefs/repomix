@@ -44,6 +44,7 @@ describe('PackCodebaseTool', () => {
     suspiciousGitLogResults: [],
     processedFiles: [],
     safeFilePaths: [],
+    skippedFiles: [],
   };
 
   beforeEach(() => {

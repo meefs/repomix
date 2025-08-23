@@ -107,6 +107,7 @@ describe('defaultAction', () => {
       safeFilePaths: [],
       gitDiffTokenCount: 0,
       gitLogTokenCount: 0,
+      skippedFiles: [],
     });
   });
 
@@ -665,6 +666,7 @@ describe('defaultAction', () => {
         fileCharCounts: {},
         fileTokenCounts: {},
         outputFilePath: 'output.txt',
+        skippedFiles: [],
       } as PackResult);
     });
 
@@ -796,6 +798,7 @@ describe('defaultAction', () => {
         fileCharCounts: {},
         fileTokenCounts: {},
         outputFilePath: 'output.txt',
+        skippedFiles: [],
       } as PackResult);
     });
 
@@ -865,6 +868,7 @@ describe('defaultAction', () => {
           fileCharCounts: {},
           fileTokenCounts: {},
           outputFilePath: 'output.txt',
+          skippedFiles: [],
         } as PackResult;
       });
 

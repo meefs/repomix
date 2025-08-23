@@ -53,7 +53,7 @@ index 123..456 100644
   test('should not fetch diffs when includeDiffs is disabled', async () => {
     // Mock the dependencies for pack
     const mockSearchFiles = vi.fn().mockResolvedValue({ filePaths: [] });
-    const mockCollectFiles = vi.fn().mockResolvedValue([]);
+    const mockCollectFiles = vi.fn().mockResolvedValue({ rawFiles: [], skippedFiles: [] });
     const mockProcessFiles = vi.fn().mockResolvedValue([]);
     const mockGenerateOutput = vi.fn().mockResolvedValue('mocked output');
     const mockValidateFileSafety = vi.fn().mockResolvedValue({
@@ -104,7 +104,7 @@ index 123..456 100644
 
     // Mock dependencies
     const mockSearchFiles = vi.fn().mockResolvedValue({ filePaths: ['test.js'] });
-    const mockCollectFiles = vi.fn().mockResolvedValue(processedFiles);
+    const mockCollectFiles = vi.fn().mockResolvedValue({ rawFiles: processedFiles, skippedFiles: [] });
     const mockProcessFiles = vi.fn().mockResolvedValue(processedFiles);
     const mockGenerateOutput = vi.fn().mockResolvedValue('Generated output with diffs included');
     const mockValidateFileSafety = vi.fn().mockResolvedValue({

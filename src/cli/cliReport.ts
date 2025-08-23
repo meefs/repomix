@@ -1,6 +1,7 @@
 import path from 'node:path';
 import pc from 'picocolors';
 import type { RepomixConfigMerged } from '../config/configSchema.js';
+import type { SkippedFileInfo } from '../core/file/fileCollect.js';
 import type { PackResult } from '../core/packager.js';
 import type { SuspiciousFileResult } from '../core/security/securityCheck.js';
 import { logger } from '../shared/logger.js';
@@ -34,6 +35,9 @@ export const reportResults = (cwd: string, packResult: PackResult, config: Repom
     packResult.suspiciousGitLogResults,
     config,
   );
+  logger.log('');
+
+  reportSkippedFiles(cwd, packResult.skippedFiles);
   logger.log('');
 
   reportSummary(packResult, config);
@@ -155,6 +159,31 @@ export const reportTopFiles = (
       `${pc.white(`${indexString}`)} ${pc.white(filePath)} ${pc.dim(`(${tokenCount.toLocaleString()} tokens, ${charCount.toLocaleString()} chars, ${percentageOfTotal}%)`)}`,
     );
   });
+};
+
+export const reportSkippedFiles = (rootDir: string, skippedFiles: SkippedFileInfo[]) => {
+  const binaryContentFiles = skippedFiles.filter((file) => file.reason === 'binary-content');
+
+  if (binaryContentFiles.length === 0) {
+    return;
+  }
+
+  logger.log(pc.white('📄 Binary Files Detected:'));
+  logger.log(pc.dim('─────────────────────────'));
+
+  if (binaryContentFiles.length === 1) {
+    logger.log(pc.yellow('1 file detected as binary by content inspection:'));
+  } else {
+    logger.log(pc.yellow(`${binaryContentFiles.length} files detected as binary by content inspection:`));
+  }
+
+  binaryContentFiles.forEach((file, index) => {
+    const relativeFilePath = path.relative(rootDir, file.path);
+    logger.log(`${pc.white(`${index + 1}.`)} ${pc.white(relativeFilePath)}`);
+  });
+
+  logger.log(pc.yellow('\nThese files have been excluded from the output.'));
+  logger.log(pc.yellow('Please review these files if you expected them to contain text content.'));
 };
 
 export const reportCompletion = () => {

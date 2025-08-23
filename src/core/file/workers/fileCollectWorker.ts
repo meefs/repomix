@@ -1,6 +1,7 @@
 import path from 'node:path';
-import { logger, setLogLevelByWorkerData } from '../../../shared/logger.js';
-import { readRawFile } from '../fileRead.js';
+import { setLogLevelByWorkerData } from '../../../shared/logger.js';
+import { type FileSkipReason, readRawFile } from '../fileRead.js';
+import type { RawFile } from '../fileTypes.js';
 
 // Initialize logger configuration from workerData at module load time
 // This must be called before any logging operations in the worker
@@ -12,16 +13,39 @@ export interface FileCollectTask {
   maxFileSize: number;
 }
 
-export default async ({ filePath, rootDir, maxFileSize }: FileCollectTask) => {
-  const fullPath = path.resolve(rootDir, filePath);
-  const content = await readRawFile(fullPath, maxFileSize);
+export interface SkippedFileInfo {
+  path: string;
+  reason: FileSkipReason;
+}
 
-  if (content) {
+export interface FileCollectResult {
+  rawFile?: RawFile;
+  skippedFile?: SkippedFileInfo;
+}
+
+export default async ({ filePath, rootDir, maxFileSize }: FileCollectTask): Promise<FileCollectResult> => {
+  const fullPath = path.resolve(rootDir, filePath);
+  const result = await readRawFile(fullPath, maxFileSize);
+
+  if (result.content !== null) {
     return {
-      path: filePath,
-      content,
+      rawFile: {
+        path: filePath,
+        content: result.content,
+      },
     };
   }
 
-  return null;
+  if (result.skippedReason) {
+    return {
+      skippedFile: {
+        path: filePath,
+        reason: result.skippedReason,
+      },
+    };
+  }
+
+  throw new Error(
+    `File processing for ${filePath} resulted in an unexpected state: content is null but no skip reason was provided.`,
+  );
 };

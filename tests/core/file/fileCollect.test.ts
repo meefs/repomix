@@ -61,10 +61,13 @@ describe('fileCollect', () => {
       initTaskRunner: mockInitTaskRunner,
     });
 
-    expect(result).toEqual([
-      { path: 'file1.txt', content: 'decoded content' },
-      { path: 'file2.txt', content: 'decoded content' },
-    ]);
+    expect(result).toEqual({
+      rawFiles: [
+        { path: 'file1.txt', content: 'decoded content' },
+        { path: 'file2.txt', content: 'decoded content' },
+      ],
+      skippedFiles: [],
+    });
   });
 
   it('should skip binary files', async () => {
@@ -83,7 +86,10 @@ describe('fileCollect', () => {
       initTaskRunner: mockInitTaskRunner,
     });
 
-    expect(result).toEqual([{ path: 'text.txt', content: 'decoded content' }]);
+    expect(result).toEqual({
+      rawFiles: [{ path: 'text.txt', content: 'decoded content' }],
+      skippedFiles: [{ path: 'binary.bin', reason: 'binary-extension' }],
+    });
     expect(logger.debug).toHaveBeenCalledWith(`Skipping binary file: ${path.resolve('/root/binary.bin')}`);
   });
 
@@ -113,7 +119,10 @@ describe('fileCollect', () => {
       initTaskRunner: mockInitTaskRunner,
     });
 
-    expect(result).toEqual([{ path: 'normal.txt', content: 'decoded content' }]);
+    expect(result).toEqual({
+      rawFiles: [{ path: 'normal.txt', content: 'decoded content' }],
+      skippedFiles: [{ path: 'large.txt', reason: 'size-limit' }],
+    });
     expect(logger.trace).toHaveBeenCalledWith(expect.stringContaining('File exceeds size limit:'));
     expect(logger.trace).toHaveBeenCalledWith(expect.stringContaining(largePath));
 
@@ -153,7 +162,10 @@ describe('fileCollect', () => {
       initTaskRunner: mockInitTaskRunner,
     });
 
-    expect(result).toEqual([{ path: 'small.txt', content: 'decoded content' }]);
+    expect(result).toEqual({
+      rawFiles: [{ path: 'small.txt', content: 'decoded content' }],
+      skippedFiles: [{ path: 'medium.txt', reason: 'size-limit' }],
+    });
     expect(logger.trace).toHaveBeenCalledWith(expect.stringContaining('File exceeds size limit:'));
     expect(logger.trace).toHaveBeenCalledWith(expect.stringContaining('10240.0KB > 5120.0KB'));
     expect(logger.trace).toHaveBeenCalledWith(expect.stringContaining(mediumPath));
@@ -175,7 +187,10 @@ describe('fileCollect', () => {
       initTaskRunner: mockInitTaskRunner,
     });
 
-    expect(result).toEqual([]);
+    expect(result).toEqual({
+      rawFiles: [],
+      skippedFiles: [{ path: 'error.txt', reason: 'encoding-error' }],
+    });
     expect(logger.warn).toHaveBeenCalledWith(
       `Failed to read file: ${path.resolve('/root/error.txt')}`,
       expect.any(Error),

@@ -2,7 +2,7 @@ import type { RepomixConfigMerged } from '../config/configSchema.js';
 import { RepomixError } from '../shared/errorHandle.js';
 import { logMemoryUsage, withMemoryLogging } from '../shared/memoryUtils.js';
 import type { RepomixProgressCallback } from '../shared/types.js';
-import { collectFiles } from './file/fileCollect.js';
+import { type SkippedFileInfo, collectFiles } from './file/fileCollect.js';
 import { sortPaths } from './file/filePathSort.js';
 import { processFiles } from './file/fileProcess.js';
 import { searchFiles } from './file/fileSearch.js';
@@ -29,6 +29,7 @@ export interface PackResult {
   suspiciousGitLogResults: SuspiciousFileResult[];
   processedFiles: ProcessedFile[];
   safeFilePaths: string[];
+  skippedFiles: SkippedFileInfo[];
 }
 
 const defaultDeps = {
@@ -83,15 +84,18 @@ export const pack = async (
   }));
 
   progressCallback('Collecting files...');
-  const rawFiles = await withMemoryLogging('Collect Files', async () =>
-    (
+  const collectResults = await withMemoryLogging(
+    'Collect Files',
+    async () =>
       await Promise.all(
         sortedFilePathsByDir.map(({ rootDir, filePaths }) =>
           deps.collectFiles(filePaths, rootDir, config, progressCallback),
         ),
-      )
-    ).reduce((acc: RawFile[], curr: RawFile[]) => acc.concat(...curr), []),
+      ),
   );
+
+  const rawFiles = collectResults.flatMap((curr) => curr.rawFiles);
+  const allSkippedFiles = collectResults.flatMap((curr) => curr.skippedFiles);
 
   // Get git diffs if enabled - run this before security check
   progressCallback('Getting git diffs...');
@@ -135,6 +139,7 @@ export const pack = async (
     suspiciousGitLogResults,
     processedFiles,
     safeFilePaths,
+    skippedFiles: allSkippedFiles,
   };
 
   logMemoryUsage('Pack - End');

@@ -245,21 +245,3 @@ jobs:
           name: repomix-output-bun-${{ matrix.os }}-${{ matrix.bun-version }}.txt
           path: repomix-output.txt
 
-  generate-schema:
-    name: Update configuration json schema
-    runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' }}
-    steps:
-      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # ratchet:actions/checkout@v4
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # ratchet:actions/setup-node@v4
-        with:
-          node-version-file: .tool-versions
-          cache: npm
-      - run: npm ci
-      - run: npm run website-generate-schema
-      - uses: stefanzweifel/git-auto-commit-action@3ea6ae190baf489ba007f7c92608f33ce20ef04a # ratchet:stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: 'chore(schema): auto generate schema'
-          commit_user_name: "github-actions[bot]"
-          commit_user_email: "github-actions[bot]@users.noreply.github.com"
-          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
