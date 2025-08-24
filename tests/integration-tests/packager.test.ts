@@ -30,7 +30,7 @@ const fixturesDir = path.join(__dirname, 'fixtures', 'packager');
 const inputsDir = path.join(fixturesDir, 'inputs');
 const outputsDir = path.join(fixturesDir, 'outputs');
 
-const mockCollectFileInitTaskRunner = <T, R>(numOfTasks: number, workerPath: string) => {
+const mockCollectFileInitTaskRunner = <T, R>(_numOfTasks: number, _workerPath: string) => {
   return {
     run: async (task: T) => {
       return (await fileCollectWorker(task as FileCollectTask)) as R;
@@ -111,7 +111,7 @@ describe.runIf(!isWindows)('packager integration', () => {
             initTaskRunner: mockCollectFileInitTaskRunner,
           });
         },
-        processFiles: async (rawFiles, config, progressCallback) => {
+        processFiles: async (rawFiles, config, _progressCallback) => {
           const processedFiles: ProcessedFile[] = [];
           for (const rawFile of rawFiles) {
             processedFiles.push(await fileProcessWorker({ rawFile, config }));
@@ -131,7 +131,14 @@ describe.runIf(!isWindows)('packager integration', () => {
         },
         writeOutputToDisk,
         copyToClipboardIfEnabled,
-        calculateMetrics: async (processedFiles, output, progressCallback, config, gitDiffResult, gitLogResult) => {
+        calculateMetrics: async (
+          processedFiles,
+          _output,
+          _progressCallback,
+          _config,
+          _gitDiffResult,
+          _gitLogResult,
+        ) => {
           return {
             totalFiles: processedFiles.length,
             totalCharacters: processedFiles.reduce((acc, file) => acc + file.content.length, 0),
@@ -160,7 +167,7 @@ describe.runIf(!isWindows)('packager integration', () => {
 
       // Read the actual and expected outputs
       const actualOutput = await fs.readFile(actualOutputPath, 'utf-8');
-      const expectedOutput = await fs.readFile(expectedOutputPath, 'utf-8');
+      const _expectedOutput = await fs.readFile(expectedOutputPath, 'utf-8');
 
       // Compare the outputs - styles (e.g., XML, plain, markdown) may differ
       expect(actualOutput).toContain('This file is a merged representation of the entire codebase');

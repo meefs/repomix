@@ -1,10 +1,9 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test } from 'vitest';
 import type { Language, Point, Query, SyntaxNode, Tree, TreeCursor } from 'web-tree-sitter';
 import type { Edit, Range } from 'web-tree-sitter';
 import type { RepomixConfigMerged } from '../../../src/config/configSchema.js';
 import { parseFile } from '../../../src/core/treeSitter/parseFile.js';
 import { TypeScriptParseStrategy } from '../../../src/core/treeSitter/parseStrategies/TypeScriptParseStrategy.js';
-import { createMockConfig } from '../../../tests/testing/testUtils.js';
 
 interface MockContext {
   fileContent: string;
@@ -158,26 +157,26 @@ describe('TypeScript File Parsing', () => {
         gotoParent(): boolean {
           return false;
         },
-        gotoFirstChildForIndex(index: number): boolean {
+        gotoFirstChildForIndex(_index: number): boolean {
           return false;
         },
-        gotoFirstChildForPosition(goalPosition: Point): boolean {
+        gotoFirstChildForPosition(_goalPosition: Point): boolean {
           return false;
         },
-        gotoDescendant(goalDescendantIndex: number): boolean {
+        gotoDescendant(_goalDescendantIndex: number): boolean {
           return false;
         },
         reset(): void {},
-        resetTo(cursor: TreeCursor): void {},
+        resetTo(_cursor: TreeCursor): void {},
         delete(): void {},
       };
 
       const mockTree: Tree = {
         rootNode: {} as SyntaxNode,
-        rootNodeWithOffset(offsetBytes: number, offsetExtent: Point): SyntaxNode {
+        rootNodeWithOffset(_offsetBytes: number, _offsetExtent: Point): SyntaxNode {
           return {} as SyntaxNode;
         },
-        getChangedRanges(other: Tree): Range[] {
+        getChangedRanges(_other: Tree): Range[] {
           return [];
         },
         getIncludedRanges(): Range[] {
@@ -187,7 +186,7 @@ describe('TypeScript File Parsing', () => {
           return this;
         },
         delete() {},
-        edit(delta: Edit) {},
+        edit(_delta: Edit) {},
         getLanguage(): Language {
           return {} as Language;
         },

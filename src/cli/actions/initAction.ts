@@ -9,7 +9,6 @@ import {
   defaultFilePathMap,
 } from '../../config/configSchema.js';
 import { getGlobalDirectory } from '../../config/globalDirectory.js';
-import { getVersion } from '../../core/file/packageJsonParse.js';
 import { logger } from '../../shared/logger.js';
 
 const onCancelOperation = () => {

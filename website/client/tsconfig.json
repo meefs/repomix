@@ -13,7 +13,7 @@
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
     "noEmit": true,
-    "baseUrl": ".",
+    "paths": {"*": ["./*"]},
     "types": ["vite/client", "vitepress/client"]
   },
   "include": [

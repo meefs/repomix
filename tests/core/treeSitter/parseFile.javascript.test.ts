@@ -1,5 +1,4 @@
 import { describe, expect, test } from 'vitest';
-import type { RepomixConfigMerged } from '../../../src/config/configSchema.js';
 import { CHUNK_SEPARATOR, parseFile } from '../../../src/core/treeSitter/parseFile.js';
 import { createMockConfig } from '../../testing/testUtils.js';
 

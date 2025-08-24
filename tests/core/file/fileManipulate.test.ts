@@ -495,11 +495,11 @@ describe('fileManipulate', () => {
       name: 'Python escaped hash in string',
       ext: '.py',
       input: `
-      text = "This string contains an \# escaped hash"
+      text = "This string contains an # escaped hash"
       # This is a real comment
     `,
       expected: `
-      text = "This string contains an \# escaped hash"
+      text = "This string contains an # escaped hash"
 
 `,
     },
@@ -564,12 +564,12 @@ describe('fileManipulate', () => {
       name: 'Python mixed single and double quotes',
       ext: '.py',
       input: `
-      x = '\"\"\""'  # This is not a docstring start
+      x = '""""'  # This is not a docstring start
       y = "'''"  # Neither is this
       """But this is a docstring"""
     `,
       expected: `
-      x = '\"\"\""'
+      x = '""""'
       y = "'''"
 
 `,

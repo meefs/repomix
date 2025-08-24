@@ -2,11 +2,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 
-interface IconSize {
-  width: number;
-  height: number;
-}
-
 const ICON_SIZES: readonly number[] = [16, 19, 32, 38, 48, 64, 128] as const;
 const INPUT_SVG_PATH = path.join(__dirname, '../app/images/icon.svg');
 const OUTPUT_DIR = path.join(__dirname, '../app/images');

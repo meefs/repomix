@@ -222,7 +222,7 @@ export function useFileUpload(config: FileUploadConfig) {
     try {
       const files = await collectFilesFromEntry(entry);
       return await processFiles(files, entry.name);
-    } catch (error) {
+    } catch {
       const errorMsg = 'Failed to process the folder. Please try again or use the browse button.';
       errorMessage.value = errorMsg;
       return { success: false, error: errorMsg };

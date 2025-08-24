@@ -46,7 +46,7 @@ export const analyzeContent = (config: RepomixConfigMerged): ContentInfo => {
   };
 };
 
-export const generateHeader = (config: RepomixConfigMerged, generationDate: string): string => {
+export const generateHeader = (config: RepomixConfigMerged, _generationDate: string): string => {
   const info = analyzeContent(config);
 
   // Generate selection description

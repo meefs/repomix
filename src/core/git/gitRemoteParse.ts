@@ -64,7 +64,7 @@ export const parseRemoteValue = (
       repoUrl: repoUrl,
       remoteBranch: undefined,
     };
-  } catch (error) {
+  } catch {
     throw new RepomixError('Invalid remote repository URL or repository shorthand (owner/repo)');
   }
 };
@@ -73,7 +73,7 @@ export const isValidRemoteValue = (remoteValue: string, refs: string[] = []): bo
   try {
     parseRemoteValue(remoteValue, refs);
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 };

@@ -1,6 +1,5 @@
 import path from 'node:path';
 import { describe, expect, test, vi } from 'vitest';
-import type { RepomixConfigMerged } from '../../../src/config/configSchema.js';
 import type { ProcessedFile } from '../../../src/core/file/fileTypes.js';
 import { sortOutputFiles } from '../../../src/core/output/outputSort.js';
 import { createMockConfig } from '../../testing/testUtils.js';

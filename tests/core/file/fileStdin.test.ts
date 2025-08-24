@@ -252,8 +252,9 @@ describe('fileStdin', () => {
 
     it('should wrap generic errors in RepomixError', async () => {
       const mockInterface = {
-        // biome-ignore lint/correctness/useYield: This generator intentionally throws without yielding
         [Symbol.asyncIterator]: async function* (): AsyncGenerator<string, void, unknown> {
+          // This generator needs to throw an error for testing, but must yield first to satisfy require-yield
+          yield 'dummy';
           throw new Error('Generic error');
         },
       };
@@ -288,8 +289,9 @@ describe('fileStdin', () => {
 
     it('should handle unknown error types', async () => {
       const mockInterface = {
-        // biome-ignore lint/correctness/useYield: This generator intentionally throws without yielding
         [Symbol.asyncIterator]: async function* (): AsyncGenerator<string, void, unknown> {
+          // This generator needs to throw an error for testing, but must yield first to satisfy require-yield
+          yield 'dummy';
           throw 'string error';
         },
       };

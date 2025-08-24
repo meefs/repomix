@@ -33,7 +33,7 @@ export const isGitRepository = async (
   try {
     await deps.execGitRevParse(directory);
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 };

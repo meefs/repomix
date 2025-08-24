@@ -2,7 +2,6 @@ import type { Stats } from 'node:fs';
 import * as fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
-import { globby } from 'globby';
 import { minimatch } from 'minimatch';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import {

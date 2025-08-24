@@ -26,7 +26,7 @@ export const processFiles = async (
     new URL('./workers/fileProcessWorker.js', import.meta.url).href,
   );
   const tasks = rawFiles.map(
-    (rawFile, index) =>
+    (rawFile, _index) =>
       ({
         rawFile,
         config,

@@ -4,7 +4,6 @@ import path from 'node:path';
 import iconv from 'iconv-lite';
 import { isBinary } from 'istextorbinary';
 import jschardet from 'jschardet';
-import pc from 'picocolors';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { collectFiles } from '../../../src/core/file/fileCollect.js';
 import type { FileCollectTask } from '../../../src/core/file/workers/fileCollectWorker.js';
@@ -21,7 +20,7 @@ vi.mock('jschardet');
 vi.mock('iconv-lite');
 vi.mock('../../../src/shared/logger');
 
-const mockInitTaskRunner = <T, R>(numOfTasks: number, workerPath: string) => {
+const mockInitTaskRunner = <T, R>(_numOfTasks: number, _workerPath: string) => {
   return {
     run: async (task: T) => {
       return (await fileCollectWorker(task as FileCollectTask)) as R;

@@ -1,8 +1,6 @@
 import Handlebars from 'handlebars';
 import { describe, expect, test } from 'vitest';
-import { generateOutput } from '../../../../src/core/output/outputGenerate.js';
 import { getMarkdownTemplate } from '../../../../src/core/output/outputStyles/markdownStyle.js';
-import { createMockConfig } from '../../../testing/testUtils.js';
 
 describe('markdownStyle', () => {
   describe('getMarkdownTemplate', () => {

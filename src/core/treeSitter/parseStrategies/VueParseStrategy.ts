@@ -6,7 +6,7 @@ export class VueParseStrategy implements ParseStrategy {
     capture: { node: SyntaxNode; name: string },
     lines: string[],
     processedChunks: Set<string>,
-    context: ParseContext,
+    _context: ParseContext,
   ): string | null {
     const { node, name } = capture;
     const startRow = node.startPosition.row;
@@ -23,7 +23,7 @@ export class VueParseStrategy implements ParseStrategy {
     }
 
     const chunk = selectedLines.join('\n');
-    const normalizedChunk = chunk.trim();
+    const _normalizedChunk = chunk.trim();
 
     // Create a unique ID for this chunk
     const chunkId = `${name}:${startRow}`;

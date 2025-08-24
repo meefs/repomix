@@ -1,14 +1,13 @@
 import type { RepomixConfigMerged } from '../config/configSchema.js';
-import { RepomixError } from '../shared/errorHandle.js';
 import { logMemoryUsage, withMemoryLogging } from '../shared/memoryUtils.js';
 import type { RepomixProgressCallback } from '../shared/types.js';
 import { type SkippedFileInfo, collectFiles } from './file/fileCollect.js';
 import { sortPaths } from './file/filePathSort.js';
 import { processFiles } from './file/fileProcess.js';
 import { searchFiles } from './file/fileSearch.js';
-import type { ProcessedFile, RawFile } from './file/fileTypes.js';
-import { GitDiffResult, getGitDiffs } from './git/gitDiffHandle.js';
-import { GitLogResult, getGitLogs } from './git/gitLogHandle.js';
+import type { ProcessedFile } from './file/fileTypes.js';
+import { getGitDiffs } from './git/gitDiffHandle.js';
+import { getGitLogs } from './git/gitLogHandle.js';
 import { calculateMetrics } from './metrics/calculateMetrics.js';
 import { generateOutput } from './output/outputGenerate.js';
 import { copyToClipboardIfEnabled } from './packager/copyToClipboardIfEnabled.js';

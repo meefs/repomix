@@ -1,5 +1,5 @@
 import process from 'node:process';
-import { Command, Option, program } from 'commander';
+import { Option, program } from 'commander';
 import pc from 'picocolors';
 import { getVersion } from '../core/file/packageJsonParse.js';
 import { RepomixError, handleError } from '../shared/errorHandle.js';

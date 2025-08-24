@@ -39,7 +39,7 @@ const mockFiles: RawFile[] = [
   },
 ];
 
-const mockInitTaskRunner = <T, R>(numOfTasks: number, workerPath: string) => {
+const mockInitTaskRunner = <T, R>(_numOfTasks: number, _workerPath: string) => {
   return {
     run: async (task: T) => {
       return (await securityCheckWorker(task as SecurityCheckTask)) as R;

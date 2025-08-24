@@ -9,9 +9,9 @@
     "build:repomix": "cd ../.. && node --run build",
     "build:all": "node --run build:repomix && node --run build",
     "clean": "rm -rf dist",
-    "memory:check": "node --run build:all && node --expose-gc dist/simple-memory-test.js",
-    "memory:watch": "node --run build:all && node --expose-gc dist/simple-memory-test.js continuous",
-    "memory:analyze": "node --run build:all && node --expose-gc dist/memory-leak-test.js 200 500"
+    "test": "node --run build:all && node --expose-gc dist/memory-test.js",
+    "test:full": "node --run build:all && node --expose-gc dist/memory-test.js --full",
+    "test:continuous": "node --run build:all && node --expose-gc dist/memory-test.js --continuous"
   },
   "dependencies": {
     "repomix": "file:../.."

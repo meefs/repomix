@@ -1,5 +1,4 @@
 import { describe, expect, test } from 'vitest';
-import type { RepomixConfigMerged } from '../../../src/config/configSchema.js';
 import { parseFile } from '../../../src/core/treeSitter/parseFile.js';
 import { createMockConfig } from '../../../tests/testing/testUtils.js';
 
@@ -10,7 +9,7 @@ describe('parseFile for PHP', () => {
 
 namespace App;
 
-use App\Greeter;
+use App\\Greeter;
 
 // Define the greeting function
 function greet($name) {
@@ -54,7 +53,7 @@ enum GreeterEnum: string {
     expect(typeof result).toBe('string');
     const expectContents = [
       'namespace App;',
-      'use AppGreeter;',
+      'use App\\Greeter;',
       'function greet($name) {',
       '// Define the greeting function',
       '// Print the personalized greeting message',

@@ -14,7 +14,7 @@ export function isValidRemoteValue(remoteValue: string): boolean {
   try {
     new URL(remoteValue);
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 }

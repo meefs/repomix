@@ -8,7 +8,7 @@
     "build-all": "npm run build chrome && npm run build firefox && npm run build edge",
     "generate-icons": "tsx scripts/generate-icons.ts",
     "lint": "npm run lint-tsc",
-    "lint-tsc": "tsc --noEmit",
+    "lint-tsc": "tsgo --noEmit",
     "test": "vitest",
     "archive": "git archive HEAD -o storage/source.zip"
   },
@@ -27,6 +27,7 @@
     "@types/chrome": "^0.1.1",
     "@types/node": "^24.0.14",
     "@types/webextension-polyfill": "^0.12.3",
+    "@typescript/native-preview": "^7.0.0-dev.20250824.1",
     "@webextension-toolbox/webextension-toolbox": "^7.1.1",
     "jsdom": "^26.1.0",
     "sharp": "^0.34.3",

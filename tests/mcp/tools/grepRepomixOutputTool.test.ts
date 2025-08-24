@@ -20,17 +20,6 @@ vi.mock('../../../src/mcp/tools/mcpToolRuntime.js', async () => {
   };
 });
 
-/**
- * Search options for grep functionality
- */
-interface SearchOptions {
-  pattern: string;
-  contextLines: number;
-  beforeLines: number;
-  afterLines: number;
-  ignoreCase: boolean;
-}
-
 describe('grepRepomixOutputTool', () => {
   describe('createRegexPattern', () => {
     it('should create a case-sensitive regex by default', () => {

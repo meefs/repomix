@@ -1,7 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import type { RepomixConfigMerged } from '../../../src/config/configSchema.js';
 import { parseFile } from '../../../src/core/treeSitter/parseFile.js';
-import { createMockConfig } from '../../../tests/testing/testUtils.js';
 
 describe('parseFile for Ruby', () => {
   test('should parse Ruby correctly', async () => {

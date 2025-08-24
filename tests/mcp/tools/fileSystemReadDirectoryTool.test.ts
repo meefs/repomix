@@ -1,15 +1,12 @@
 import { promises as fs } from 'node:fs';
-import type { Dirent, Stats } from 'node:fs';
 import path from 'node:path';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { registerFileSystemReadDirectoryTool } from '../../../src/mcp/tools/fileSystemReadDirectoryTool.js';
-import { logger } from '../../../src/shared/logger.js';
 
 vi.mock('node:fs');
 vi.mock('node:path');
-vi.mock('../../../src/shared/logger.js');
 
 describe('FileSystemReadDirectoryTool', () => {
   const mockServer = {

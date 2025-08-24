@@ -644,12 +644,6 @@ describe('defaultAction', () => {
       tokenCount: { encoding: 'cl100k_base' as const },
     });
 
-    const mockCliOptions: CliOptions = {
-      verbose: false,
-      progress: true,
-      stdin: true,
-    };
-
     beforeEach(() => {
       vi.mocked(packager.pack).mockResolvedValue({
         totalTokens: 1000,
@@ -776,11 +770,6 @@ describe('defaultAction', () => {
       security: { enableSecurityCheck: true },
       tokenCount: { encoding: 'cl100k_base' as const },
     });
-
-    const mockCliOptions: CliOptions = {
-      verbose: false,
-      progress: true,
-    };
 
     beforeEach(() => {
       vi.mocked(packager.pack).mockResolvedValue({

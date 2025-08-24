@@ -6,7 +6,7 @@ import { logger } from '../../../src/shared/logger.js';
 
 vi.mock('../../../src/shared/logger');
 
-const mockInitTaskRunner = <T, R>(numOfTasks: number, workerPath: string) => {
+const mockInitTaskRunner = <T, R>(_numOfTasks: number, _workerPath: string) => {
   return {
     run: async (task: T) => {
       return (await outputMetricsWorker(task as OutputMetricsTask)) as R;
@@ -46,9 +46,9 @@ describe('calculateOutputMetrics', () => {
     const encoding = 'o200k_base';
     const mockError = new Error('Worker error');
 
-    const mockErrorTaskRunner = <T, R>(numOfTasks: number, workerPath: string) => {
+    const mockErrorTaskRunner = <T, _R>(_numOfTasks: number, _workerPath: string) => {
       return {
-        run: async (task: T) => {
+        run: async (_task: T) => {
           throw mockError;
         },
         cleanup: async () => {
@@ -96,9 +96,9 @@ describe('calculateOutputMetrics', () => {
     const path = 'large-file.txt';
 
     let chunksProcessed = 0;
-    const mockParallelTaskRunner = <T, R>(numOfTasks: number, workerPath: string) => {
+    const mockParallelTaskRunner = <T, R>(_numOfTasks: number, _workerPath: string) => {
       return {
-        run: async (task: T) => {
+        run: async (_task: T) => {
           chunksProcessed++;
           // Return a fixed token count for each chunk
           return 100 as R;
@@ -122,9 +122,9 @@ describe('calculateOutputMetrics', () => {
     const encoding = 'o200k_base';
     const mockError = new Error('Parallel processing error');
 
-    const mockErrorTaskRunner = <T, R>(numOfTasks: number, workerPath: string) => {
+    const mockErrorTaskRunner = <T, _R>(_numOfTasks: number, _workerPath: string) => {
       return {
-        run: async (task: T) => {
+        run: async (_task: T) => {
           throw mockError;
         },
         cleanup: async () => {
@@ -147,7 +147,7 @@ describe('calculateOutputMetrics', () => {
     const encoding = 'o200k_base';
     const processedChunks: string[] = [];
 
-    const mockChunkTrackingTaskRunner = <T, R>(numOfTasks: number, workerPath: string) => {
+    const mockChunkTrackingTaskRunner = <T, R>(_numOfTasks: number, _workerPath: string) => {
       return {
         run: async (task: T) => {
           const outputTask = task as OutputMetricsTask;
@@ -165,7 +165,7 @@ describe('calculateOutputMetrics', () => {
     });
 
     // Check that chunks are roughly equal in size
-    const expectedChunkSize = Math.ceil(content.length / 1000); // CHUNK_SIZE is 1000
+    const _expectedChunkSize = Math.ceil(content.length / 1000); // CHUNK_SIZE is 1000
     const chunkSizes = processedChunks.map((chunk) => chunk.length);
 
     expect(processedChunks.length).toBe(1000); // Should have 1000 chunks

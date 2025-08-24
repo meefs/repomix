@@ -123,7 +123,7 @@ index 123..456 100644
     };
 
     // Call generateOutput with mocked deps
-    const output = await generateOutput(rootDirs, mockConfig, processedFiles, ['file1.js'], gitDiffResult, undefined, {
+    const _output = await generateOutput(rootDirs, mockConfig, processedFiles, ['file1.js'], gitDiffResult, undefined, {
       buildOutputGeneratorContext: mockBuildOutputGeneratorContext,
       generateHandlebarOutput: mockGenerateHandlebarOutput,
       generateParsableXmlOutput: mockGenerateParsableXmlOutput,
@@ -186,7 +186,7 @@ index 123..456 100644
     };
 
     // Call generateOutput with mocked deps
-    const output = await generateOutput(rootDirs, mockConfig, processedFiles, ['file1.js'], gitDiffResult, undefined, {
+    const _output = await generateOutput(rootDirs, mockConfig, processedFiles, ['file1.js'], gitDiffResult, undefined, {
       buildOutputGeneratorContext: mockBuildOutputGeneratorContext,
       generateHandlebarOutput: mockGenerateHandlebarOutput,
       generateParsableXmlOutput: mockGenerateParsableXmlOutput,

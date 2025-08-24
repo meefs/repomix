@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildCliConfig } from '../../../src/cli/actions/defaultAction.js';
 import type { CliOptions } from '../../../src/cli/types.js';
-import { RepomixError } from '../../../src/shared/errorHandle.js';
 
 describe('buildCliConfig', () => {
   describe('tokenCountTree option', () => {

@@ -1,5 +1,5 @@
 import type { RepomixConfigMerged } from '../../../config/configSchema.js';
-import { logger, setLogLevelByWorkerData } from '../../../shared/logger.js';
+import { setLogLevelByWorkerData } from '../../../shared/logger.js';
 import { processContent } from '../fileProcessContent.js';
 import type { ProcessedFile, RawFile } from '../fileTypes.js';
 

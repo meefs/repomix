@@ -117,7 +117,7 @@ export const registerGrepRepomixOutputTool = (mcpServer: McpServer) => {
 
         try {
           await fs.access(filePath);
-        } catch (error) {
+        } catch {
           return buildMcpToolErrorResponse({
             errorMessage: `Error: Output file does not exist at path: ${filePath}. The temporary file may have been cleaned up.`,
             details: {

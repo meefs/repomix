@@ -1,7 +1,7 @@
 import type { RepomixConfigMerged } from '../../config/configSchema.js';
 import { logger } from '../../shared/logger.js';
 import type { RepomixProgressCallback } from '../../shared/types.js';
-import type { ProcessedFile, RawFile } from '../file/fileTypes.js';
+import type { RawFile } from '../file/fileTypes.js';
 import type { GitDiffResult } from '../git/gitDiffHandle.js';
 import type { GitLogResult } from '../git/gitLogHandle.js';
 import { filterOutUntrustedFiles } from './filterOutUntrustedFiles.js';

@@ -1,5 +1,4 @@
-import { beforeEach, describe, expect, test } from 'vitest';
-import type { RepomixConfigMerged } from '../../../src/config/configSchema.js';
+import { describe, expect, test } from 'vitest';
 import { parseFile } from '../../../src/core/treeSitter/parseFile.js';
 import { createMockConfig } from '../../testing/testUtils.js';
 

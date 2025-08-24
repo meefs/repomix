@@ -1,4 +1,3 @@
-import type { QueryCapture } from 'web-tree-sitter';
 import type { RepomixConfigMerged } from '../../config/configSchema.js';
 import { logger } from '../../shared/logger.js';
 import type { SupportedLang } from './lang2Query.js';

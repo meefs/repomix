@@ -11,7 +11,7 @@ import type { PackResult } from './types.js';
 import { handlePackError } from './utils/errorHandler.js';
 import { cloudLogger, createErrorResponse, logError, logInfo, logMemoryUsage } from './utils/logger.js';
 import { getProcessConcurrency } from './utils/processConcurrency.js';
-import { calculateLatency, formatLatencyForDisplay } from './utils/time.js';
+import { formatLatencyForDisplay } from './utils/time.js';
 
 // Log server metrics on startup
 logInfo('Server starting', {

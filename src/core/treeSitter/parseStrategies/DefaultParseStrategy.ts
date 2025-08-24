@@ -6,7 +6,7 @@ export class DefaultParseStrategy implements ParseStrategy {
     capture: { node: SyntaxNode; name: string },
     lines: string[],
     processedChunks: Set<string>,
-    context: ParseContext,
+    _context: ParseContext,
   ): string | null {
     const { node, name } = capture;
     const startRow = node.startPosition.row;

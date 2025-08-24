@@ -2,12 +2,11 @@ import type { Stats } from 'node:fs';
 import * as fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
-import pc from 'picocolors';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { loadFileConfig, mergeConfigs } from '../../src/config/configLoad.js';
 import type { RepomixConfigCli, RepomixConfigFile } from '../../src/config/configSchema.js';
 import { getGlobalDirectory } from '../../src/config/globalDirectory.js';
-import { RepomixConfigValidationError, RepomixError } from '../../src/shared/errorHandle.js';
+import { RepomixConfigValidationError } from '../../src/shared/errorHandle.js';
 import { logger } from '../../src/shared/logger.js';
 
 vi.mock('node:fs/promises');

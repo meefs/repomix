@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import type { FileManipulator } from '../../../src/core/file/fileManipulate.js';
 import { processFiles } from '../../../src/core/file/fileProcess.js';
 import { processContent } from '../../../src/core/file/fileProcessContent.js';
@@ -19,7 +19,7 @@ const mockGetFileManipulator = (filePath: string): FileManipulator | null => {
   return null;
 };
 
-const mockInitTaskRunner = <T, R>(numOfTasks: number, workerPath: string) => {
+const mockInitTaskRunner = <T, R>(_numOfTasks: number, _workerPath: string) => {
   return {
     run: async (task: T) => {
       return (await fileProcessWorker(task as FileProcessTask)) as R;

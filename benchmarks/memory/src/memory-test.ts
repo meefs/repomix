@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * Comprehensive memory leak test for runCli
- * Tests multiple configurations and generates detailed reports
+ * Memory test for runCli
+ * - Fast and lightweight for CI (default)
+ * - Comprehensive analysis when needed (--full flag)
  */
 
 import fs from 'node:fs/promises';
@@ -14,61 +15,62 @@ import type { MemoryHistory, MemoryTestSummary, MemoryUsage, TestConfig } from '
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, '..');
 
+// Parse command line arguments
+const args = process.argv.slice(2);
+const flags = {
+  full: args.includes('--full') || args.includes('-f'),
+  continuous: args.includes('--continuous'),
+  saveResults: args.includes('--save') || args.includes('-s'),
+  help: args.includes('--help') || args.includes('-h'),
+};
+
+// Extract numeric arguments
+const numericArgs = args.filter((arg) => !arg.startsWith('-') && !Number.isNaN(Number(arg)));
+const iterations = Number(numericArgs[0]) || (flags.full ? 200 : 50);
+const delay = Number(numericArgs[1]) || (flags.full ? 100 : 50);
+
 // Configuration
-const DEFAULT_ITERATIONS = 500;
-const DEFAULT_DELAY = 100;
-const MEMORY_LOG_INTERVAL = 10;
-const FORCE_GC_INTERVAL = 20;
+const MEMORY_LOG_INTERVAL = flags.full ? 10 : 5;
+const FORCE_GC_INTERVAL = flags.full ? 20 : 10;
+const WARNING_THRESHOLD = flags.full ? 50 : 100; // Memory growth percentage
 
-// Test configurations
-const TEST_CONFIGS: TestConfig[] = [
-  {
-    name: 'Local Directory (src/)',
-    args: ['.'],
-    cwd: projectRoot,
-    options: {
-      include: 'src/**/*.ts',
-      output: path.join(__dirname, '../test-output-1.txt'),
-      style: 'plain',
-      quiet: true,
-    },
+// Test configuration
+const TEST_CONFIG: TestConfig = {
+  name: 'Memory Test',
+  args: ['.'],
+  cwd: projectRoot,
+  options: {
+    include: 'src/**/*.ts',
+    output: path.join(__dirname, '../test-output.txt'),
+    style: 'plain',
+    quiet: true,
   },
-  {
-    name: 'Local Directory with compression',
-    args: ['.'],
-    cwd: projectRoot,
-    options: {
-      include: 'src/**/*.ts',
-      output: path.join(__dirname, '../test-output-2.txt'),
-      style: 'xml',
-      compress: true,
-      quiet: true,
-    },
-  },
-  {
-    name: 'Complex patterns',
-    args: ['.'],
-    cwd: projectRoot,
-    options: {
-      include: 'src/**/*.{ts,js}',
-      ignore: '**/*.test.ts,**/*.d.ts',
-      output: path.join(__dirname, '../test-output-3.txt'),
-      style: 'markdown',
-      quiet: true,
-    },
-  },
-];
-
-// Memory tracking
+};
 const memoryHistory: MemoryHistory[] = [];
 
-const iterations = Number.parseInt(process.argv[2]) || DEFAULT_ITERATIONS;
-const delay = Number.parseInt(process.argv[3]) || DEFAULT_DELAY;
+function showHelp(): void {
+  console.log(`
+🧪 Memory Test for Repomix
 
-console.log('🧪 Comprehensive Memory Leak Test');
-console.log(`📋 Configuration: ${iterations} iterations, ${delay}ms delay`);
-console.log(`🎯 Test Configurations: ${TEST_CONFIGS.length} different configs`);
-console.log('🛑 Press Ctrl+C to stop\n');
+Usage: node memory-test.ts [iterations] [delay] [options]
+
+Arguments:
+  iterations     Number of test iterations (default: 50 for basic, 200 for --full)
+  delay          Delay between iterations in ms (default: 50 for basic, 100 for --full)
+
+Options:
+  --full, -f       Enable comprehensive testing (more iterations, detailed analysis)
+  --continuous     Run until stopped with Ctrl+C
+  --save, -s       Save detailed results to JSON file
+  --help, -h       Show this help message
+
+Examples:
+  node memory-test.ts                    # Quick CI test (50 iterations)
+  node memory-test.ts --full             # Comprehensive test (200 iterations)
+  node memory-test.ts 100 200            # 100 iterations, 200ms delay
+  node memory-test.ts --continuous       # Run until Ctrl+C
+`);
+}
 
 function getMemoryUsage(): MemoryUsage {
   const usage = process.memoryUsage();
@@ -90,7 +92,9 @@ function getMemoryUsage(): MemoryUsage {
 function forceGC(): void {
   if (global.gc) {
     global.gc();
-    console.log('🗑️  Forced garbage collection');
+    if (flags.full) {
+      console.log('🗑️  Forced garbage collection');
+    }
   }
 }
 
@@ -117,15 +121,11 @@ function logMemoryUsage(iteration: number, configName: string, error: Error | nu
 }
 
 async function cleanupFiles(): Promise<void> {
-  const filesToClean = TEST_CONFIGS.map((config) => config.options.output);
-
-  for (const file of filesToClean) {
-    try {
-      await fs.unlink(file);
-    } catch (error) {
-      if (error instanceof Error && 'code' in error && error.code !== 'ENOENT') {
-        console.warn(`Failed to cleanup ${file}:`, error.message);
-      }
+  try {
+    await fs.unlink(TEST_CONFIG.options.output);
+  } catch (error) {
+    if (error instanceof Error && 'code' in error && error.code !== 'ENOENT') {
+      console.warn(`Failed to cleanup ${TEST_CONFIG.options.output}:`, error.message);
     }
   }
 }
@@ -150,19 +150,20 @@ function analyzeMemoryTrends(): void {
   );
   console.log(`   RSS Growth: ${rssGrowth.toFixed(2)}% (${avgInitialRSS.toFixed(2)}MB → ${avgRecentRSS.toFixed(2)}MB)`);
 
-  if (heapGrowth > 50 || rssGrowth > 50) {
+  if (heapGrowth > WARNING_THRESHOLD || rssGrowth > WARNING_THRESHOLD) {
     console.log('⚠️  WARNING: Significant memory growth detected - possible memory leak!');
   }
 }
 
 async function saveMemoryHistory(): Promise<void> {
+  if (!flags.saveResults && !flags.full) return;
+
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const filename = path.join(__dirname, '..', `memory-test-results-${timestamp}.json`);
 
   const summary: MemoryTestSummary = {
     testInfo: {
       iterations: memoryHistory.length,
-      configurations: TEST_CONFIGS.length,
       startTime: memoryHistory[0]?.timestamp || '',
       endTime: memoryHistory[memoryHistory.length - 1]?.timestamp || '',
     },
@@ -184,20 +185,24 @@ async function saveMemoryHistory(): Promise<void> {
   }
 }
 
-async function runMemoryLeakTest(): Promise<void> {
+async function runMemoryTest(): Promise<void> {
+  const totalIterations = flags.continuous ? Number.POSITIVE_INFINITY : iterations;
+
   // Log initial memory usage
   console.log('📊 Initial Memory Usage:');
   logMemoryUsage(0, 'Initial', null);
 
-  console.log('\n🚀 Starting test iterations...\n');
+  console.log(`\n🚀 Starting ${flags.continuous ? 'continuous' : totalIterations} test iterations...`);
+  console.log(`🎯 Delay: ${delay}ms\n`);
 
-  for (let i = 1; i <= iterations; i++) {
-    const config = TEST_CONFIGS[(i - 1) % TEST_CONFIGS.length];
+  const startTime = Date.now();
+
+  for (let i = 1; i <= totalIterations; i++) {
     let error: Error | null = null;
 
     try {
-      // Run the CLI with current configuration
-      await runCli(config.args, config.cwd, config.options);
+      // Run the CLI with test configuration
+      await runCli(TEST_CONFIG.args, TEST_CONFIG.cwd, TEST_CONFIG.options);
 
       // Clean up output files after each run
       await cleanupFiles();
@@ -207,7 +212,7 @@ async function runMemoryLeakTest(): Promise<void> {
 
     // Log memory usage at specified intervals or on error
     if (i % MEMORY_LOG_INTERVAL === 0 || error) {
-      logMemoryUsage(i, config.name, error);
+      logMemoryUsage(i, TEST_CONFIG.name, error);
     }
 
     // Force garbage collection at specified intervals
@@ -215,8 +220,8 @@ async function runMemoryLeakTest(): Promise<void> {
       forceGC();
     }
 
-    // Analyze trends periodically
-    if (i % (MEMORY_LOG_INTERVAL * 2) === 0 && i > 20) {
+    // Analyze trends periodically (only in full mode)
+    if (flags.full && i % (MEMORY_LOG_INTERVAL * 2) === 0 && i > 20) {
       analyzeMemoryTrends();
     }
 
@@ -224,30 +229,45 @@ async function runMemoryLeakTest(): Promise<void> {
     if (delay > 0) {
       await new Promise((resolve) => setTimeout(resolve, delay));
     }
+
+    // Safety exit for continuous mode during CI
+    if (flags.continuous && !flags.full && Date.now() - startTime > 60000) {
+      // 1 minute limit for CI
+      console.log('\n⏱️  CI time limit reached, stopping continuous test');
+      break;
+    }
   }
 
-  console.log('\n✅ Memory leak test completed!');
+  console.log('\n✅ Memory test completed!');
 
   // Final analysis
-  console.log('\n📊 Final Memory Analysis:');
   const finalUsage = getMemoryUsage();
   const initialUsage = memoryHistory[0];
 
   if (initialUsage) {
+    const heapGrowth =
+      initialUsage.heapUsed > 0 ? ((finalUsage.heapUsed - initialUsage.heapUsed) / initialUsage.heapUsed) * 100 : 0;
+    const rssGrowth = initialUsage.rss > 0 ? ((finalUsage.rss - initialUsage.rss) / initialUsage.rss) * 100 : 0;
+
+    console.log('\n📊 Final Memory Analysis:');
     console.log(`Initial: Heap ${initialUsage.heapUsed}MB, RSS ${initialUsage.rss}MB`);
     console.log(`Final:   Heap ${finalUsage.heapUsed}MB, RSS ${finalUsage.rss}MB`);
-    console.log(
-      `Growth:  Heap ${(((finalUsage.heapUsed - initialUsage.heapUsed) / initialUsage.heapUsed) * 100).toFixed(2)}%, RSS ${(((finalUsage.rss - initialUsage.rss) / initialUsage.rss) * 100).toFixed(2)}%`,
-    );
+    console.log(`Growth:  Heap ${heapGrowth.toFixed(2)}%, RSS ${rssGrowth.toFixed(2)}%`);
+
+    // Exit with error code if memory growth exceeds threshold
+    if (heapGrowth > WARNING_THRESHOLD || rssGrowth > WARNING_THRESHOLD) {
+      console.log('⚠️  WARNING: Significant memory growth detected!');
+      process.exitCode = 1;
+    } else {
+      console.log('✅ Memory usage appears stable');
+    }
   }
 
-  // Save results
+  // Save results if requested
   await saveMemoryHistory();
 
   // Final cleanup
   await cleanupFiles();
-
-  console.log('\n🎉 Test completed successfully!');
 }
 
 // Handle process termination
@@ -265,6 +285,12 @@ process.on('uncaughtException', async (error) => {
   process.exit(1);
 });
 
+// Show help and exit
+if (flags.help) {
+  showHelp();
+  process.exit(0);
+}
+
 // Validate arguments
 if (Number.isNaN(iterations) || iterations <= 0) {
   console.error('❌ Invalid iterations count. Must be a positive number.');
@@ -276,8 +302,20 @@ if (Number.isNaN(delay) || delay < 0) {
   process.exit(1);
 }
 
+// Display configuration
+console.log('🧪 Memory Test');
+console.log(`📋 Mode: ${flags.full ? 'Comprehensive' : 'Basic'} (${iterations} iterations, ${delay}ms delay)`);
+console.log(
+  `⚡ Features: ${
+    [flags.continuous && 'Continuous Mode', flags.saveResults && 'Save Results', flags.full && 'Full Analysis']
+      .filter(Boolean)
+      .join(', ') || 'Basic Test'
+  }`,
+);
+console.log('🛑 Press Ctrl+C to stop\n');
+
 // Run the test
-runMemoryLeakTest().catch(async (error) => {
+runMemoryTest().catch(async (error) => {
   console.error('\n❌ Test failed:', error);
   await saveMemoryHistory();
   await cleanupFiles();

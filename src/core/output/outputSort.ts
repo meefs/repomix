@@ -50,7 +50,7 @@ export const sortOutputFiles = async (
       const countB = fileChangeCounts[b.path] || 0;
       return countA - countB;
     });
-  } catch (error) {
+  } catch {
     // If git command fails, return original order
     return files;
   }
