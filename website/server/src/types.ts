@@ -16,6 +16,12 @@ interface TopFile {
   tokenCount: number;
 }
 
+interface FileInfo {
+  path: string;
+  tokenCount: number;
+  selected?: boolean;
+}
+
 interface PackSummary {
   totalFiles: number;
   totalCharacters: number;
@@ -30,6 +36,7 @@ export interface PackResult {
     timestamp: string;
     summary?: PackSummary;
     topFiles?: TopFile[];
+    allFiles?: FileInfo[];
   };
 }
 

@@ -63,6 +63,7 @@ export async function processRemoteRepo(
     topFilesLen: 10,
     include: sanitizedIncludePatterns,
     ignore: sanitizedIgnorePatterns,
+    tokenCountTree: true, // Required to generate token counts for all files in the repository
     quiet: true, // Enable quiet mode to suppress output
   } as CliOptions;
 
@@ -98,11 +99,18 @@ export async function processRemoteRepo(
         topFiles: Object.entries(packResult.fileCharCounts)
           .map(([path, charCount]) => ({
             path,
-            charCount,
+            charCount: charCount as number,
             tokenCount: packResult.fileTokenCounts[path] || 0,
           }))
-          .sort((a, b) => b.charCount - a.charCount)
+          .sort((a, b) => b.tokenCount - a.tokenCount)
           .slice(0, cliOptions.topFilesLen),
+        allFiles: Object.entries(packResult.fileTokenCounts)
+          .map(([path]) => ({
+            path,
+            tokenCount: packResult.fileTokenCounts[path] || 0,
+            selected: true, // Default to selected for initial packing
+          }))
+          .sort((a, b) => b.tokenCount - a.tokenCount),
       },
     };
 

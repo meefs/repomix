@@ -1,50 +1,91 @@
 <script setup lang="ts">
-import type { PackResult } from '../api/client';
+import { computed, ref } from 'vue';
+import type { TabType } from '../../types/ui';
+import type { FileInfo, PackResult } from '../api/client';
+import TryItFileSelection from './TryItFileSelection.vue';
+import TryItLoading from './TryItLoading.vue';
 import TryItResultContent from './TryItResultContent.vue';
 import TryItResultErrorContent from './TryItResultErrorContent.vue';
 
-defineProps<{
-  result: PackResult | null;
-  loading: boolean;
-  error: string | null;
+interface Props {
+  result?: PackResult | null;
+  loading?: boolean;
+  error?: string | null;
   repositoryUrl?: string;
-}>();
+}
+
+interface Emits {
+  (e: 'repack', selectedFiles: FileInfo[]): void;
+  (e: 'repack-completed'): void;
+}
+
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
+
+// Tab management
+const activeTab = ref<TabType>('result');
+
+const hasFileSelection = computed(() => props.result?.metadata?.allFiles && props.result.metadata.allFiles.length > 0);
+
+const handleTabClick = (tab: TabType) => {
+  activeTab.value = tab;
+};
+
+const handleRepack = (selectedFiles: FileInfo[]) => {
+  // Only proceed if we have selected files
+  if (!selectedFiles || selectedFiles.length === 0) {
+    return;
+  }
+
+  // Switch to result tab immediately when re-pack starts
+  activeTab.value = 'result';
+
+  emit('repack', selectedFiles);
+};
 </script>
 
 <template>
   <div class="result-viewer">
-    <div v-if="loading" class="loading">
-      <div class="spinner"></div>
-      <p>Processing repository...</p>
-
-      <div class="sponsor-section">
-        <p class="sponsor-header">Special thanks to:</p>
-        <a href="https://go.warp.dev/repomix" target="_blank" rel="noopener noreferrer">
-          <img alt="Warp sponsorship" width="400" src="https://raw.githubusercontent.com/warpdotdev/brand-assets/main/Github/Sponsor/Warp-Github-LG-01.png">
-        </a>
-        <p class="sponsor-title">
-          <a href="https://go.warp.dev/repomix" target="_blank" rel="noopener noreferrer">
-            Warp, built for coding with multiple AI agents
-          </a>
-        </p>
-        <p class="sponsor-subtitle">
-          <a href="https://go.warp.dev/repomix" target="_blank" rel="noopener noreferrer">
-            Available for MacOS, Linux, & Windows
-          </a>
-        </p>
-      </div>
-    </div>
-
+    <TryItLoading v-if="loading && !result" />
     <TryItResultErrorContent
       v-else-if="error"
       :message="error"
       :repository-url="repositoryUrl"
     />
+    <div v-else-if="result" class="result-content">
+      <!-- Tab Navigation -->
+      <div v-if="hasFileSelection" class="tab-navigation">
+        <button 
+          type="button"
+          class="tab-button"
+          :class="{ active: activeTab === 'result' }"
+          @click="handleTabClick('result')"
+        >
+          Result
+        </button>
+        <button 
+          type="button"
+          class="tab-button"
+          :class="{ active: activeTab === 'files' }"
+          @click="handleTabClick('files')"
+        >
+          File Selection
+        </button>
+      </div>
 
-    <TryItResultContent
-      v-else-if="result"
-      :result="result"
-    />
+      <!-- Tab Content -->
+      <div v-show="activeTab === 'result' || !hasFileSelection">
+        <TryItResultContent :result="result" />
+      </div>
+      <div v-show="activeTab === 'files' && hasFileSelection">
+        <TryItFileSelection
+          v-if="hasFileSelection"
+          :all-files="result.metadata!.allFiles!"
+          :loading="loading"
+          @repack="handleRepack"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -56,56 +97,39 @@ defineProps<{
   overflow: hidden;
 }
 
-.loading {
-  padding: 36px;
-  text-align: center;
-}
-
-.spinner {
-  width: 40px;
-  height: 40px;
-  margin: 0 auto 16px;
-  border: 3px solid var(--vp-c-brand-1);
-  border-radius: 50%;
-  border-top-color: transparent;
-  animation: spin 1s linear infinite;
-}
-
-.sponsor-section {
-  margin-top: 16px;
+.result-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 
-.sponsor-section p {
-  margin: 8px 0;
+.tab-navigation {
+  display: flex;
+  border-bottom: 1px solid var(--vp-c-border);
+  background: var(--vp-c-bg-soft);
 }
 
-.sponsor-section .sponsor-header {
-  font-size: 0.9em;
+.tab-button {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: var(--vp-c-text-2);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
 }
 
-.sponsor-section img {
-  max-width: 100%;
-  height: auto;
-  margin: 12px 0;
+.tab-button:hover {
+  background: var(--vp-c-bg-alt);
+  color: var(--vp-c-text-1);
 }
 
-.sponsor-section .sponsor-title {
-  font-weight: bold;
-  font-size: 1.1em;
+.tab-button.active {
   color: var(--vp-c-brand-1);
-  text-decoration: underline;
+  border-bottom-color: var(--vp-c-brand-1);
+  background: var(--vp-c-bg);
 }
 
-.sponsor-section .sponsor-subtitle {
-  font-size: 0.9em;
-  color: var(--vp-c-brand-1);
-  text-decoration: underline;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
 </style>

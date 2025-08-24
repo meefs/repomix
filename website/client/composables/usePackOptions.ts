@@ -35,7 +35,8 @@ export function usePackOptions() {
     for (const key of Object.keys(packOptions) as Array<keyof PackOptions>) {
       if (key in urlParams && urlParams[key] !== undefined) {
         // Type-safe assignment: only assign if the key is a valid PackOptions key
-        packOptions[key] = urlParams[key] as PackOptions[typeof key];
+        // @ts-expect-error
+        packOptions[key] = urlParams[key];
       }
     }
   }

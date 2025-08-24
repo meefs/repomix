@@ -16,7 +16,7 @@ export function useZipProcessor() {
           if (err) {
             reject(new Error(`Failed to create ZIP file: ${err.message}`));
           } else {
-            const zipBlob = new Blob([data], { type: 'application/zip' });
+            const zipBlob = new Blob([data as BlobPart], { type: 'application/zip' });
             resolve(new File([zipBlob], `${folderName}.zip`, { type: 'application/zip' }));
           }
         });

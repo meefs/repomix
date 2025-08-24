@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <form class="try-it-container" @submit.prevent="handleSubmit">
+    <form class="try-it-container" @submit.prevent="handleSubmit($event)">
       <div class="input-row">
         <div class="tab-container">
           <button
@@ -93,6 +93,7 @@
           :loading="loading"
           :error="error"
           :repository-url="inputRepositoryUrl"
+          @repack="handleRepack"
         />
       </div>
     </form>
@@ -104,6 +105,7 @@ import { FolderArchive, FolderOpen, Link2, RotateCcw } from 'lucide-vue-next';
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { usePackRequest } from '../../composables/usePackRequest';
 import { hasNonDefaultValues, parseUrlParameters, updateUrlParameters } from '../../utils/urlParams';
+import type { FileInfo } from '../api/client';
 import { isValidRemoteValue } from '../utils/validation';
 import PackButton from './PackButton.vue';
 import TryItFileUpload from './TryItFileUpload.vue';
@@ -137,6 +139,7 @@ const {
   setMode,
   handleFileUpload,
   submitRequest,
+  repackWithSelectedFiles,
   resetOptions,
 } = usePackRequest();
 
@@ -175,7 +178,20 @@ function updateUrlFromCurrentState() {
   updateUrlParameters(urlParamsToUpdate);
 }
 
-async function handleSubmit() {
+async function handleSubmit(event?: SubmitEvent) {
+  // Prevent accidental form submissions from unintended buttons
+  if (event?.submitter && !isSubmitValid.value) {
+    const submitter = event.submitter as HTMLElement;
+    if (!submitter.matches('.pack-button, [type="submit"]')) {
+      return; // Ignore submission from non-pack buttons when form is invalid
+    }
+  }
+
+  // Only proceed if form is valid
+  if (!isSubmitValid.value) {
+    return;
+  }
+
   await submitRequest();
 }
 
@@ -191,6 +207,10 @@ function handleReset() {
 
   // Clear URL parameters
   updateUrlParameters({});
+}
+
+function handleRepack(selectedFiles: FileInfo[]) {
+  repackWithSelectedFiles(selectedFiles);
 }
 
 // Watch for changes in packOptions and inputUrl to update URL in real-time

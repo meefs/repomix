@@ -10,6 +10,13 @@ export interface PackOptions {
   compress?: boolean;
 }
 
+export interface FileInfo {
+  path: string;
+  charCount: number;
+  tokenCount: number;
+  selected?: boolean;
+}
+
 export interface PackRequest {
   url: string;
   format: 'xml' | 'markdown' | 'plain';
@@ -32,7 +39,9 @@ export interface PackResult {
     topFiles: {
       path: string;
       charCount: number;
+      tokenCount: number;
     }[];
+    allFiles?: FileInfo[];
   };
 }
 

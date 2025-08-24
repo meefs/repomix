@@ -16,6 +16,16 @@
     "baseUrl": ".",
     "types": ["vite/client", "vitepress/client"]
   },
-  "include": [".vitepress/**/*.ts", ".vitepress/**/*.d.ts", ".vitepress/**/*.tsx", ".vitepress/**/*.vue"],
+  "include": [
+    ".vitepress/**/*.ts", 
+    ".vitepress/**/*.d.ts", 
+    ".vitepress/**/*.tsx", 
+    ".vitepress/**/*.vue",
+    "components/**/*.ts",
+    "components/**/*.vue",
+    "composables/**/*.ts",
+    "utils/**/*.ts",
+    "constants/**/*.ts"
+  ],
   "exclude": ["node_modules", "dist"]
 }

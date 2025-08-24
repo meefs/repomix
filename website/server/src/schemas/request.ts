@@ -14,7 +14,7 @@ export const packOptionsSchema = z
     directoryStructure: z.boolean().optional(),
     includePatterns: z
       .string()
-      .max(1000, 'Include patterns too long')
+      .max(100_000, 'Include patterns too long')
       .optional()
       .transform((val) => val?.trim()),
     ignorePatterns: z
