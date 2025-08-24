@@ -1,39 +1,19 @@
 import { randomUUID } from 'node:crypto';
 import fs from 'node:fs/promises';
 import { type CliOptions, runCli } from 'repomix';
-import { packRequestSchema } from './schemas/request.js';
-import type { PackOptions, PackResult } from './types.js';
+import type { PackOptions, PackResult } from '../../types.js';
+import { AppError } from '../../utils/errorHandler.js';
+import { logMemoryUsage } from '../../utils/logger.js';
 import { generateCacheKey } from './utils/cache.js';
-import { AppError } from './utils/errorHandler.js';
-import { logMemoryUsage } from './utils/logger.js';
-import { cache, rateLimiter } from './utils/sharedInstance.js';
-import { sanitizePattern, validateRequest } from './utils/validation.js';
+import { cache } from './utils/sharedInstance.js';
 
-export async function processRemoteRepo(
-  repoUrl: string,
-  format: string,
-  options: PackOptions,
-  clientIp: string,
-): Promise<PackResult> {
-  // Validate the request
-  const validatedData = validateRequest(packRequestSchema, {
-    url: repoUrl,
-    format,
-    options,
-  });
-
-  // Rate limit check
-  if (!rateLimiter.isAllowed(clientIp)) {
-    const remainingTime = Math.ceil(rateLimiter.getRemainingTime(clientIp) / 1000);
-    throw new AppError(`Rate limit exceeded. Please try again in ${remainingTime} seconds.`, 429);
-  }
-
-  if (!validatedData.url) {
+export async function processRemoteRepo(repoUrl: string, format: string, options: PackOptions): Promise<PackResult> {
+  if (!repoUrl) {
     throw new AppError('Repository URL is required for remote processing', 400);
   }
 
   // Generate cache key
-  const cacheKey = generateCacheKey(validatedData.url, validatedData.format, validatedData.options, 'url');
+  const cacheKey = generateCacheKey(repoUrl, format, options, 'url');
 
   // Check if the result is already cached
   const cachedResult = await cache.get(cacheKey);
@@ -41,28 +21,24 @@ export async function processRemoteRepo(
     return cachedResult;
   }
 
-  // Sanitize ignore patterns
-  const sanitizedIncludePatterns = sanitizePattern(validatedData.options.includePatterns);
-  const sanitizedIgnorePatterns = sanitizePattern(validatedData.options.ignorePatterns);
-
   const outputFilePath = `repomix-output-${randomUUID()}.txt`;
 
   // Create CLI options with correct mapping
   const cliOptions = {
     remote: repoUrl,
     output: outputFilePath,
-    style: validatedData.format,
-    parsableStyle: validatedData.options.outputParsable,
-    removeComments: validatedData.options.removeComments,
-    removeEmptyLines: validatedData.options.removeEmptyLines,
-    outputShowLineNumbers: validatedData.options.showLineNumbers,
-    fileSummary: validatedData.options.fileSummary,
-    directoryStructure: validatedData.options.directoryStructure,
-    compress: validatedData.options.compress,
+    style: format,
+    parsableStyle: options.outputParsable,
+    removeComments: options.removeComments,
+    removeEmptyLines: options.removeEmptyLines,
+    outputShowLineNumbers: options.showLineNumbers,
+    fileSummary: options.fileSummary,
+    directoryStructure: options.directoryStructure,
+    compress: options.compress,
     securityCheck: false,
     topFilesLen: 10,
-    include: sanitizedIncludePatterns,
-    ignore: sanitizedIgnorePatterns,
+    include: options.includePatterns,
+    ignore: options.ignorePatterns,
     tokenCountTree: true, // Required to generate token counts for all files in the repository
     quiet: true, // Enable quiet mode to suppress output
   } as CliOptions;
@@ -71,7 +47,7 @@ export async function processRemoteRepo(
     // Log memory usage before processing
     logMemoryUsage('Remote repository processing started', {
       repository: repoUrl,
-      format: validatedData.format,
+      format: format,
     });
 
     // Execute remote action

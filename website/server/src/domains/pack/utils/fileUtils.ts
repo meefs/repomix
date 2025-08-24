@@ -2,8 +2,20 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { unzip } from 'fflate';
-import { FILE_SIZE_LIMITS, formatFileSize } from '../constants.js';
-import { AppError } from './errorHandler.js';
+import { AppError } from '../../../utils/errorHandler.js';
+
+// File size limits for pack operations
+export const FILE_SIZE_LIMITS = {
+  MAX_REQUEST_SIZE: 10 * 1024 * 1024, // 10MB
+  MAX_ZIP_SIZE: 10 * 1024 * 1024, // 10MB
+  MAX_UNCOMPRESSED_SIZE: 50 * 1024 * 1024, // 50MB
+  MAX_FILES: 1000, // Maximum number of files in zip
+} as const;
+
+// Helper function to format size for error messages
+export const formatFileSize = (bytes: number): string => {
+  return `${bytes / 1024 / 1024}MB`;
+};
 
 // Enhanced ZIP extraction limits (aligned with processZipFile.ts)
 const ZIP_SECURITY_LIMITS = {

@@ -46,14 +46,14 @@ export function formatMemoryUsage(usage: MemoryUsage): string {
 }
 
 /**
- * Get a simplified memory usage object for logging
+ * Calculate the difference between two memory usage measurements
  */
-export function getMemoryMetrics(): Record<string, number> {
-  const usage = getMemoryUsage();
+export function calculateMemoryDiff(before: MemoryUsage, after: MemoryUsage): MemoryUsage {
   return {
-    heapUsedMB: usage.heapUsed,
-    heapTotalMB: usage.heapTotal,
-    rssMB: usage.rss,
-    heapUsagePercent: usage.heapUsagePercent,
+    heapUsed: Math.round((after.heapUsed - before.heapUsed) * 100) / 100,
+    heapTotal: Math.round((after.heapTotal - before.heapTotal) * 100) / 100,
+    external: Math.round((after.external - before.external) * 100) / 100,
+    rss: Math.round((after.rss - before.rss) * 100) / 100,
+    heapUsagePercent: Math.round((after.heapUsagePercent - before.heapUsagePercent) * 100) / 100,
   };
 }

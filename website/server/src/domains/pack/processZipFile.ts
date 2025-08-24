@@ -3,14 +3,12 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { unzip } from 'fflate';
 import { type CliOptions, runDefaultAction, setLogLevel } from 'repomix';
-import { packRequestSchema } from './schemas/request.js';
-import type { PackOptions, PackResult } from './types.js';
+import type { PackOptions, PackResult } from '../../types.js';
+import { AppError } from '../../utils/errorHandler.js';
+import { logMemoryUsage } from '../../utils/logger.js';
 import { generateCacheKey } from './utils/cache.js';
-import { AppError } from './utils/errorHandler.js';
 import { cleanupTempDirectory, copyOutputToCurrentDirectory, createTempDirectory } from './utils/fileUtils.js';
-import { logMemoryUsage } from './utils/logger.js';
-import { cache, rateLimiter } from './utils/sharedInstance.js';
-import { sanitizePattern, validateRequest } from './utils/validation.js';
+import { cache } from './utils/sharedInstance.js';
 
 // Enhanced ZIP extraction limits
 const ZIP_SECURITY_LIMITS = {
@@ -24,35 +22,12 @@ const ZIP_SECURITY_LIMITS = {
 /**
  * Process an uploaded ZIP file
  */
-export async function processZipFile(
-  file: File,
-  format: string,
-  options: PackOptions,
-  clientIp: string,
-): Promise<PackResult> {
-  // Validate the request (excluding URL validation)
-  const validatedData = validateRequest(packRequestSchema, {
-    file,
-    format,
-    options,
-  });
-
-  // Rate limit check
-  if (!rateLimiter.isAllowed(clientIp)) {
-    const remainingTime = Math.ceil(rateLimiter.getRemainingTime(clientIp) / 1000);
-    throw new AppError(`Rate limit exceeded. Please try again in ${remainingTime} seconds.`, 429);
-  }
-
+export async function processZipFile(file: File, format: string, options: PackOptions): Promise<PackResult> {
   if (!file) {
     throw new AppError('File is required for file processing', 400);
   }
 
-  const cacheKey = generateCacheKey(
-    `${file.name}-${file.size}-${file.lastModified}`,
-    validatedData.format,
-    validatedData.options,
-    'file',
-  );
+  const cacheKey = generateCacheKey(`${file.name}-${file.size}-${file.lastModified}`, format, options, 'file');
 
   // Check if the result is already cached
   const cachedResult = await cache.get(cacheKey);
@@ -60,27 +35,23 @@ export async function processZipFile(
     return cachedResult;
   }
 
-  // Sanitize patterns
-  const sanitizedIncludePatterns = sanitizePattern(validatedData.options.includePatterns);
-  const sanitizedIgnorePatterns = sanitizePattern(validatedData.options.ignorePatterns);
-
   const outputFilePath = `repomix-output-${randomUUID()}.txt`;
 
   // Create CLI options
   const cliOptions = {
     output: outputFilePath,
-    style: validatedData.format,
-    parsableStyle: validatedData.options.outputParsable,
-    removeComments: validatedData.options.removeComments,
-    removeEmptyLines: validatedData.options.removeEmptyLines,
-    outputShowLineNumbers: validatedData.options.showLineNumbers,
-    fileSummary: validatedData.options.fileSummary,
-    directoryStructure: validatedData.options.directoryStructure,
-    compress: validatedData.options.compress,
+    style: format,
+    parsableStyle: options.outputParsable,
+    removeComments: options.removeComments,
+    removeEmptyLines: options.removeEmptyLines,
+    outputShowLineNumbers: options.showLineNumbers,
+    fileSummary: options.fileSummary,
+    directoryStructure: options.directoryStructure,
+    compress: options.compress,
     securityCheck: false,
     topFilesLen: 10,
-    include: sanitizedIncludePatterns,
-    ignore: sanitizedIgnorePatterns,
+    include: options.includePatterns,
+    ignore: options.ignorePatterns,
     quiet: true, // Enable quiet mode to suppress output
   } as CliOptions;
 
@@ -93,7 +64,7 @@ export async function processZipFile(
     logMemoryUsage('ZIP file processing started', {
       fileName: file.name,
       fileSize: file.size,
-      format: validatedData.format,
+      format: format,
     });
 
     // Extract the ZIP file to the temporary directory with enhanced security checks

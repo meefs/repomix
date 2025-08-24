@@ -1,6 +1,6 @@
 import { promisify } from 'node:util';
 import * as zlib from 'node:zlib';
-import type { PackOptions } from '../types.js';
+import type { PackOptions } from '../../../types.js';
 
 const inflateAsync = promisify(zlib.inflate);
 const deflateAsync = promisify(zlib.deflate);
