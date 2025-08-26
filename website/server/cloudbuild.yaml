@@ -38,7 +38,7 @@ steps:
       - '--memory'
       - '1024Mi'
       - '--cpu'
-      - '2'
+      - '1'
       - '--min-instances'
       - '0'
       - '--max-instances'
