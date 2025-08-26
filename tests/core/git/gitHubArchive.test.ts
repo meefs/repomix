@@ -242,9 +242,9 @@ describe('gitHubArchive', () => {
         createWriteStream: mockCreateWriteStream,
       });
 
-      // Should try main branch first, then master branch
+      // Should try HEAD first, then master branch
       expect(mockFetch).toHaveBeenCalledWith(
-        'https://github.com/yamadashy/repomix/archive/refs/heads/main.zip',
+        'https://github.com/yamadashy/repomix/archive/HEAD.zip',
         expect.any(Object),
       );
       expect(mockFetch).toHaveBeenCalledWith(

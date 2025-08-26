@@ -4,20 +4,18 @@ import { formatMemoryUsage, getMemoryUsage } from './memory.js';
 
 // Configure transports based on environment
 function createLogger() {
-  const transports: winston.transport[] = [
-    new winston.transports.Console({
-      format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
-    }),
-  ];
+  const isProduction = process.env.NODE_ENV === 'production';
 
-  // Add Cloud Logging transport only in production
-  if (process.env.NODE_ENV === 'production') {
-    const loggingWinston = new LoggingWinston();
-    transports.push(loggingWinston);
-  }
+  const transports: winston.transport[] = isProduction
+    ? [new LoggingWinston()]
+    : [
+        new winston.transports.Console({
+          format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
+        }),
+      ];
 
   return winston.createLogger({
-    level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+    level: isProduction ? 'info' : 'debug',
     transports,
   });
 }

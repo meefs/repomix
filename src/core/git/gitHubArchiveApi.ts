@@ -12,8 +12,8 @@ export const buildGitHubArchiveUrl = (repoInfo: GitHubRepoInfo): string => {
   const baseUrl = `https://github.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/archive`;
 
   if (!ref) {
-    // Default to main branch - fallback to master will be handled by the caller
-    return `${baseUrl}/refs/heads/main.zip`;
+    // Default to HEAD (repository's default branch)
+    return `${baseUrl}/HEAD.zip`;
   }
 
   // Check if ref looks like a commit SHA (40 hex chars or shorter)
@@ -57,7 +57,7 @@ export const buildGitHubTagArchiveUrl = (repoInfo: GitHubRepoInfo): string | nul
  */
 export const getArchiveFilename = (repoInfo: GitHubRepoInfo): string => {
   const { repo, ref } = repoInfo;
-  const refPart = ref || 'main';
+  const refPart = ref || 'HEAD';
 
   // GitHub uses the last part of the ref for the filename
   const refName = refPart.includes('/') ? refPart.split('/').pop() : refPart;

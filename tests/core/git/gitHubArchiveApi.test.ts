@@ -11,10 +11,10 @@ import { RepomixError } from '../../../src/shared/errorHandle.js';
 
 describe('GitHub Archive API', () => {
   describe('buildGitHubArchiveUrl', () => {
-    test('should build URL for default branch', () => {
+    test('should build URL for default branch (HEAD)', () => {
       const repoInfo = { owner: 'user', repo: 'repo' };
       const url = buildGitHubArchiveUrl(repoInfo);
-      expect(url).toBe('https://github.com/user/repo/archive/refs/heads/main.zip');
+      expect(url).toBe('https://github.com/user/repo/archive/HEAD.zip');
     });
 
     test('should build URL for specific branch', () => {
@@ -71,10 +71,10 @@ describe('GitHub Archive API', () => {
   });
 
   describe('getArchiveFilename', () => {
-    test('should generate filename for default branch', () => {
+    test('should generate filename for default branch (HEAD)', () => {
       const repoInfo = { owner: 'user', repo: 'myrepo' };
       const filename = getArchiveFilename(repoInfo);
-      expect(filename).toBe('myrepo-main.zip');
+      expect(filename).toBe('myrepo-HEAD.zip');
     });
 
     test('should generate filename for specific branch', () => {

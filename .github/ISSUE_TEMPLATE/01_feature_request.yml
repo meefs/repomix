@@ -2,6 +2,7 @@ name: 🚀 Feature Request
 description: Suggest an idea or improvement for Repomix
 labels:
   - enhancement
+  - triage
 body:
   - type: markdown
     attributes:
