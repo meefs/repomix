@@ -67,8 +67,8 @@ steps:
       - '$_REGION-docker.pkg.dev/$PROJECT_ID/repomix/server:latest'
 
 substitutions:
-  _REGION: asia-northeast1
-  _SERVICE_NAME: repomix-server
+  _REGION: us-central1
+  _SERVICE_NAME: repomix-server-us
 
 options:
   logging: CLOUD_LOGGING_ONLY
