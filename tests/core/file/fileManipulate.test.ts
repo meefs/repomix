@@ -733,6 +733,80 @@ describe('fileManipulate', () => {
 `,
     },
     {
+      name: 'Go directives preservation',
+      ext: '.go',
+      input: `//go:build linux
+//go:generate something
+
+package main
+
+import "fmt"
+
+func main() {
+    // Regular comment
+    s1 := "String with // not a comment"
+    s2 := \`raw string with
+    // this is not a comment
+    /* neither is this */\`
+
+    r := '/' // rune literal
+
+    /*
+    Multi-line comment
+    */
+
+    fmt.Println("Hello") // end of line comment
+}`,
+      expected: `//go:build linux
+//go:generate something
+
+package main
+
+import "fmt"
+
+func main() {
+
+    s1 := "String with // not a comment"
+    s2 := \`raw string with
+    // this is not a comment
+    /* neither is this */\`
+
+    r := '/'
+
+
+
+
+
+    fmt.Println("Hello")
+}`,
+    },
+    {
+      name: 'Go mixed directives and comments',
+      ext: '.go',
+      input: `//go:build linux
+// This is a comment, not a directive
+//go:generate stringer -type=Color
+// Another comment
+package main`,
+      expected: `//go:build linux
+
+//go:generate stringer -type=Color
+
+package main`,
+    },
+    {
+      name: 'Go string literals with comments',
+      ext: '.go',
+      input: `s := "This is a string with \\"escaped\\" quotes // not a comment"
+// This is a comment
+r1 := '\\''  // Escaped single quote
+r2 := '\\\\'  // Backslash`,
+      expected: `s := "This is a string with \\"escaped\\" quotes // not a comment"
+
+r1 := '\\''
+r2 := '\\\\'`,
+    },
+    {
       name: 'Kotlin comment removal',
       ext: '.kt',
       input: `

@@ -64,6 +64,137 @@ class CppManipulator extends BaseManipulator {
   }
 }
 
+enum GoParserState {
+  Normal = 0,
+  InLineComment = 1,
+  InBlockComment = 2,
+  InDoubleQuoteString = 3,
+  InRawString = 4,
+  InRuneLiteral = 5,
+}
+
+class GoManipulator extends BaseManipulator {
+  removeComments(content: string): string {
+    if (!content) return '';
+
+    let state: GoParserState = GoParserState.Normal;
+    let result = '';
+    let i = 0;
+    let hasNonWhitespaceOnLine = false; // Track if line has non-whitespace content
+
+    while (i < content.length) {
+      const char = content[i];
+      const nextChar = i + 1 < content.length ? content[i + 1] : null;
+
+      switch (state) {
+        case GoParserState.Normal:
+          if (char === '/' && nextChar === '/') {
+            // Go directive handling
+            if (!hasNonWhitespaceOnLine) {
+              if (content.startsWith('//go:', i)) {
+                // Preserve //go: directives
+                const lineEnd = content.indexOf('\n', i);
+                if (lineEnd === -1) {
+                  result += content.substring(i);
+                  i = content.length;
+                } else {
+                  result += content.substring(i, lineEnd + 1);
+                  i = lineEnd + 1;
+                  hasNonWhitespaceOnLine = false;
+                }
+                continue;
+              }
+            }
+            state = GoParserState.InLineComment;
+            i += 2; // skip '//'
+            continue;
+          }
+          if (char === '/' && nextChar === '*') {
+            state = GoParserState.InBlockComment;
+            i += 2; // skip '/*'
+            continue;
+          }
+          result += char;
+          if (char !== ' ' && char !== '\t' && char !== '\n') {
+            hasNonWhitespaceOnLine = true;
+          }
+          if (char === '"') {
+            state = GoParserState.InDoubleQuoteString;
+          } else if (char === '`') {
+            state = GoParserState.InRawString;
+          } else if (char === "'") {
+            state = GoParserState.InRuneLiteral;
+          }
+          break;
+
+        case GoParserState.InLineComment:
+          // Skip text within line comments until newline
+          if (char === '\n') {
+            result += char;
+            state = GoParserState.Normal;
+            hasNonWhitespaceOnLine = false;
+          }
+          // Skip all other characters
+          break;
+
+        case GoParserState.InBlockComment:
+          // Go block comments do not nest - first */ closes the comment
+          if (char === '*' && nextChar === '/') {
+            state = GoParserState.Normal;
+            i += 2; // skip '*/'
+            continue;
+          }
+          if (char === '\n') {
+            // Preserve newlines in block comments to maintain line structure
+            result += char;
+            hasNonWhitespaceOnLine = false;
+          }
+          // Skip all other characters within block comments
+          break;
+
+        case GoParserState.InDoubleQuoteString:
+          result += char;
+          if (char === '\\' && nextChar !== null) {
+            // Handle escape sequences
+            result += nextChar;
+            i += 2;
+            continue;
+          }
+          if (char === '"') {
+            state = GoParserState.Normal;
+          }
+          break;
+
+        case GoParserState.InRawString:
+          result += char;
+          if (char === '`') {
+            state = GoParserState.Normal;
+          }
+          break;
+
+        case GoParserState.InRuneLiteral:
+          result += char;
+          if (char === '\\' && nextChar !== null) {
+            // Handle escape sequences
+            result += nextChar;
+            i += 2;
+            continue;
+          }
+          if (char === "'") {
+            state = GoParserState.Normal;
+          }
+          break;
+      }
+
+      if (char === '\n') {
+        hasNonWhitespaceOnLine = false;
+      }
+      i++;
+    }
+    return rtrimLines(result);
+  }
+}
+
 class PythonManipulator extends BaseManipulator {
   removeDocStrings(content: string): string {
     if (!content) return '';
@@ -197,7 +328,7 @@ const manipulators: Record<string, FileManipulator> = {
   '.cs': new StripCommentsManipulator('csharp'),
   '.css': new StripCommentsManipulator('css'),
   '.dart': new StripCommentsManipulator('c'),
-  '.go': new StripCommentsManipulator('c'),
+  '.go': new GoManipulator(),
   '.html': new StripCommentsManipulator('html'),
   '.java': new StripCommentsManipulator('java'),
   '.js': new StripCommentsManipulator('javascript'),

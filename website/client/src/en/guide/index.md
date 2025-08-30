@@ -12,7 +12,8 @@ Repomix is a tool that packs your entire repository into a single, AI-friendly f
 
 <HomeBadges />
 
-[![Sponsors](https://cdn.jsdelivr.net/gh/yamadashy/sponsor-list/sponsors/sponsors.png)](https://github.com/sponsors/yamadashy)
+<br>
+<!--@include: ../../shared/sponsors-section.md-->
 
 ## Quick Start
 

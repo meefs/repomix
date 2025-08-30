@@ -12,7 +12,8 @@ Repomix es una herramienta que empaqueta todo tu repositorio en un solo archivo 
 
 <HomeBadges />
 
-[![Sponsors](https://cdn.jsdelivr.net/gh/yamadashy/sponsor-list/sponsors/sponsors.png)](https://github.com/sponsors/yamadashy)
+<br>
+<!--@include: ../../shared/sponsors-section.md-->
 
 ## Inicio rápido
 

@@ -31,15 +31,14 @@ import { VIDEO_IDS } from '../../utils/videos'
 
 <div class="cli-section">
 
-[![Sponsors](https://cdn.jsdelivr.net/gh/yamadashy/sponsor-list/sponsors/sponsors.png)](https://github.com/sponsors/yamadashy)
+<br>
+<!--@include: ../shared/sponsors-section.md-->
 
 ## 🏆 Nominasi Open Source Awards
 
 Kami merasa terhormat! Repomix telah dinominasikan untuk kategori **Powered by AI** di [JSNation Open Source Awards 2025](https://osawards.com/javascript/).
 
 Ini tidak mungkin terjadi tanpa semua pengguna yang menggunakan dan mendukung Repomix. Terima kasih!
-
-Jika Repomix telah membantu Anda menganalisis atau mengemas basis kode untuk alat AI, kami akan sangat berterima kasih atas suara Anda dalam kategori **Powered by AI**.
 
 ## Apa itu Repomix?
 

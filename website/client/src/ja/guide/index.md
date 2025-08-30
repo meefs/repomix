@@ -12,7 +12,8 @@ Repomixは、リポジトリ全体をAIフレンドリーな単一ファイル�
 
 <HomeBadges />
 
-[![Sponsors](https://cdn.jsdelivr.net/gh/yamadashy/sponsor-list/sponsors/sponsors.png)](https://github.com/sponsors/yamadashy)
+<br>
+<!--@include: ../../shared/sponsors-section.md-->
 
 ## クイックスタート
 

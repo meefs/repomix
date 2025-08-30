@@ -12,7 +12,8 @@ Repomix adalah alat yang mengemas seluruh repositori Anda menjadi satu file yang
 
 <HomeBadges />
 
-[![Sponsors](https://cdn.jsdelivr.net/gh/yamadashy/sponsor-list/sponsors/sponsors.png)](https://github.com/sponsors/yamadashy)
+<br>
+<!--@include: ../../shared/sponsors-section.md-->
 
 ## Mulai Cepat
 

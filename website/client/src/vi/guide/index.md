@@ -12,7 +12,8 @@ Repomix là một công cụ đóng gói toàn bộ kho lưu trữ của bạn t
 
 <HomeBadges />
 
-[![Sponsors](https://cdn.jsdelivr.net/gh/yamadashy/sponsor-list/sponsors/sponsors.png)](https://github.com/sponsors/yamadashy)
+<br>
+<!--@include: ../../shared/sponsors-section.md-->
 
 ## Bắt đầu nhanh
 

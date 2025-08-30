@@ -9,7 +9,16 @@
 ### [Warp, built for coding with multiple AI agents](https://go.warp.dev/repomix)
 [Available for MacOS, Linux, & Windows](https://go.warp.dev/repomix)<br>
 
+   <br>
+
+   <a href="https://tuple.app/repomix">
+      <img alt="Tuple sponsorship" width="400" src="website/client/src/public/images/sponsors/tuple/github_repo_sponsorship.png">
+   </a>
+
+### [Tuple, the premier screen sharing app for developers on macOS and Windows.](https://tuple.app/repomix)
+
 </div>
+
 
 <hr />
 
@@ -60,8 +69,6 @@ Please consider sponsoring me.
 We're honored! Repomix has been nominated for the **Powered by AI** category at the [JSNation Open Source Awards 2025](https://osawards.com/javascript/).
 
 This wouldn't have been possible without all of you using and supporting Repomix. Thank you!
-
-If Repomix has helped you analyze or pack codebases for AI tools, we'd be grateful for your vote in the **Powered by AI** category.
 
 ## 🎉 New: Repomix Website & Discord Community!
 

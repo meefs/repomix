@@ -12,7 +12,8 @@ Repomix 是一个将代码库打包成单个 AI 友好文件的工具。它专�
 
 <HomeBadges />
 
-[![Sponsors](https://cdn.jsdelivr.net/gh/yamadashy/sponsor-list/sponsors/sponsors.png)](https://github.com/sponsors/yamadashy)
+<br>
+<!--@include: ../../shared/sponsors-section.md-->
 
 ## 快速开始
 

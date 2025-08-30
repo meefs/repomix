@@ -23,18 +23,7 @@ Ihr Sponsoring hilft uns dabei:
 
 ## Aktuelle Sponsoren
 
-<div align="center">
-   <sup>Besonderen Dank an:</sup>
-
-   <a href="https://go.warp.dev/repomix" target="_blank">
-      <img alt="Warp sponsorship" width="400" src="https://raw.githubusercontent.com/warpdotdev/brand-assets/main/Github/Sponsor/Warp-Github-LG-01.png">
-   </a>
-
-  [Warp, entwickelt für das Programmieren mit mehreren KI-Agenten](https://go.warp.dev/repomix)  
-  [Verfügbar für MacOS, Linux und Windows](https://go.warp.dev/repomix)
-</div>
-
-[![Sponsors](https://cdn.jsdelivr.net/gh/yamadashy/sponsor-list/sponsors/sponsors.png)](https://github.com/sponsors/yamadashy)
+<!--@include: ../../shared/sponsors-section.md-->
 
 ---
 

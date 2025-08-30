@@ -23,18 +23,7 @@ Repomix를 지원해주시는 모든 훌륭한 개인과 조직에게 감사드�
 
 ## 현재 후원자
 
-<div align="center">
-   <sup>특별히 감사드립니다:</sup>
-
-   <a href="https://go.warp.dev/repomix" target="_blank">
-      <img alt="Warp sponsorship" width="400" src="https://raw.githubusercontent.com/warpdotdev/brand-assets/main/Github/Sponsor/Warp-Github-LG-01.png">
-   </a>
-
-  [Warp, 여러 AI 에이전트와 함께 코딩하기 위해 제작됨](https://go.warp.dev/repomix)  
-  [MacOS, Linux, Windows에서 사용 가능](https://go.warp.dev/repomix)
-</div>
-
-[![Sponsors](https://cdn.jsdelivr.net/gh/yamadashy/sponsor-list/sponsors/sponsors.png)](https://github.com/sponsors/yamadashy)
+<!--@include: ../../shared/sponsors-section.md-->
 
 ---
 

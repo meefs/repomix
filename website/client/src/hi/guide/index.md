@@ -12,7 +12,8 @@ Repomix एक ऐसा टूल है जो आपके पूरे र�
 
 <HomeBadges />
 
-[![Sponsors](https://cdn.jsdelivr.net/gh/yamadashy/sponsor-list/sponsors/sponsors.png)](https://github.com/sponsors/yamadashy)
+<br>
+<!--@include: ../../shared/sponsors-section.md-->
 
 ## त्वरित शुरुआत
 

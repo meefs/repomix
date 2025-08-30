@@ -12,7 +12,8 @@ Repomix는 전체 저장소를 AI 친화적인 단일 파일로 패키징하는 
 
 <HomeBadges />
 
-[![Sponsors](https://cdn.jsdelivr.net/gh/yamadashy/sponsor-list/sponsors/sponsors.png)](https://github.com/sponsors/yamadashy)
+<br>
+<!--@include: ../../shared/sponsors-section.md-->
 
 ## 빠른 시작
 

@@ -23,18 +23,7 @@ editLink: false
 
 ## 目前贊助商
 
-<div align="center">
-   <sup>特別感謝：</sup>
-
-   <a href="https://go.warp.dev/repomix" target="_blank">
-      <img alt="Warp sponsorship" width="400" src="https://raw.githubusercontent.com/warpdotdev/brand-assets/main/Github/Sponsor/Warp-Github-LG-01.png">
-   </a>
-
-  [Warp，專為多個AI代理編程而構建](https://go.warp.dev/repomix)  
-  [支援 MacOS、Linux 和 Windows](https://go.warp.dev/repomix)
-</div>
-
-[![Sponsors](https://cdn.jsdelivr.net/gh/yamadashy/sponsor-list/sponsors/sponsors.png)](https://github.com/sponsors/yamadashy)
+<!--@include: ../../shared/sponsors-section.md-->
 
 ---
 
