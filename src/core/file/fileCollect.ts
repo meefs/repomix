@@ -23,10 +23,12 @@ export const collectFiles = async (
     initTaskRunner,
   },
 ): Promise<FileCollectResults> => {
-  const taskRunner = deps.initTaskRunner<FileCollectTask, FileCollectResult>(
-    filePaths.length,
-    new URL('./workers/fileCollectWorker.js', import.meta.url).href,
-  );
+  const taskRunner = deps.initTaskRunner<FileCollectTask, FileCollectResult>({
+    numOfTasks: filePaths.length,
+    workerPath: new URL('./workers/fileCollectWorker.js', import.meta.url).href,
+    // Use worker_threads for file collection - low memory leak risk
+    runtime: 'worker_threads',
+  });
   const tasks = filePaths.map(
     (filePath) =>
       ({

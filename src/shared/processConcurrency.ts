@@ -1,6 +1,14 @@
 import os from 'node:os';
-import { Tinypool } from 'tinypool';
+import { type Options, Tinypool } from 'tinypool';
 import { logger } from './logger.js';
+
+export type WorkerRuntime = NonNullable<Options['runtime']>;
+
+export interface WorkerOptions {
+  numOfTasks: number;
+  workerPath: string;
+  runtime?: WorkerRuntime;
+}
 
 // Worker initialization is expensive, so we prefer fewer threads unless there are many files
 const TASKS_PER_THREAD = 100;
@@ -23,19 +31,19 @@ export const getWorkerThreadCount = (numOfTasks: number): { minThreads: number; 
   };
 };
 
-export const createWorkerPool = (numOfTasks: number, workerPath: string): Tinypool => {
+export const createWorkerPool = (options: WorkerOptions): Tinypool => {
+  const { numOfTasks, workerPath, runtime = 'child_process' } = options;
   const { minThreads, maxThreads } = getWorkerThreadCount(numOfTasks);
 
   logger.trace(
-    `Initializing worker pool with min=${minThreads}, max=${maxThreads} threads. Worker path: ${workerPath}`,
+    `Initializing worker pool with min=${minThreads}, max=${maxThreads} threads, runtime=${runtime}. Worker path: ${workerPath}`,
   );
 
   const startTime = process.hrtime.bigint();
 
   const pool = new Tinypool({
     filename: workerPath,
-    // Use child_process for better memory management
-    runtime: 'child_process',
+    runtime,
     minThreads,
     maxThreads,
     idleTimeout: 5000,
@@ -78,8 +86,8 @@ export interface TaskRunner<T, R> {
   cleanup: () => Promise<void>;
 }
 
-export const initTaskRunner = <T, R>(numOfTasks: number, workerPath: string): TaskRunner<T, R> => {
-  const pool = createWorkerPool(numOfTasks, workerPath);
+export const initTaskRunner = <T, R>(options: WorkerOptions): TaskRunner<T, R> => {
+  const pool = createWorkerPool(options);
   return {
     run: (task: T) => pool.run(task),
     cleanup: () => cleanupWorkerPool(pool),

@@ -23,10 +23,10 @@ export const calculateGitDiffMetrics = async (
     return 0;
   }
 
-  const taskRunner = deps.initTaskRunner<GitDiffMetricsTask, number>(
-    1, // Single task for git diff calculation
-    new URL('./workers/gitDiffMetricsWorker.js', import.meta.url).href,
-  );
+  const taskRunner = deps.initTaskRunner<GitDiffMetricsTask, number>({
+    numOfTasks: 1, // Single task for git diff calculation
+    workerPath: new URL('./workers/gitDiffMetricsWorker.js', import.meta.url).href,
+  });
 
   try {
     const startTime = process.hrtime.bigint();

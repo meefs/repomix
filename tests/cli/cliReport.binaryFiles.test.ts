@@ -1,4 +1,3 @@
-import path from 'node:path';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { reportSkippedFiles } from '../../src/cli/cliReport.js';
 import type { SkippedFileInfo } from '../../src/core/file/fileCollect.js';
@@ -30,7 +29,7 @@ describe('reportSkippedFiles', () => {
 
     expect(logger.log).toHaveBeenCalledWith(expect.stringContaining('📄 Binary Files Detected:'));
     expect(logger.log).toHaveBeenCalledWith(expect.stringContaining('1 file detected as binary'));
-    expect(logger.log).toHaveBeenCalledWith(expect.stringContaining(path.join('dir', 'malformed.txt')));
+    expect(logger.log).toHaveBeenCalledWith(expect.stringContaining('/root/dir/malformed.txt'));
   });
 
   test('should report multiple binary-content files', () => {
@@ -44,16 +43,16 @@ describe('reportSkippedFiles', () => {
 
     expect(logger.log).toHaveBeenCalledWith(expect.stringContaining('📄 Binary Files Detected:'));
     expect(logger.log).toHaveBeenCalledWith(expect.stringContaining('2 files detected as binary'));
-    expect(logger.log).toHaveBeenCalledWith(expect.stringContaining('file1.txt'));
-    expect(logger.log).toHaveBeenCalledWith(expect.stringContaining(path.join('dir', 'file2.md')));
+    expect(logger.log).toHaveBeenCalledWith(expect.stringContaining('/root/file1.txt'));
+    expect(logger.log).toHaveBeenCalledWith(expect.stringContaining('/root/dir/file2.md'));
   });
 
-  test('should show relative paths correctly', () => {
+  test('should show full paths correctly', () => {
     const skippedFiles: SkippedFileInfo[] = [{ path: '/root/src/components/app.tsx', reason: 'binary-content' }];
 
     reportSkippedFiles('/root', skippedFiles);
 
-    expect(logger.log).toHaveBeenCalledWith(expect.stringContaining(path.join('src', 'components', 'app.tsx')));
+    expect(logger.log).toHaveBeenCalledWith(expect.stringContaining('/root/src/components/app.tsx'));
   });
 
   test('should show warning messages about excluded files', () => {

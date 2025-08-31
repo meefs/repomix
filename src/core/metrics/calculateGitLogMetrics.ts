@@ -28,10 +28,10 @@ export const calculateGitLogMetrics = async (
     };
   }
 
-  const taskRunner = deps.initTaskRunner<GitLogMetricsTask, number>(
-    1, // Single task for git log calculation
-    new URL('./workers/gitLogMetricsWorker.js', import.meta.url).href,
-  );
+  const taskRunner = deps.initTaskRunner<GitLogMetricsTask, number>({
+    numOfTasks: 1, // Single task for git log calculation
+    workerPath: new URL('./workers/gitLogMetricsWorker.js', import.meta.url).href,
+  });
 
   try {
     const startTime = process.hrtime.bigint();

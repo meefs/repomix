@@ -55,10 +55,10 @@ export const runSecurityCheck = async (
     }
   }
 
-  const taskRunner = deps.initTaskRunner<SecurityCheckTask, SuspiciousFileResult | null>(
-    rawFiles.length + gitDiffTasks.length + gitLogTasks.length,
-    new URL('./workers/securityCheckWorker.js', import.meta.url).href,
-  );
+  const taskRunner = deps.initTaskRunner<SecurityCheckTask, SuspiciousFileResult | null>({
+    numOfTasks: rawFiles.length + gitDiffTasks.length + gitLogTasks.length,
+    workerPath: new URL('./workers/securityCheckWorker.js', import.meta.url).href,
+  });
   const fileTasks = rawFiles.map(
     (file) =>
       ({

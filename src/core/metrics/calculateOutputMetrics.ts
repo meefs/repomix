@@ -16,10 +16,10 @@ export const calculateOutputMetrics = async (
 ): Promise<number> => {
   const shouldRunInParallel = content.length > MIN_CONTENT_LENGTH_FOR_PARALLEL;
   const numOfTasks = shouldRunInParallel ? CHUNK_SIZE : 1;
-  const taskRunner = deps.initTaskRunner<OutputMetricsTask, number>(
+  const taskRunner = deps.initTaskRunner<OutputMetricsTask, number>({
     numOfTasks,
-    new URL('./workers/outputMetricsWorker.js', import.meta.url).href,
-  );
+    workerPath: new URL('./workers/outputMetricsWorker.js', import.meta.url).href,
+  });
 
   try {
     logger.trace(`Starting output token count for ${path || 'output'}`);

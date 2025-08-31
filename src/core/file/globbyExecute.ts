@@ -13,10 +13,10 @@ export const executeGlobbyInWorker = async (
     initTaskRunner,
   },
 ): Promise<string[]> => {
-  const taskRunner = deps.initTaskRunner<GlobbyTask, string[]>(
-    1,
-    new URL('./workers/globbyWorker.js', import.meta.url).href,
-  );
+  const taskRunner = deps.initTaskRunner<GlobbyTask, string[]>({
+    numOfTasks: 1,
+    workerPath: new URL('./workers/globbyWorker.js', import.meta.url).href,
+  });
 
   try {
     logger.trace('Starting globby in worker for memory isolation');

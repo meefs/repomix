@@ -26,7 +26,7 @@ const flags = {
 
 // Extract numeric arguments
 const numericArgs = args.filter((arg) => !arg.startsWith('-') && !Number.isNaN(Number(arg)));
-const iterations = Number(numericArgs[0]) || (flags.full ? 200 : 50);
+const iterations = Number(numericArgs[0]) || (flags.full ? 200 : 100);
 const delay = Number(numericArgs[1]) || (flags.full ? 100 : 50);
 
 // Configuration
