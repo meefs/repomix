@@ -49,3 +49,8 @@ export default async ({ filePath, rootDir, maxFileSize }: FileCollectTask): Prom
     `File processing for ${filePath} resulted in an unexpected state: content is null but no skip reason was provided.`,
   );
 };
+
+// Export cleanup function for Tinypool teardown (no cleanup needed for this worker)
+export const onWorkerTermination = () => {
+  // No cleanup needed for file collection worker
+};

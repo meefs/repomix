@@ -87,6 +87,21 @@ const getLanguageParserSingleton = async () => {
   }
   return languageParserSingleton;
 };
+/**
+ * Clean up the language parser singleton by deleting all loaded parsers
+ */
+export const cleanupLanguageParser = async (): Promise<void> => {
+  if (languageParserSingleton) {
+    try {
+      await languageParserSingleton.dispose();
+      logger.debug('Language parser singleton deleted');
+    } catch (err) {
+      logger.debug('Language parser dispose threw', err);
+    } finally {
+      languageParserSingleton = null;
+    }
+  }
+};
 
 const filterDuplicatedChunks = (chunks: CapturedChunk[]): CapturedChunk[] => {
   // Group chunks by their start row

@@ -24,6 +24,8 @@ export const processFiles = async (
   const taskRunner = deps.initTaskRunner<FileProcessTask, ProcessedFile>({
     numOfTasks: rawFiles.length,
     workerPath: new URL('./workers/fileProcessWorker.js', import.meta.url).href,
+    // High memory usage and leak risk
+    runtime: 'child_process',
   });
   const tasks = rawFiles.map(
     (rawFile, _index) =>

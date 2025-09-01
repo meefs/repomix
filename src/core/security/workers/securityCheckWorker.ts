@@ -83,3 +83,8 @@ export const createSecretLintConfig = (): SecretLintCoreConfig => ({
     },
   ],
 });
+
+// Export cleanup function for Tinypool teardown (no cleanup needed for this worker)
+export const onWorkerTermination = () => {
+  // No cleanup needed for security check worker
+};

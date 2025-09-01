@@ -7,6 +7,7 @@ dist/
 # Test outputs
 memory-test-output.txt
 test-output-*.txt
+test-output.txt
 
 # Test results
 memory-history-*.json

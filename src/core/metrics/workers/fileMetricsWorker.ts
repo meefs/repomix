@@ -37,7 +37,7 @@ export const calculateIndividualFileMetrics = async (
   return { path: file.path, charCount, tokenCount };
 };
 
-// Cleanup when worker is terminated
-process.on('exit', () => {
+// Export cleanup function for Tinypool teardown
+export const onWorkerTermination = () => {
   freeTokenCounters();
-});
+};

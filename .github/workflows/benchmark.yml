@@ -23,7 +23,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        working-directory: benchmarks/memory
+        working-directory: scripts/memory
     steps:
       - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # ratchet:actions/checkout@v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # ratchet:actions/setup-node@v4
@@ -32,26 +32,26 @@ jobs:
           cache: npm
           cache-dependency-path: |
             package-lock.json
-            benchmarks/memory/package-lock.json
-      
+            scripts/memory/package-lock.json
+
       # Install root dependencies (for repomix)
       - name: Install root dependencies
         working-directory: .
         run: npm ci
-      
+
       # Build repomix
       - name: Build repomix
         working-directory: .
         run: npm run build
-      
+
       # Install benchmark dependencies
       - name: Install benchmark dependencies
         run: npm ci
-      
+
       # Build benchmark
       - name: Build benchmark
         run: npm run build
-      
+
       # Run memory test
       - name: Run memory test
         run: |
@@ -60,14 +60,14 @@ jobs:
           node --expose-gc dist/memory-test.js $ITERATIONS $DELAY
         env:
           CI: true
-      
+
       # Upload memory test results if available
       - name: Upload memory test results
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # ratchet:actions/upload-artifact@v4
         if: always()
         with:
           name: memory-test-results-${{ github.run_id }}
-          path: benchmarks/memory/memory-test-results-*.json
+          path: scripts/memory/memory-test-results-*.json
           retention-days: 30
 
   memory-test-full:
@@ -78,7 +78,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
     defaults:
       run:
-        working-directory: benchmarks/memory
+        working-directory: scripts/memory
     steps:
       - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # ratchet:actions/checkout@v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # ratchet:actions/setup-node@v4
@@ -87,37 +87,37 @@ jobs:
           cache: npm
           cache-dependency-path: |
             package-lock.json
-            benchmarks/memory/package-lock.json
-      
+            scripts/memory/package-lock.json
+
       # Install root dependencies (for repomix)
       - name: Install root dependencies
         working-directory: .
         run: npm ci
-      
+
       # Build repomix
       - name: Build repomix
         working-directory: .
         run: npm run build
-      
+
       # Install benchmark dependencies
       - name: Install benchmark dependencies
         run: npm ci
-      
+
       # Build benchmark
       - name: Build benchmark
         run: npm run build
-      
+
       # Run comprehensive memory test
       - name: Run comprehensive memory test
         run: node --expose-gc dist/memory-test.js --full --save
         env:
           CI: true
-      
+
       # Upload detailed memory test results
       - name: Upload detailed memory test results
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # ratchet:actions/upload-artifact@v4
         if: always()
         with:
           name: memory-test-results-full-${{ github.run_id }}
-          path: benchmarks/memory/memory-test-results-*.json
+          path: scripts/memory/memory-test-results-*.json
           retention-days: 90

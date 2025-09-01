@@ -2,12 +2,14 @@ import * as path from 'node:path';
 import Parser from 'web-tree-sitter';
 
 import { RepomixError } from '../../shared/errorHandle.js';
+import { logger } from '../../shared/logger.js';
 import { ext2Lang } from './ext2Lang.js';
 import { type SupportedLang, lang2Query } from './lang2Query.js';
 import { loadLanguage } from './loadLanguage.js';
 import { type ParseStrategy, createParseStrategy } from './parseStrategies/ParseStrategy.js';
 
 interface LanguageResources {
+  lang: SupportedLang;
   parser: Parser;
   query: Parser.Query;
   strategy: ParseStrategy;
@@ -30,6 +32,7 @@ export class LanguageParser {
       const strategy = createParseStrategy(name);
 
       const resources: LanguageResources = {
+        lang: name,
         parser,
         query,
         strategy,
@@ -95,6 +98,7 @@ export class LanguageParser {
   public async dispose(): Promise<void> {
     for (const resources of this.loadedResources.values()) {
       resources.parser.delete();
+      logger.debug(`Deleted parser for language: ${resources.lang}`);
     }
     this.loadedResources.clear();
     this.initialized = false;

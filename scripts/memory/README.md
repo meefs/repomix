@@ -5,7 +5,7 @@ Memory usage monitoring tools for repomix.
 ## Setup
 
 ```bash
-cd benchmarks/memory
+cd scripts/memory
 npm install
 ```
 

@@ -25,7 +25,7 @@ export default async ({ content, encoding, path }: OutputMetricsTask): Promise<n
   return tokenCount;
 };
 
-// Cleanup when worker is terminated
-process.on('exit', () => {
+// Export cleanup function for Tinypool teardown
+export const onWorkerTermination = () => {
   freeTokenCounters();
-});
+};

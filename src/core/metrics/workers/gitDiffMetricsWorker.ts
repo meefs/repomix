@@ -36,7 +36,7 @@ export default async ({ workTreeDiffContent, stagedDiffContent, encoding }: GitD
   return totalTokens;
 };
 
-// Cleanup when worker is terminated
-process.on('exit', () => {
+// Export cleanup function for Tinypool teardown
+export const onWorkerTermination = () => {
   freeTokenCounters();
-});
+};

@@ -26,7 +26,6 @@ export interface TestConfig {
     include?: string;
     ignore?: string;
     output: string;
-    style: 'plain' | 'xml' | 'markdown';
     compress?: boolean;
     quiet: boolean;
   };

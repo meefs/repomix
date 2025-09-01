@@ -9,6 +9,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import * as asciichart from 'asciichart';
 import { runCli } from 'repomix';
 import type { MemoryHistory, MemoryTestSummary, MemoryUsage, TestConfig } from './types.js';
 
@@ -29,10 +30,15 @@ const numericArgs = args.filter((arg) => !arg.startsWith('-') && !Number.isNaN(N
 const iterations = Number(numericArgs[0]) || (flags.full ? 200 : 100);
 const delay = Number(numericArgs[1]) || (flags.full ? 100 : 50);
 
-// Configuration
+// Configuration constants
 const MEMORY_LOG_INTERVAL = flags.full ? 10 : 5;
-const FORCE_GC_INTERVAL = flags.full ? 20 : 10;
+const FORCE_GC_INTERVAL = flags.full ? 50 : 20;
 const WARNING_THRESHOLD = flags.full ? 50 : 100; // Memory growth percentage
+
+// Graph display constants
+const MIN_POINTS_FOR_GRAPH = 5;
+const GRAPH_DATA_POINTS = 40;
+const GRAPH_HEIGHT = 8;
 
 // Test configuration
 const TEST_CONFIG: TestConfig = {
@@ -42,7 +48,7 @@ const TEST_CONFIG: TestConfig = {
   options: {
     include: 'src/**/*.ts',
     output: path.join(__dirname, '../test-output.txt'),
-    style: 'plain',
+    compress: true,
     quiet: true,
   },
 };
@@ -92,9 +98,7 @@ function getMemoryUsage(): MemoryUsage {
 function forceGC(): void {
   if (global.gc) {
     global.gc();
-    if (flags.full) {
-      console.log('🗑️  Forced garbage collection');
-    }
+    console.log('🗑️  Forced garbage collection');
   }
 }
 
@@ -113,10 +117,18 @@ function logMemoryUsage(iteration: number, configName: string, error: Error | nu
   const statusIcon = error ? '❌' : '✅';
   const errorText = error ? ` (ERROR: ${error.message})` : '';
 
+  // Format with fixed widths for alignment
+  const iterationStr = `Iteration ${iteration.toString().padStart(3)}`;
+  const configStr = configName.padEnd(12);
+  const heapStr = `${usage.heapUsed.toString().padStart(6)}MB`;
+  const heapTotalStr = `${usage.heapTotal.toString().padStart(6)}MB`;
+  const heapPercentStr = `(${usage.heapUsagePercent.toString().padStart(5)}%)`;
+  const rssStr = `${usage.rss.toString().padStart(6)}MB`;
+
   console.log(
-    `${statusIcon} Iteration ${iteration}: ${configName} - ` +
-      `Heap: ${usage.heapUsed}MB/${usage.heapTotal}MB (${usage.heapUsagePercent}%), ` +
-      `RSS: ${usage.rss}MB${errorText}`,
+    `${statusIcon} ${iterationStr}: ${configStr} - ` +
+      `Heap: ${heapStr}/${heapTotalStr} ${heapPercentStr}, ` +
+      `RSS: ${rssStr}${errorText}`,
   );
 }
 
@@ -128,6 +140,33 @@ async function cleanupFiles(): Promise<void> {
       console.warn(`Failed to cleanup ${TEST_CONFIG.options.output}:`, error.message);
     }
   }
+}
+
+function displayMemoryGraphs(history: MemoryHistory[]): void {
+  if (history.length < MIN_POINTS_FOR_GRAPH) return;
+
+  const recentHistory = history.slice(-GRAPH_DATA_POINTS);
+
+  const heapData = recentHistory.map((entry) => entry.heapUsed);
+  const rssData = recentHistory.map((entry) => entry.rss);
+
+  console.log('\n📈 Memory Usage Graphs:');
+
+  console.log('\n🔸 Heap Usage (MB):');
+  console.log(
+    asciichart.plot(heapData, {
+      height: GRAPH_HEIGHT,
+      format: (x: number) => x.toFixed(1),
+    }),
+  );
+
+  console.log('\n🔹 RSS Usage (MB):');
+  console.log(
+    asciichart.plot(rssData, {
+      height: GRAPH_HEIGHT,
+      format: (x: number) => x.toFixed(1),
+    }),
+  );
 }
 
 function analyzeMemoryTrends(): void {
@@ -153,6 +192,9 @@ function analyzeMemoryTrends(): void {
   if (heapGrowth > WARNING_THRESHOLD || rssGrowth > WARNING_THRESHOLD) {
     console.log('⚠️  WARNING: Significant memory growth detected - possible memory leak!');
   }
+
+  // Show graphs
+  displayMemoryGraphs(memoryHistory);
 }
 
 async function saveMemoryHistory(): Promise<void> {
@@ -263,6 +305,12 @@ async function runMemoryTest(): Promise<void> {
     }
   }
 
+  // Show final graph
+  if (memoryHistory.length >= MIN_POINTS_FOR_GRAPH) {
+    console.log('\n📈 Complete Memory Usage Timeline:');
+    displayMemoryGraphs(memoryHistory);
+  }
+
   // Save results if requested
   await saveMemoryHistory();
 
@@ -307,7 +355,12 @@ console.log('🧪 Memory Test');
 console.log(`📋 Mode: ${flags.full ? 'Comprehensive' : 'Basic'} (${iterations} iterations, ${delay}ms delay)`);
 console.log(
   `⚡ Features: ${
-    [flags.continuous && 'Continuous Mode', flags.saveResults && 'Save Results', flags.full && 'Full Analysis']
+    [
+      flags.continuous && 'Continuous Mode',
+      flags.saveResults && 'Save Results',
+      flags.full && 'Full Analysis',
+      'Graph Display',
+    ]
       .filter(Boolean)
       .join(', ') || 'Basic Test'
   }`,
