@@ -16,5 +16,6 @@
   ],
   "ignoreDeps": [
     "node",
-  ]
+  ],
+  "minimumReleaseAge": "7 days"
 }
