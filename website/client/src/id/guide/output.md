@@ -56,9 +56,14 @@ src/core/output/outputGenerate.ts
 </git_logs>
 ```
 
-::: tip Mengapa XML?
-Tag XML membantu model AI seperti Claude mem-parsing konten dengan lebih akurat. [Dokumentasi Claude](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags) merekomendasikan penggunaan tag XML untuk prompt terstruktur.
-:::
+### Mengapa XML sebagai Format Default?
+
+Repomix menggunakan XML sebagai format output default berdasarkan penelitian dan pengujian yang ekstensif. Keputusan ini didasarkan pada bukti empiris dan pertimbangan praktis untuk analisis kode yang dibantu AI.
+
+Pilihan kami terhadap XML terutama dipengaruhi oleh rekomendasi resmi dari penyedia AI utama:
+- **Anthropic (Claude)**: Secara eksplisit merekomendasikan penggunaan tag XML untuk menyusun prompt, menyatakan bahwa "Claude terekspos pada prompt semacam itu selama pelatihan" ([dokumentasi](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags))
+- **Google (Gemini)**: Merekomendasikan format terstruktur termasuk XML untuk tugas kompleks ([dokumentasi](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/structure-prompts))
+- **OpenAI (GPT)**: Menganjurkan prompting terstruktur dalam skenario kompleks ([pengumuman](https://x.com/OpenAIDevs/status/1890147300493914437), [cookbook](https://cookbook.openai.com/examples/gpt-5/gpt-5_prompting_guide))
 
 ## Format Markdown
 

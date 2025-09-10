@@ -43,9 +43,14 @@ src/core/output/outputGenerate.ts
 </git_logs>
 ```
 
-::: tip Pourquoi XML?
-Les balises XML aident les modèles d'IA comme Claude à analyser le contenu plus précisément. La [Documentation de Claude](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags) recommande d'utiliser des balises XML pour les prompts structurés.
-:::
+### Pourquoi XML comme format par défaut ?
+
+Repomix utilise XML comme format de sortie par défaut basé sur des recherches et tests approfondis. Cette décision se fonde sur des preuves empiriques et des considérations pratiques pour l'analyse de code assistée par IA.
+
+Notre choix de XML est principalement influencé par les recommandations officielles des principaux fournisseurs d'IA :
+- **Anthropic (Claude)** : Recommande explicitement l'utilisation de balises XML pour structurer les prompts, déclarant que "Claude a été exposé à de tels prompts pendant l'entraînement" ([documentation](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags))
+- **Google (Gemini)** : Recommande les formats structurés incluant XML pour les tâches complexes ([documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/structure-prompts))
+- **OpenAI (GPT)** : Préconise le prompting structuré dans les scénarios complexes ([annonce](https://x.com/OpenAIDevs/status/1890147300493914437), [cookbook](https://cookbook.openai.com/examples/gpt-5/gpt-5_prompting_guide))
 
 ## Format Markdown
 

@@ -81,6 +81,15 @@ Ví dụ về đầu ra XML:
 - Bao gồm siêu dữ liệu về mỗi tệp (ngôn ngữ, số dòng, số token)
 - Phân tích tự động bởi các công cụ
 
+### Tại sao XML là định dạng mặc định?
+
+Repomix sử dụng XML làm định dạng đầu ra mặc định dựa trên nghiên cứu và thử nghiệm rộng rãi. Quyết định này dựa trên bằng chứng thực nghiệm và các cân nhắc thực tế cho phân tích mã được hỗ trợ bởi AI.
+
+Lựa chọn XML của chúng tôi chủ yếu được ảnh hưởng bởi các khuyến nghị chính thức từ các nhà cung cấp AI lớn:
+- **Anthropic (Claude)**: Khuyến nghị rõ ràng việc sử dụng thẻ XML để cấu trúc prompt, tuyên bố rằng "Claude đã được tiếp xúc với những prompt như vậy trong quá trình huấn luyện" ([tài liệu](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags))
+- **Google (Gemini)**: Khuyến nghị các định dạng có cấu trúc bao gồm XML cho các tác vụ phức tạp ([tài liệu](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/structure-prompts))
+- **OpenAI (GPT)**: Ủng hộ prompting có cấu trúc trong các tình huống phức tạp ([thông báo](https://x.com/OpenAIDevs/status/1890147300493914437), [cookbook](https://cookbook.openai.com/examples/gpt-5/gpt-5_prompting_guide))
+
 ## Định dạng Markdown
 
 Định dạng Markdown cung cấp đầu ra dễ đọc hơn cho con người, đồng thời vẫn duy trì cấu trúc đủ tốt cho AI.

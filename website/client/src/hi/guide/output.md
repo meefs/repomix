@@ -56,9 +56,14 @@ src/core/output/outputGenerate.ts
 </git_logs>
 ```
 
-::: tip XML क्यों?
-XML टैग Claude जैसे AI मॉडल को सामग्री को अधिक सटीक रूप से पार्स करने में मदद करते हैं। [Claude डॉक्यूमेंटेशन](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags) संरचित प्रॉम्प्ट के लिए XML टैग का उपयोग करने की सिफारिश करता है।
-:::
+### XML को डिफ़ॉल्ट फॉर्मेट के रूप में क्यों?
+
+Repomix व्यापक अनुसंधान और परीक्षण के आधार पर XML को डिफ़ॉल्ट आउटपुट फॉर्मेट के रूप में उपयोग करता है। यह निर्णय अनुभवजन्य साक्ष्य और AI-सहायता प्राप्त कोड विश्लेषण के व्यावहारिक विचारों पर आधारित है।
+
+XML का हमारा चुनाव मुख्य रूप से प्रमुख AI प्रदाताओं की आधिकारिक सिफारिशों से प्रभावित है:
+- **Anthropic (Claude)**: प्रॉम्प्ट को संरचित करने के लिए XML टैग के उपयोग की स्पष्ट रूप से सिफारिश करता है, यह कहते हुए कि "Claude को प्रशिक्षण के दौरान ऐसे प्रॉम्प्ट का सामना हुआ था" ([दस्तावेज़](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags))
+- **Google (Gemini)**: जटिल कार्यों के लिए XML सहित संरचित फॉर्मेट की सिफारिश करता है ([दस्तावेज़](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/structure-prompts))
+- **OpenAI (GPT)**: जटिल परिदृश्यों में संरचित प्रॉम्प्टिंग की वकालत करता है ([घोषणा](https://x.com/OpenAIDevs/status/1890147300493914437), [cookbook](https://cookbook.openai.com/examples/gpt-5/gpt-5_prompting_guide))
 
 ## मार्कडाउन फॉर्मेट
 

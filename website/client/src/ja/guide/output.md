@@ -60,9 +60,14 @@ src/core/output/outputGenerate.ts
 </instruction>
 ```
 
-::: tip なぜXML？
-XMLタグはClaudeなどのAIモデルがコンテンツをより正確に解析するのに役立ちます。[Claude公式ドキュメント](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags)では、構造化されたプロンプトにXMLタグを使用することを推奨しています。
-:::
+### なぜXMLをデフォルト形式としているのか？
+
+Repomixは広範な研究とテストに基づき、XMLをデフォルトの出力形式として採用しています。この決定は実証的な証拠とAIアシスト型コード解析における実用性を考慮した結果です。
+
+XML採用の主な理由は、大手AIプロバイダーからの公式推奨事項にあります：
+- **Anthropic (Claude)**: プロンプト構造化においてXMLタグの使用を明示的に推奨し、「Claudeは学習過程でそのようなプロンプトに触れている」と明記（[ドキュメント](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags)）
+- **Google (Gemini)**: 複雑なタスクにおいてXMLを含む構造化フォーマットを推奨（[ドキュメント](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/structure-prompts)）
+- **OpenAI (GPT)**: 複雑なシナリオでの構造化プロンプトを推奨（[発表](https://x.com/OpenAIDevs/status/1890147300493914437)、[cookbook](https://cookbook.openai.com/examples/gpt-5/gpt-5_prompting_guide)）
 
 ## Markdownフォーマット
 

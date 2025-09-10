@@ -49,6 +49,7 @@ export const configEs = defineConfig({
         {
           text: 'Comunidad',
           items: [
+            { text: 'Proyectos de la Comunidad', link: '/es/guide/community-projects' },
             { text: 'Contribuir a Repomix', link: '/es/guide/development/' },
             { text: 'Patrocinadores', link: '/es/guide/sponsors' },
           ],

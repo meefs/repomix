@@ -46,9 +46,14 @@ src/core/output/outputGenerate.ts
 </git_logs>
 ```
 
-::: tip Why XML?
-XML tags help AI models like Claude parse content more accurately. [Claude Documentation](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags) recommends using XML tags for structured prompts.
-:::
+### Why XML as Default Format?
+Repomix uses XML as the default output format based on extensive research and testing. This decision is grounded in both empirical evidence and practical considerations for AI-assisted code analysis.
+
+Our choice of XML is primarily influenced by official recommendations from major AI providers:
+- **Anthropic (Claude)**: Explicitly recommends XML tags for structuring prompts, stating that "Claude was exposed to such prompts during training" ([source](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags))
+- **Google (Gemini)**: Recommends structured formats including XML for complex tasks ([documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/structure-prompts))
+- **OpenAI (GPT)**: Advocates for structured prompting in complex scenarios ([announcement](https://x.com/OpenAIDevs/status/1890147300493914437), [cookbook](https://cookbook.openai.com/examples/gpt-5/gpt-5_prompting_guide))
+
 
 ## Markdown Format
 

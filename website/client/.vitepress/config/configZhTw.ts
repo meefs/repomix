@@ -49,6 +49,7 @@ export const configZhTw = defineConfig({
         {
           text: '社群',
           items: [
+            { text: '社群專案', link: '/zh-tw/guide/community-projects' },
             { text: '為Repomix做貢獻', link: '/zh-tw/guide/development/' },
             { text: '贊助商', link: '/zh-tw/guide/sponsors' },
           ],

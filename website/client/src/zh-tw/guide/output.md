@@ -55,9 +55,14 @@ src/core/output/outputGenerate.ts
 </git_logs>
 ```
 
-::: tip 為什麼選擇 XML？
-XML 標籤有助於像 Claude 這樣的 AI 模型更準確地解析內容。[Claude 官方文檔](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags)推薦使用 XML 標籤來構建結構化提示。
-:::
+### 為什麼選擇 XML 作為預設格式？
+
+Repomix 基於廣泛的研究和測試，選擇 XML 作為預設輸出格式。這一決定基於實證證據和 AI 輔助程式碼分析的實際考量。
+
+我們選擇 XML 主要受到各大 AI 提供商官方推薦的影響：
+- **Anthropic (Claude)**: 明確推薦使用 XML 標籤來構建提示，聲明「Claude 在訓練過程中接觸過此類提示」（[文檔](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags)）
+- **Google (Gemini)**: 推薦在複雜任務中使用包括 XML 在內的結構化格式（[文檔](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/structure-prompts)）
+- **OpenAI (GPT)**: 在複雜場景中倡導結構化提示（[公告](https://x.com/OpenAIDevs/status/1890147300493914437)、[cookbook](https://cookbook.openai.com/examples/gpt-5/gpt-5_prompting_guide)）
 
 ## Markdown 格式
 

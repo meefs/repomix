@@ -56,9 +56,14 @@ src/core/output/outputGenerate.ts
 </git_logs>
 ```
 
-::: tip XML을 사용하는 이유
-XML 태그는 Claude와 같은 AI 모델이 내용을 더 정확하게 파싱하는 데 도움이 됩니다. [Claude 공식 문서](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags)에서는 구조화된 프롬프트에 XML 태그 사용을 권장하고 있습니다.
-:::
+### 왜 XML을 기본 형식으로 사용하나요?
+
+Repomix는 광범위한 연구와 테스트를 바탕으로 XML을 기본 출력 형식으로 채택했습니다. 이 결정은 실증적 증거와 AI 보조 코드 분석의 실용적 고려사항에 근거합니다.
+
+XML 채택의 주요 이유는 주요 AI 제공업체의 공식 권장사항에 있습니다:
+- **Anthropic (Claude)**: 프롬프트 구조화에서 XML 태그 사용을 명시적으로 권장하며, "Claude는 훈련 과정에서 그러한 프롬프트에 노출되었다"고 명시 ([문서](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags))
+- **Google (Gemini)**: 복잡한 작업에서 XML을 포함한 구조화된 형식을 권장 ([문서](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/structure-prompts))
+- **OpenAI (GPT)**: 복잡한 시나리오에서 구조화된 프롬프팅을 권장 ([발표](https://x.com/OpenAIDevs/status/1890147300493914437), [cookbook](https://cookbook.openai.com/examples/gpt-5/gpt-5_prompting_guide))
 
 ## Markdown 형식
 

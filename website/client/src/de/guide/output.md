@@ -13,10 +13,6 @@ repomix --style xml
 
 Das XML-Format ist für die KI-Verarbeitung optimiert:
 
-::: tip Warum XML?
-XML-Tags helfen KI-Modellen wie Claude, Inhalte genauer zu analysieren. Die [Claude-Dokumentation](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags) empfiehlt die Verwendung von XML-Tags für strukturierte Prompts.
-:::
-
 ```xml
 Diese Datei ist eine zusammengeführte Darstellung der gesamten Codebasis...
 
@@ -48,6 +44,16 @@ src/core/output/outputGenerate.ts
 2025-08-21 00:09:43 +0900|Merge pull request #795 from yamadashy/chore/ratchet-update-ci
 .github/workflows/ratchet-update.yml
 </git_logs>
+```
+
+### Warum XML als Standardformat?
+
+Repomix verwendet XML als Standard-Ausgabeformat basierend auf umfangreichen Forschungen und Tests. Diese Entscheidung gründet auf empirischen Belegen und praktischen Überlegungen für KI-unterstützte Codeanalyse.
+
+Unsere Wahl von XML wird hauptsächlich von offiziellen Empfehlungen großer KI-Anbieter beeinflusst:
+- **Anthropic (Claude)**: Empfiehlt explizit die Verwendung von XML-Tags zur Strukturierung von Prompts und erklärt, dass "Claude während des Trainings solchen Prompts ausgesetzt war" ([Dokumentation](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags))
+- **Google (Gemini)**: Empfiehlt strukturierte Formate einschließlich XML für komplexe Aufgaben ([Dokumentation](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/structure-prompts))
+- **OpenAI (GPT)**: Befürwortet strukturiertes Prompting in komplexen Szenarien ([Ankündigung](https://x.com/OpenAIDevs/status/1890147300493914437), [Cookbook](https://cookbook.openai.com/examples/gpt-5/gpt-5_prompting_guide))
 
 ## Markdown-Format
 

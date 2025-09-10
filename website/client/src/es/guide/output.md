@@ -56,9 +56,14 @@ src/core/output/outputGenerate.ts
 </git_logs>
 ```
 
-::: tip ¿Por qué XML?
-Las etiquetas XML ayudan a los modelos de IA como Claude a analizar el contenido con mayor precisión. La [documentación de Claude](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags) recomienda usar etiquetas XML para prompts estructurados.
-:::
+### ¿Por qué XML como formato predeterminado?
+
+Repomix utiliza XML como formato de salida predeterminado basándose en investigaciones y pruebas extensas. Esta decisión se fundamenta en evidencia empírica y consideraciones prácticas para el análisis de código asistido por IA.
+
+Nuestra elección de XML está principalmente influenciada por las recomendaciones oficiales de los principales proveedores de IA:
+- **Anthropic (Claude)**: Recomienda explícitamente el uso de etiquetas XML para estructurar prompts, declarando que "Claude fue expuesto a tales prompts durante el entrenamiento" ([documentación](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags))
+- **Google (Gemini)**: Recomienda formatos estructurados incluyendo XML para tareas complejas ([documentación](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/structure-prompts))
+- **OpenAI (GPT)**: Aboga por el prompting estructurado en escenarios complejos ([anuncio](https://x.com/OpenAIDevs/status/1890147300493914437), [cookbook](https://cookbook.openai.com/examples/gpt-5/gpt-5_prompting_guide))
 
 ## Formato Markdown
 
