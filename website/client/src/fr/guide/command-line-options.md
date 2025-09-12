@@ -10,11 +10,11 @@
 - `--stdin`: Lire les chemins de fichiers depuis stdin au lieu de découvrir automatiquement les fichiers
 - `--copy`: Copier en plus la sortie générée dans le presse-papiers système
 - `--token-count-tree [threshold]`: Afficher l'arbre de fichiers avec des résumés de comptage de jetons (optionnel : seuil minimum de comptage de jetons). Utile pour identifier les gros fichiers et optimiser l'utilisation des jetons pour les limites de contexte IA
-- `--top-files-len <number>`: Nombre de fichiers principaux à afficher dans le résumé
+- `--top-files-len <number>`: Nombre des plus gros fichiers à afficher dans le résumé (par défaut : 5, ex : --top-files-len 20)
 
 ## Options de sortie Repomix
-- `-o, --output <file>`: Spécifier le nom du fichier de sortie
-- `--style <style>`: Spécifier le style de sortie (`xml`, `markdown`, `plain`)
+- `-o, --output <file>`: Chemin du fichier de sortie (par défaut : repomix-output.xml, utiliser "-" pour stdout)
+- `--style <type>`: Format de sortie : xml, markdown ou plain (par défaut : xml)
 - `--parsable-style`: Activer la sortie analysable basée sur le schéma de style choisi. Notez que cela peut augmenter le nombre de jetons.
 - `--compress`: Effectuer une extraction de code intelligente, en se concentrant sur les signatures de fonctions et de classes essentielles pour réduire le nombre de jetons
 - `--output-show-line-numbers`: Afficher les numéros de ligne dans la sortie
@@ -48,11 +48,13 @@
 - `--global`: Utiliser la configuration globale
 
 ## Options de sécurité
-- `--no-security-check`: Désactiver la vérification de sécurité (par défaut : `true`)
+- `--no-security-check`: Ignorer la recherche de données sensibles comme les clés API et mots de passe
 
 ## Options de comptage de jetons
-- `--token-count-encoding <encoding>`: Spécifier l'encodage de comptage de jetons utilisé par le tokenizer [tiktoken](https://github.com/openai/tiktoken) d'OpenAI (par exemple, `o200k_base` pour GPT-4o, `cl100k_base` pour GPT-4/3.5). Voir [tiktoken model.py](https://github.com/openai/tiktoken/blob/main/tiktoken/model.py#L24) pour les détails d'encodage.
+- `--token-count-encoding <encoding>`: Modèle de tokenizer pour le comptage : o200k_base (GPT-4o), cl100k_base (GPT-3.5/4), etc. (par défaut : o200k_base)
 
+## Options MCP
+- `--mcp`: Fonctionner comme serveur Model Context Protocol pour l'intégration d'outils IA
 
 ## Exemples
 
@@ -60,8 +62,8 @@
 # Utilisation de base
 repomix
 
-# Sortie personnalisée
-repomix -o output.xml --style xml
+# Fichier de sortie et format personnalisés
+repomix -o my-output.xml --style xml
 
 # Sortie vers stdout
 repomix --stdout > custom-output.txt
@@ -72,8 +74,8 @@ repomix --stdout | llm "Veuillez expliquer ce que fait ce code."
 # Sortie personnalisée avec compression
 repomix --compress
 
-# Traiter des fichiers spécifiques
-repomix --include "src/**/*.ts" --ignore "**/*.test.ts"
+# Traiter des fichiers spécifiques avec des motifs
+repomix --include "src/**/*.ts,*.md" --ignore "*.test.js,docs/**"
 
 # Dépôt distant avec branche
 repomix --remote https://github.com/user/repo/tree/main

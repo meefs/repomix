@@ -1,20 +1,20 @@
 # 命令列選項
 
 ## 基本選項
-- `-v, --version`: 顯示工具版本
+- `-v, --version`: 顯示版本資訊並退出
 
 ## CLI輸入/輸出選項
-- `--verbose`: 啟用詳細日誌記錄
-- `--quiet`: 停用所有輸出到標準輸出
-- `--stdout`: 輸出到標準輸出而不是寫入檔案（不能與`--output`選項同時使用）
-- `--stdin`: 從標準輸入讀取檔案路徑，而不是自動發現檔案
-- `--copy`: 另外將產生的輸出複製到系統剪貼簿
-- `--token-count-tree [threshold]`: 顯示帶有權杖計數摘要的檔案樹（可選：最小權杖計數閾值）。對於識別大檔案和最佳化AI上下文限制的權杖使用很有用
-- `--top-files-len <number>`: 摘要中顯示的頂級檔案數
+- `--verbose`: 啟用詳細除錯日誌（顯示檔案處理、權杖計數和配置詳細資訊）
+- `--quiet`: 抑制除錯誤外的所有控制台輸出（用於腳本編寫）
+- `--stdout`: 將打包輸出直接寫入標準輸出而不是檔案（抑制所有日誌記錄）
+- `--stdin`: 從標準輸入逐行讀取檔案路徑（指定的檔案直接處理）
+- `--copy`: 處理後將產生的輸出複製到系統剪貼簿
+- `--token-count-tree [threshold]`: 顯示帶有權杖計數的檔案樹；可選閾值僅顯示≥N權杖的檔案（例如：--token-count-tree 100）
+- `--top-files-len <number>`: 摘要中顯示的最大檔案數（預設：5，例如：--top-files-len 20）
 
 ## Repomix輸出選項
-- `-o, --output <file>`: 指定輸出檔案名
-- `--style <style>`: 指定輸出樣式（`xml`、`markdown`、`plain`）
+- `-o, --output <file>`: 輸出檔案路徑（預設：repomix-output.xml，標準輸出使用 "-"）
+- `--style <type>`: 輸出格式：xml、markdown 或 plain（預設：xml）
 - `--parsable-style`: 基於所選樣式架構啟用可解析輸出。注意這可能會增加權杖數。
 - `--compress`: 執行智慧程式碼提取，專注於基本函數和類別簽名以減少權杖數
 - `--output-show-line-numbers`: 在輸出中顯示行號
@@ -48,11 +48,13 @@
 - `--global`: 使用全域組態
 
 ## 安全選項
-- `--no-security-check`: 停用安全檢查（預設：`true`）
+- `--no-security-check`: 跳過敏感資料（如 API 金鑰和密碼）的掃描
 
 ## 權杖計數選項
-- `--token-count-encoding <encoding>`: 指定OpenAI的[tiktoken](https://github.com/openai/tiktoken)分詞器使用的權杖計數編碼（例如，GPT-4o使用`o200k_base`，GPT-4/3.5使用`cl100k_base`）。有關編碼詳細資訊，請參閱[tiktoken model.py](https://github.com/openai/tiktoken/blob/main/tiktoken/model.py#L24)。
+- `--token-count-encoding <encoding>`: 計數用的分詞器模型：o200k_base（GPT-4o）、cl100k_base（GPT-3.5/4）等（預設：o200k_base）
 
+## MCP 選項
+- `--mcp`: 作為 Model Context Protocol 伺服器運行，用於 AI 工具整合
 
 ## 範例
 
@@ -60,8 +62,8 @@
 # 基本使用
 repomix
 
-# 自訂輸出
-repomix -o output.xml --style xml
+# 自訂輸出檔案和格式
+repomix -o my-output.xml --style xml
 
 # 輸出到標準輸出
 repomix --stdout > custom-output.txt
@@ -72,8 +74,8 @@ repomix --stdout | llm "請解釋這段程式碼的作用。"
 # 使用壓縮的自訂輸出
 repomix --compress
 
-# 處理特定檔案
-repomix --include "src/**/*.ts" --ignore "**/*.test.ts"
+# 使用模式處理特定檔案
+repomix --include "src/**/*.ts,*.md" --ignore "*.test.js,docs/**"
 
 # 帶分支的遠端儲存庫
 repomix --remote https://github.com/user/repo/tree/main

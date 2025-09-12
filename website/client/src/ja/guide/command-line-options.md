@@ -1,57 +1,60 @@
 # コマンドラインオプション
 
 ## 基本オプション
-- `-v, --version`: ツールのバージョンを表示
+- `-v, --version`: バージョン情報を表示して終了
 
 ## CLI入出力オプション
-- `--verbose`: 詳細なログを有効化
-- `--quiet`: 標準出力へのすべての出力を無効化
-- `--stdout`: ファイルに書き込む代わりに標準出力に出力（`--output`オプションと併用不可）
-- `--stdin`: ファイルを自動的に検出する代わりに、stdinからファイルパスを読み取る
-- `--copy`: 生成された出力をシステムクリップボードにも追加でコピー
-- `--token-count-tree [threshold]`: トークン数のサマリーでファイルツリーを表示（オプション：最小トークン数のしきい値）。大きなファイルを特定し、AIコンテキスト制限に向けたトークン使用量を最適化するのに有用
-- `--top-files-len <number>`: サマリーに表示するトップファイルの数
+- `--verbose`: 詳細なデバッグログを有効化（ファイル処理、トークン数、設定詳細を表示）
+- `--quiet`: エラー以外のすべてのコンソール出力を抑制（スクリプト実行時に有用）
+- `--stdout`: パックした出力をファイルではなく標準出力に直接出力（すべてのログを抑制）
+- `--stdin`: Stdinから1行ずつファイルパスを読み取り（指定されたファイルを直接処理）
+- `--copy`: 処理後に生成された出力をシステムクリップボードにコピー
+- `--token-count-tree [threshold]`: トークン数付きファイルツリーを表示；オプションでN以上のトークンを持つファイルのみ表示（例：--token-count-tree 100）
+- `--top-files-len <number>`: サマリーに表示する最大ファイル数（デフォルト：5、例：--top-files-len 20）
 
 ## Repomix出力オプション
-- `-o, --output <file>`: 出力ファイル名を指定
-- `--style <style>`: 出力スタイルを指定（`xml`、`markdown`、`plain`）
-- `--parsable-style`: 選択した形式のスキーマに基づいて解析可能な出力を有効化。これによりトークン数が増加する可能性があります。
-- `--compress`: 関数やクラスのシグネチャなどの重要な構造に焦点を当てたインテリジェントなコード抽出を実行し、トークン数を削減
-- `--output-show-line-numbers`: 出力に行番号を表示
-- `--no-file-summary`: ファイルサマリーセクションの出力を無効化
-- `--no-directory-structure`: ディレクトリ構造セクションの出力を無効化
-- `--no-files`: ファイル内容の出力を無効化（メタデータのみモード）
-- `--remove-comments`: サポートされているファイルタイプからコメントを削除
-- `--remove-empty-lines`: 出力から空行を削除
-- `--truncate-base64`: Base64データ文字列の切り捨てを有効化
-- `--header-text <text>`: ファイルヘッダーに含めるカスタムテキスト
-- `--instruction-file-path <path>`: 詳細なカスタム指示を含むファイルのパス
-- `--include-empty-directories`: 空のディレクトリを出力に含める
-- `--include-diffs`: Git差分を出力に含める（ワークツリーとステージングされた変更を別々に含む）
-- `--include-logs`: Gitログを出力に含める（日時、メッセージ、ファイルパスを含むコミット履歴）
-- `--include-logs-count <count>`: 含めるGitログのコミット数（デフォルト: 50）
-- `--no-git-sort-by-changes`: Gitの変更回数によるファイルのソートを無効化（デフォルトで有効）
+- `-o, --output <file>`: 出力ファイルパス（デフォルト：repomix-output.xml、標準出力には「-」を使用）
+- `--style <type>`: 出力形式：xml、markdown、またはplain（デフォルト：xml）
+- `--parsable-style`: 特殊文字をエスケープして有効なXML/Markdownを保証（出力に形式を破損するコードが含まれる場合に必要）
+- `--compress`: Tree-sitter解析を使用して重要なコード構造（クラス、関数、インターフェース）を抽出
+- `--output-show-line-numbers`: 出力の各行に行番号を付ける
+- `--no-file-summary`: 出力からファイルサマリーセクションを省略
+- `--no-directory-structure`: 出力からディレクトリツリーの可視化を省略
+- `--no-files`: ファイル内容なしでメタデータのみを生成（リポジトリ分析に有用）
+- `--remove-comments`: パック前にすべてのコードコメントを除去
+- `--remove-empty-lines`: すべてのファイルから空行を削除
+- `--truncate-base64`: 出力サイズを削減するため長いbase64データ文字列を切り詰め
+- `--header-text <text>`: 出力の冒頭に含めるカスタムテキスト
+- `--instruction-file-path <path>`: 出力に含めるカスタム指示を含むファイルのパス
+- `--include-empty-directories`: ディレクトリ構造にファイルのないフォルダを含める
+- `--no-git-sort-by-changes`: Git変更頻度によるファイルのソートをしない（デフォルト：最も変更の多いファイルを優先）
+- `--include-diffs`: ワークツリーとステージングされた変更を示すgit diffセクションを追加
+- `--include-logs`: メッセージと変更されたファイルを含むgitコミット履歴を追加
+- `--include-logs-count <count>`: --include-logsで含める最新のコミット数（デフォルト：50）
 
 ## ファイル選択オプション
-- `--include <patterns>`: 含めるパターンのリスト（カンマ区切り）
-- `-i, --ignore <patterns>`: 追加の除外パターン（カンマ区切り）
-- `--no-gitignore`: .gitignoreファイルの使用を無効化
-- `--no-default-patterns`: デフォルトパターンを無効化
+- `--include <patterns>`: これらのglobパターンに一致するファイルのみを含める（カンマ区切り、例：「src/**/*.js,*.md」）
+- `-i, --ignore <patterns>`: 除外する追加パターン（カンマ区切り、例：「*.test.js,docs/**」）
+- `--no-gitignore`: ファイルフィルタリングに.gitignoreルールを使用しない
+- `--no-default-patterns`: 組み込みの無視パターンを適用しない（node_modules、.git、buildディレクトリなど）
 
 ## リモートリポジトリオプション
-- `--remote <url>`: リモートリポジトリを処理
-- `--remote-branch <name>`: リモートブランチ名、タグ、またはコミットハッシュを指定（デフォルトはリポジトリのデフォルトブランチ）
+- `--remote <url>`: リモートリポジトリをクローンしてパック（GitHub URLまたはuser/repo形式）
+- `--remote-branch <name>`: 使用する特定のブランチ、タグ、またはコミット（デフォルト：リポジトリのデフォルトブランチ）
 
 ## 設定オプション
-- `-c, --config <path>`: カスタム設定ファイルのパス
-- `--init`: 設定ファイルを作成
-- `--global`: グローバル設定を使用
+- `-c, --config <path>`: repomix.config.jsonの代わりにカスタム設定ファイルを使用
+- `--init`: デフォルト設定で新しいrepomix.config.jsonファイルを作成
+- `--global`: --initと併用、現在のディレクトリではなくホームディレクトリに設定を作成
 
 ## セキュリティオプション
-- `--no-security-check`: セキュリティチェックを無効化（デフォルト: `true`）
+- `--no-security-check`: APIキーやパスワードなどの機密データのスキャンをスキップ
 
 ## トークンカウントオプション
-- `--token-count-encoding <encoding>`: OpenAIの[tiktoken](https://github.com/openai/tiktoken)トークナイザーで使用されるトークンカウントエンコーディングを指定（例：GPT-4o用`o200k_base`、GPT-4/3.5用`cl100k_base`）。エンコーディングの詳細については[tiktoken model.py](https://github.com/openai/tiktoken/blob/main/tiktoken/model.py#L24)を参照してください。
+- `--token-count-encoding <encoding>`: カウント用のトークナイザーモデル：o200k_base（GPT-4o）、cl100k_base（GPT-3.5/4）など（デフォルト：o200k_base）
+
+## MCPオプション
+- `--mcp`: AI ツール統合用のModel Context Protocolサーバーとして実行
 
 
 ## 使用例
@@ -60,8 +63,8 @@
 # 基本的な使用方法
 repomix
 
-# カスタム出力
-repomix -o output.xml --style xml
+# カスタム出力ファイルと形式
+repomix -o my-output.xml --style xml
 
 # 標準出力への出力
 repomix --stdout > custom-output.txt
@@ -77,8 +80,8 @@ repomix --include-logs   # Gitログを含める（デフォルトで50コミッ
 repomix --include-logs --include-logs-count 10  # 最新10コミットを含める
 repomix --include-diffs --include-logs  # 差分とログの両方を含める
 
-# 特定のファイルを処理
-repomix --include "src/**/*.ts" --ignore "**/*.test.ts"
+# パターンを使用して特定のファイルを処理
+repomix --include "src/**/*.ts,*.md" --ignore "*.test.js,docs/**"
 
 # ブランチを指定したリモートリポジトリ
 repomix --remote https://github.com/user/repo/tree/main

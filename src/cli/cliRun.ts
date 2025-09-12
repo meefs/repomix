@@ -52,82 +52,117 @@ export const run = async () => {
       .argument('[directories...]', 'list of directories to process', ['.'])
       // Basic Options
       .optionsGroup('Basic Options')
-      .option('-v, --version', 'show version information')
+      .option('-v, --version', 'Show version information and exit')
       // CLI Input/Output Options
       .optionsGroup('CLI Input/Output Options')
-      .addOption(new Option('--verbose', 'enable verbose logging for detailed output').conflicts('quiet'))
-      .addOption(new Option('--quiet', 'disable all output to stdout').conflicts('verbose'))
-      .addOption(new Option('--stdout', 'output to stdout instead of writing to a file').conflicts('output'))
-      .option('--stdin', 'read file list from stdin')
-      .option('--copy', 'copy generated output to system clipboard')
+      .addOption(
+        new Option(
+          '--verbose',
+          'Enable detailed debug logging (shows file processing, token counts, and configuration details)',
+        ).conflicts('quiet'),
+      )
+      .addOption(
+        new Option('--quiet', 'Suppress all console output except errors (useful for scripting)').conflicts('verbose'),
+      )
+      .addOption(
+        new Option(
+          '--stdout',
+          'Write packed output directly to stdout instead of a file (suppresses all logging)',
+        ).conflicts('output'),
+      )
+      .option('--stdin', 'Read file paths from stdin, one per line (specified files are processed directly)')
+      .option('--copy', 'Copy the generated output to system clipboard after processing')
       .option(
         '--token-count-tree [threshold]',
-        'display file tree with token count summaries (optional: minimum token count threshold)',
+        'Show file tree with token counts; optional threshold to show only files with ≥N tokens (e.g., --token-count-tree 100)',
         (value: string | boolean) => {
           if (typeof value === 'string') {
-            const parsed = Number.parseInt(value, 10);
-            if (Number.isNaN(parsed)) {
-              throw new RepomixError(`Invalid token count threshold: '${value}'. Must be a valid number.`);
+            if (!/^\d+$/.test(value)) {
+              throw new RepomixError(`Invalid token count threshold: '${value}'. Must be a non-negative integer.`);
             }
-            return parsed;
+            return Number(value);
           }
           return value;
         },
       )
-      .option('--top-files-len <number>', 'specify the number of top files to display', Number.parseInt)
+      .option(
+        '--top-files-len <number>',
+        'Number of largest files to show in summary (default: 5, e.g., --top-files-len 20)',
+        (v: string) => {
+          if (!/^\d+$/.test(v)) {
+            throw new RepomixError(`Invalid number for --top-files-len: '${v}'. Must be a non-negative integer.`);
+          }
+          return Number(v);
+        },
+      )
       // Repomix Output Options
       .optionsGroup('Repomix Output Options')
-      .option('-o, --output <file>', 'specify the output file name')
-      .option('--style <type>', 'specify the output style (xml, markdown, plain)')
-      .option('--parsable-style', 'by escaping and formatting, ensure the output is parsable as a document of its type')
-      .option('--compress', 'perform code compression to reduce token count')
-      .option('--output-show-line-numbers', 'add line numbers to each line in the output')
-      .option('--no-file-summary', 'disable file summary section output')
-      .option('--no-directory-structure', 'disable directory structure section output')
-      .option('--no-files', 'disable files content output (metadata-only mode)')
-      .option('--remove-comments', 'remove comments')
-      .option('--remove-empty-lines', 'remove empty lines')
-      .option('--truncate-base64', 'enable truncation of base64 data strings')
-      .option('--header-text <text>', 'specify the header text')
-      .option('--instruction-file-path <path>', 'path to a file containing detailed custom instructions')
-      .option('--include-empty-directories', 'include empty directories in the output')
-      .option('--no-git-sort-by-changes', 'disable sorting files by git change count')
+      .option('-o, --output <file>', 'Output file path (default: repomix-output.xml, use "-" for stdout)')
+      .option('--style <type>', 'Output format: xml, markdown, or plain (default: xml)')
       .option(
-        '--include-diffs',
-        'include git diffs in the output (includes both work tree and staged changes separately)',
+        '--parsable-style',
+        'Escape special characters to ensure valid XML/Markdown (needed when output contains code that breaks formatting)',
       )
       .option(
-        '--include-logs',
-        'include git logs in the output (includes commit history with dates, messages, and file paths)',
+        '--compress',
+        'Extract essential code structure (classes, functions, interfaces) using Tree-sitter parsing',
       )
-      .option('--include-logs-count <count>', 'number of git log commits to include (default: 50)', Number.parseInt)
+      .option('--output-show-line-numbers', 'Prefix each line with its line number in the output')
+      .option('--no-file-summary', 'Omit the file summary section from output')
+      .option('--no-directory-structure', 'Omit the directory tree visualization from output')
+      .option('--no-files', 'Generate metadata only without file contents (useful for repository analysis)')
+      .option('--remove-comments', 'Strip all code comments before packing')
+      .option('--remove-empty-lines', 'Remove blank lines from all files')
+      .option('--truncate-base64', 'Truncate long base64 data strings to reduce output size')
+      .option('--header-text <text>', 'Custom text to include at the beginning of the output')
+      .option('--instruction-file-path <path>', 'Path to file containing custom instructions to include in output')
+      .option('--include-empty-directories', 'Include folders with no files in directory structure')
+      .option(
+        '--no-git-sort-by-changes',
+        "Don't sort files by git change frequency (default: most changed files first)",
+      )
+      .option('--include-diffs', 'Add git diff section showing working tree and staged changes')
+      .option('--include-logs', 'Add git commit history with messages and changed files')
+      .option(
+        '--include-logs-count <count>',
+        'Number of recent commits to include with --include-logs (default: 50)',
+        (v: string) => {
+          if (!/^\d+$/.test(v)) {
+            throw new RepomixError(`Invalid number for --include-logs-count: '${v}'. Must be a non-negative integer.`);
+          }
+          return Number(v);
+        },
+      )
       // File Selection Options
       .optionsGroup('File Selection Options')
-      .option('--include <patterns>', 'list of include patterns (comma-separated)')
-      .option('-i, --ignore <patterns>', 'additional ignore patterns (comma-separated)')
-      .option('--no-gitignore', 'disable .gitignore file usage')
-      .option('--no-default-patterns', 'disable default patterns')
+      .option(
+        '--include <patterns>',
+        'Include only files matching these glob patterns (comma-separated, e.g., "src/**/*.js,*.md")',
+      )
+      .option('-i, --ignore <patterns>', 'Additional patterns to exclude (comma-separated, e.g., "*.test.js,docs/**")')
+      .option('--no-gitignore', "Don't use .gitignore rules for filtering files")
+      .option('--no-default-patterns', "Don't apply built-in ignore patterns (node_modules, .git, build dirs, etc.)")
       // Remote Repository Options
       .optionsGroup('Remote Repository Options')
-      .option('--remote <url>', 'process a remote Git repository')
-      .option(
-        '--remote-branch <name>',
-        'specify the remote branch name, tag, or commit hash (defaults to repository default branch)',
-      )
+      .option('--remote <url>', 'Clone and pack a remote repository (GitHub URL or user/repo format)')
+      .option('--remote-branch <name>', "Specific branch, tag, or commit to use (default: repository's default branch)")
       // Configuration Options
       .optionsGroup('Configuration Options')
-      .option('-c, --config <path>', 'path to a custom config file')
-      .option('--init', 'initialize a new repomix.config.json file')
-      .option('--global', 'use global configuration (only applicable with --init)')
+      .option('-c, --config <path>', 'Use custom config file instead of repomix.config.json')
+      .option('--init', 'Create a new repomix.config.json file with defaults')
+      .option('--global', 'With --init, create config in home directory instead of current directory')
       // Security Options
       .optionsGroup('Security Options')
-      .option('--no-security-check', 'disable security check')
+      .option('--no-security-check', 'Skip scanning for sensitive data like API keys and passwords')
       // Token Count Options
       .optionsGroup('Token Count Options')
-      .option('--token-count-encoding <encoding>', 'specify token count encoding (e.g., o200k_base, cl100k_base)')
+      .option(
+        '--token-count-encoding <encoding>',
+        'Tokenizer model for counting: o200k_base (GPT-4o), cl100k_base (GPT-3.5/4), etc. (default: o200k_base)',
+      )
       // MCP
       .optionsGroup('MCP')
-      .option('--mcp', 'run as a MCP server')
+      .option('--mcp', 'Run as Model Context Protocol server for AI tool integration')
       .action(commanderActionEndpoint);
 
     // Custom error handling function

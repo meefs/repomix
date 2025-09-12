@@ -10,11 +10,11 @@
 - `--stdin`: Dateipfade von stdin lesen statt Dateien automatisch zu entdecken
 - `--copy`: Generierte Ausgabe zusätzlich in die Systemzwischenablage kopieren
 - `--token-count-tree [threshold]`: Dateibaum mit Token-Anzahl-Zusammenfassungen anzeigen (optional: minimale Token-Anzahl-Schwelle). Nützlich zur Identifizierung großer Dateien und Optimierung der Token-Nutzung für KI-Kontextlimits
-- `--top-files-len <number>`: Anzahl der Top-Dateien in der Zusammenfassung
+- `--top-files-len <number>`: Anzahl der größten Dateien in der Zusammenfassung (Standard: 5, z.B. --top-files-len 20)
 
 ## Repomix-Ausgabeoptionen
-- `-o, --output <file>`: Ausgabedateiname angeben
-- `--style <style>`: Ausgabestil angeben (`xml`, `markdown`, `plain`)
+- `-o, --output <file>`: Ausgabedateipfad (Standard: repomix-output.xml, "-" für stdout)
+- `--style <type>`: Ausgabeformat: xml, markdown oder plain (Standard: xml)
 - `--parsable-style`: Parsbare Ausgabe basierend auf dem gewählten Stil-Schema aktivieren. Beachten Sie, dass dies die Token-Anzahl erhöhen kann.
 - `--compress`: Intelligente Code-Extraktion durchführen, die sich auf wesentliche Funktions- und Klassensignaturen konzentriert, um die Token-Anzahl zu reduzieren
 - `--output-show-line-numbers`: Zeilennummern in der Ausgabe anzeigen
@@ -48,11 +48,13 @@
 - `--global`: Globale Konfiguration verwenden
 
 ## Sicherheitsoptionen
-- `--no-security-check`: Sicherheitsprüfung deaktivieren (Standard: `true`)
+- `--no-security-check`: Scannen nach sensiblen Daten wie API-Schlüsseln und Passwörtern überspringen
 
 ## Token-Anzahl-Optionen
-- `--token-count-encoding <encoding>`: Token-Anzahl-Kodierung angeben, die von OpenAIs [tiktoken](https://github.com/openai/tiktoken) Tokenizer verwendet wird (z.B. `o200k_base` für GPT-4o, `cl100k_base` für GPT-4/3.5). Siehe [tiktoken model.py](https://github.com/openai/tiktoken/blob/main/tiktoken/model.py#L24) für Kodierungsdetails.
+- `--token-count-encoding <encoding>`: Tokenizer-Modell für Zählung: o200k_base (GPT-4o), cl100k_base (GPT-3.5/4), etc. (Standard: o200k_base)
 
+## MCP-Optionen
+- `--mcp`: Als Model Context Protocol Server für AI-Tool-Integration ausführen
 
 ## Beispiele
 
@@ -60,8 +62,8 @@
 # Grundlegende Nutzung
 repomix
 
-# Benutzerdefinierte Ausgabe
-repomix -o output.xml --style xml
+# Benutzerdefinierte Ausgabedatei und Format
+repomix -o my-output.xml --style xml
 
 # Ausgabe an stdout
 repomix --stdout > custom-output.txt
@@ -72,8 +74,8 @@ repomix --stdout | llm "Bitte erklären Sie, was dieser Code macht."
 # Benutzerdefinierte Ausgabe mit Komprimierung
 repomix --compress
 
-# Spezifische Dateien verarbeiten
-repomix --include "src/**/*.ts" --ignore "**/*.test.ts"
+# Spezifische Dateien mit Mustern verarbeiten
+repomix --include "src/**/*.ts,*.md" --ignore "*.test.js,docs/**"
 
 # Remote-Repository mit Branch
 repomix --remote https://github.com/user/repo/tree/main

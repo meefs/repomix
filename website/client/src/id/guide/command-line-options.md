@@ -10,11 +10,11 @@
 - `--stdin`: Membaca jalur file dari stdin alih-alih menemukan file secara otomatis
 - `--copy`: Menyalin output yang dihasilkan ke clipboard sistem
 - `--token-count-tree [threshold]`: Menampilkan pohon file dengan ringkasan jumlah token (opsional: ambang batas jumlah token minimum). Berguna untuk mengidentifikasi file besar dan mengoptimalkan penggunaan token untuk batas konteks AI
-- `--top-files-len <number>`: Jumlah file teratas untuk ditampilkan dalam ringkasan
+- `--top-files-len <number>`: Jumlah file terbesar untuk ditampilkan dalam ringkasan (default: 5, contoh: --top-files-len 20)
 
 ## Opsi Output Repomix
-- `-o, --output <file>`: Menentukan nama file output
-- `--style <style>`: Menentukan gaya output (`xml`, `markdown`, `plain`)
+- `-o, --output <file>`: Jalur file output (default: repomix-output.xml, gunakan "-" untuk stdout)
+- `--style <type>`: Format output: xml, markdown atau plain (default: xml)
 - `--parsable-style`: Mengaktifkan output yang dapat diurai berdasarkan skema gaya yang dipilih. Perhatikan bahwa ini dapat meningkatkan jumlah token.
 - `--compress`: Melakukan ekstraksi kode cerdas, fokus pada tanda tangan fungsi dan kelas penting untuk mengurangi jumlah token
 - `--output-show-line-numbers`: Menampilkan nomor baris dalam output
@@ -48,11 +48,13 @@
 - `--global`: Menggunakan konfigurasi global
 
 ## Opsi Keamanan
-- `--no-security-check`: Menonaktifkan pemeriksaan keamanan (default: `true`)
+- `--no-security-check`: Lewati pemindaian data sensitif seperti kunci API dan kata sandi
 
 ## Opsi Jumlah Token
-- `--token-count-encoding <encoding>`: Menentukan encoding jumlah token yang digunakan oleh tokenizer [tiktoken](https://github.com/openai/tiktoken) OpenAI (mis., `o200k_base` untuk GPT-4o, `cl100k_base` untuk GPT-4/3.5). Lihat [tiktoken model.py](https://github.com/openai/tiktoken/blob/main/tiktoken/model.py#L24) untuk detail encoding.
+- `--token-count-encoding <encoding>`: Model tokenizer untuk penghitungan: o200k_base (GPT-4o), cl100k_base (GPT-3.5/4), dll. (default: o200k_base)
 
+## Opsi MCP
+- `--mcp`: Jalankan sebagai server Model Context Protocol untuk integrasi alat AI
 
 ## Contoh
 
@@ -60,8 +62,8 @@
 # Penggunaan dasar
 repomix
 
-# Output kustom
-repomix -o output.xml --style xml
+# File output dan format kustom
+repomix -o my-output.xml --style xml
 
 # Output ke stdout
 repomix --stdout > custom-output.txt
@@ -72,8 +74,8 @@ repomix --stdout | llm "Tolong jelaskan apa yang dilakukan kode ini."
 # Output kustom dengan kompresi
 repomix --compress
 
-# Memproses file tertentu
-repomix --include "src/**/*.ts" --ignore "**/*.test.ts"
+# Memproses file tertentu dengan pola
+repomix --include "src/**/*.ts,*.md" --ignore "*.test.js,docs/**"
 
 # Repositori remote dengan branch
 repomix --remote https://github.com/user/repo/tree/main

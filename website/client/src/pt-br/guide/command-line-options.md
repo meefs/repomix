@@ -10,11 +10,11 @@
 - `--stdin`: Ler caminhos de arquivos do stdin em vez de descobrir arquivos automaticamente
 - `--copy`: Copiar adicionalmente a saída gerada para a área de transferência do sistema
 - `--token-count-tree [threshold]`: Exibir árvore de arquivos com resumos de contagem de tokens (opcional: limite mínimo de contagem de tokens). Útil para identificar arquivos grandes e otimizar o uso de tokens para limites de contexto de IA
-- `--top-files-len <number>`: Número de arquivos principais para exibir no resumo
+- `--top-files-len <number>`: Número dos maiores arquivos para exibir no resumo (padrão: 5, ex: --top-files-len 20)
 
 ## Opções de Saída do Repomix
-- `-o, --output <file>`: Especificar nome do arquivo de saída
-- `--style <style>`: Especificar estilo de saída (`xml`, `markdown`, `plain`)
+- `-o, --output <file>`: Caminho do arquivo de saída (padrão: repomix-output.xml, usar "-" para stdout)
+- `--style <type>`: Formato de saída: xml, markdown ou plain (padrão: xml)
 - `--parsable-style`: Habilitar saída analisável baseada no esquema de estilo escolhido. Note que isso pode aumentar a contagem de tokens.
 - `--compress`: Realizar extração inteligente de código, focando em assinaturas essenciais de funções e classes para reduzir a contagem de tokens
 - `--output-show-line-numbers`: Mostrar números de linha na saída
@@ -48,11 +48,13 @@
 - `--global`: Usar configuração global
 
 ## Opções de Segurança
-- `--no-security-check`: Desabilitar verificação de segurança (padrão: `true`)
+- `--no-security-check`: Pular verificação de dados sensíveis como chaves de API e senhas
 
 ## Opções de Contagem de Tokens
-- `--token-count-encoding <encoding>`: Especificar codificação de contagem de tokens usada pelo tokenizador [tiktoken](https://github.com/openai/tiktoken) da OpenAI (ex., `o200k_base` para GPT-4o, `cl100k_base` para GPT-4/3.5). Veja [tiktoken model.py](https://github.com/openai/tiktoken/blob/main/tiktoken/model.py#L24) para detalhes de codificação.
+- `--token-count-encoding <encoding>`: Modelo tokenizador para contagem: o200k_base (GPT-4o), cl100k_base (GPT-3.5/4), etc. (padrão: o200k_base)
 
+## Opções MCP
+- `--mcp`: Executar como servidor Model Context Protocol para integração de ferramentas de IA
 
 ## Exemplos
 
@@ -60,8 +62,8 @@
 # Uso básico
 repomix
 
-# Saída personalizada
-repomix -o output.xml --style xml
+# Arquivo de saída e formato personalizados
+repomix -o my-output.xml --style xml
 
 # Saída para stdout
 repomix --stdout > custom-output.txt
@@ -72,8 +74,8 @@ repomix --stdout | llm "Por favor explique o que este código faz."
 # Saída personalizada com compressão
 repomix --compress
 
-# Processar arquivos específicos
-repomix --include "src/**/*.ts" --ignore "**/*.test.ts"
+# Processar arquivos específicos com padrões
+repomix --include "src/**/*.ts,*.md" --ignore "*.test.js,docs/**"
 
 # Repositório remoto com branch
 repomix --remote https://github.com/user/repo/tree/main

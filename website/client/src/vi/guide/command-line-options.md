@@ -10,11 +10,11 @@
 - `--stdin`: Đọc đường dẫn tệp từ stdin thay vì tự động khám phá tệp
 - `--copy`: Sao chép thêm đầu ra được tạo vào clipboard hệ thống
 - `--token-count-tree [threshold]`: Hiển thị cây tệp với tóm tắt số lượng token (tùy chọn: ngưỡng số lượng token tối thiểu). Hữu ích để xác định các tệp lớn và tối ưu hóa việc sử dụng token cho giới hạn ngữ cảnh AI
-- `--top-files-len <number>`: Số lượng tệp hàng đầu để hiển thị trong tóm tắt
+- `--top-files-len <number>`: Số lượng tệp lớn nhất để hiển thị trong tóm tắt (mặc định: 5, ví dụ: --top-files-len 20)
 
 ## Tùy chọn Đầu ra Repomix
-- `-o, --output <file>`: Chỉ định tên tệp đầu ra
-- `--style <style>`: Chỉ định kiểu đầu ra (`xml`, `markdown`, `plain`)
+- `-o, --output <file>`: Đường dẫn tệp đầu ra (mặc định: repomix-output.xml, sử dụng "-" cho stdout)
+- `--style <type>`: Định dạng đầu ra: xml, markdown hoặc plain (mặc định: xml)
 - `--parsable-style`: Bật đầu ra có thể phân tích dựa trên lược đồ kiểu đã chọn. Lưu ý rằng điều này có thể làm tăng số lượng token.
 - `--compress`: Thực hiện trích xuất mã thông minh, tập trung vào các chữ ký hàm và lớp cần thiết để giảm số lượng token
 - `--output-show-line-numbers`: Hiển thị số dòng trong đầu ra
@@ -48,11 +48,13 @@
 - `--global`: Sử dụng cấu hình toàn cục
 
 ## Tùy chọn Bảo mật
-- `--no-security-check`: Tắt kiểm tra bảo mật (mặc định: `true`)
+- `--no-security-check`: Bỏ qua quét dữ liệu nhạy cảm như khóa API và mật khẩu
 
 ## Tùy chọn Số lượng Token
-- `--token-count-encoding <encoding>`: Chỉ định mã hóa số lượng token được sử dụng bởi tokenizer [tiktoken](https://github.com/openai/tiktoken) của OpenAI (ví dụ, `o200k_base` cho GPT-4o, `cl100k_base` cho GPT-4/3.5). Xem [tiktoken model.py](https://github.com/openai/tiktoken/blob/main/tiktoken/model.py#L24) để biết chi tiết mã hóa.
+- `--token-count-encoding <encoding>`: Mô hình tokenizer để đếm: o200k_base (GPT-4o), cl100k_base (GPT-3.5/4), v.v. (mặc định: o200k_base)
 
+## Tùy chọn MCP
+- `--mcp`: Chạy như máy chủ Model Context Protocol để tích hợp công cụ AI
 
 ## Ví dụ
 
@@ -60,8 +62,8 @@
 # Sử dụng cơ bản
 repomix
 
-# Đầu ra tùy chỉnh
-repomix -o output.xml --style xml
+# Tệp đầu ra và định dạng tùy chỉnh
+repomix -o my-output.xml --style xml
 
 # Đầu ra sang stdout
 repomix --stdout > custom-output.txt
@@ -72,8 +74,8 @@ repomix --stdout | llm "Vui lòng giải thích mã này làm gì."
 # Đầu ra tùy chỉnh với nén
 repomix --compress
 
-# Xử lý tệp cụ thể
-repomix --include "src/**/*.ts" --ignore "**/*.test.ts"
+# Xử lý tệp cụ thể với các mẫu
+repomix --include "src/**/*.ts,*.md" --ignore "*.test.js,docs/**"
 
 # Kho lưu trữ từ xa với nhánh
 repomix --remote https://github.com/user/repo/tree/main
