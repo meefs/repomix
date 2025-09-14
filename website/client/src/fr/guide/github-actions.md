@@ -25,6 +25,14 @@ Vous pouvez spécifier différents formats de sortie en utilisant le paramètre 
     style: markdown
 ```
 
+```yaml
+- name: Pack repository with Repomix (JSON format)
+  uses: yamadashy/repomix/.github/actions/repomix@main
+  with:
+    output: repomix-output.json
+    style: json
+```
+
 ## Packager plusieurs dossiers avec compression
 
 Vous pouvez spécifier plusieurs dossiers, des patterns d'inclusion/exclusion et activer la compression intelligente :
@@ -67,7 +75,7 @@ Pour rendre le fichier packagé disponible pour les étapes suivantes ou pour le
 | `include`          | Patterns glob à inclure (séparés par virgule) | `""`           |
 | `ignore`           | Patterns glob à exclure (séparés par virgule) | `""`           |
 | `output`           | Chemin du fichier de sortie                   | `repomix-output.xml`     |
-| `style`            | Style de sortie (xml, markdown, plain)        | `xml`             |
+| `style`            | Style de sortie (xml, markdown, json, plain)        | `xml`             |
 | `compress`         | Activer la compression intelligente           | `true`            |
 | `additional-args`  | Arguments supplémentaires pour repomix CLI    | `""`           |
 | `repomix-version`  | Version du package npm à installer            | `latest`          |

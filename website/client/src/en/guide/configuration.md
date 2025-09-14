@@ -21,7 +21,7 @@ repomix --init --global
 |----------------------------------|------------------------------------------------------------------------------------------------------------------------------|------------------------|
 | `input.maxFileSize`              | Maximum file size in bytes to process. Files larger than this will be skipped. Useful for excluding large binary files or data files | `50000000`            |
 | `output.filePath`                | The name of the output file. Supports XML, Markdown, and plain text formats                                                   | `"repomix-output.xml"` |
-| `output.style`                   | The style of the output (`xml`, `markdown`, `plain`). Each format has its own advantages for different AI tools              | `"xml"`                |
+| `output.style`                   | The style of the output (`xml`, `markdown`, `json`, `plain`). Each format has its own advantages for different AI tools              | `"xml"`                |
 | `output.parsableStyle`           | Whether to escape the output based on the chosen style schema. Enables better parsing but may increase token count           | `false`                |
 | `output.compress`                | Whether to perform intelligent code extraction using Tree-sitter to reduce token count while preserving structure             | `false`                |
 | `output.headerText`              | Custom text to include in the file header. Useful for providing context or instructions for AI tools                         | `null`                 |
@@ -62,8 +62,8 @@ You can enable schema validation for your configuration file by adding the `$sch
 {
   "$schema": "https://repomix.com/schemas/latest/schema.json",
   "output": {
-    "filePath": "repomix-output.md",
-    "style": "markdown"
+    "filePath": "repomix-output.xml",
+    "style": "xml"
   }
 }
 ```

@@ -25,6 +25,14 @@ GitHub Actions 워크플로우에 Repomix를 통합하면 AI 분석을 위한 �
     style: markdown
 ```
 
+```yaml
+- name: Pack repository with Repomix (JSON format)
+  uses: yamadashy/repomix/.github/actions/repomix@main
+  with:
+    output: repomix-output.json
+    style: json
+```
+
 ## 여러 디렉터리 및 압축 옵션
 
 여러 디렉터리, include/exclude 패턴, 스마트 압축도 지정할 수 있습니다.
@@ -67,7 +75,7 @@ GitHub Actions 워크플로우에 Repomix를 통합하면 AI 분석을 위한 �
 | `include`           | 포함할 glob 패턴(쉼표 구분)            | `""`           |
 | `ignore`            | 제외할 glob 패턴(쉼표 구분)            | `""`           |
 | `output`            | 출력 파일 경로                          | `repomix-output.xml`    |
-| `style`             | 출력 스타일 (xml, markdown, plain)      | `xml`            |
+| `style`             | 출력 스타일 (xml, markdown, json, plain)      | `xml`            |
 | `compress`          | 스마트 압축 활성화                      | `true`           |
 | `additional-args`   | repomix CLI에 전달할 추가 인자          | `""`           |
 | `repomix-version`   | 설치할 npm 패키지 버전                  | `latest`         |

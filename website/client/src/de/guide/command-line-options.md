@@ -14,7 +14,7 @@
 
 ## Repomix-Ausgabeoptionen
 - `-o, --output <file>`: Ausgabedateipfad (Standard: repomix-output.xml, "-" für stdout)
-- `--style <type>`: Ausgabeformat: xml, markdown oder plain (Standard: xml)
+- `--style <type>`: Ausgabeformat: xml, markdown, json oder plain (Standard: xml)
 - `--parsable-style`: Parsbare Ausgabe basierend auf dem gewählten Stil-Schema aktivieren. Beachten Sie, dass dies die Token-Anzahl erhöhen kann.
 - `--compress`: Intelligente Code-Extraktion durchführen, die sich auf wesentliche Funktions- und Klassensignaturen konzentriert, um die Token-Anzahl zu reduzieren
 - `--output-show-line-numbers`: Zeilennummern in der Ausgabe anzeigen

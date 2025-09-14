@@ -242,6 +242,7 @@ export const buildMcpToolErrorResponse = (structuredContent: McpToolStructuredCo
         text: textContent,
       },
     ],
-    structuredContent: structuredContent,
+    // structuredContent is intentionally omitted for error responses
+    // Error messages have different schema than success responses and may cause validation issues
   };
 };

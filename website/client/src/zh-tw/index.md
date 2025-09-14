@@ -188,6 +188,9 @@ repomix --style xml
 # Markdown 格式
 repomix --style markdown
 
+# JSON 格式
+repomix --style json
+
 # 純文字格式
 repomix --style plain
 ```

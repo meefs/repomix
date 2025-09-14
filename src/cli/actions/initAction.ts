@@ -83,6 +83,7 @@ export const createConfigFile = async (rootDir: string, isGlobal: boolean): Prom
           options: [
             { value: 'xml', label: 'XML', hint: 'Structured XML format' },
             { value: 'markdown', label: 'Markdown', hint: 'Markdown format' },
+            { value: 'json', label: 'JSON', hint: 'Machine-readable JSON format' },
             { value: 'plain', label: 'Plain', hint: 'Simple text format' },
           ],
           initialValue: defaultConfig.output.style,

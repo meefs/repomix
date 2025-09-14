@@ -68,6 +68,14 @@ describe.runIf(!isWindows)('packager integration', () => {
         output: { style: 'markdown', filePath: 'simple-project-output.md' },
       },
     },
+    {
+      desc: 'simple json style',
+      input: 'simple-project',
+      output: 'simple-project-output.json',
+      config: {
+        output: { style: 'json', filePath: 'simple-project-output.json' },
+      },
+    },
   ];
 
   let tempDir: string;
@@ -168,7 +176,6 @@ describe.runIf(!isWindows)('packager integration', () => {
 
       // Read the actual and expected outputs
       const actualOutput = await fs.readFile(actualOutputPath, 'utf-8');
-      const _expectedOutput = await fs.readFile(expectedOutputPath, 'utf-8');
 
       // Compare the outputs - styles (e.g., XML, plain, markdown) may differ
       expect(actualOutput).toContain('This file is a merged representation of the entire codebase');
@@ -209,6 +216,18 @@ describe.runIf(!isWindows)('packager integration', () => {
           expect(actualOutput).toContain('File: src/utils.js');
           expect(actualOutput).toContain('function greet(name) {');
           break;
+
+        case 'json': {
+          // Validate it's valid JSON
+          const jsonOutput = JSON.parse(actualOutput);
+          expect(jsonOutput.fileSummary).toBeDefined();
+          expect(jsonOutput.userProvidedHeader).toBeDefined();
+          expect(jsonOutput.directoryStructure).toBeDefined();
+          expect(jsonOutput.files).toBeDefined();
+          expect(jsonOutput.files['src/index.js']).toContain('function main() {');
+          expect(jsonOutput.files['src/utils.js']).toContain('function greet(name) {');
+          break;
+        }
 
         default:
           throw new Error(`Unsupported style: ${config.output?.style}`);

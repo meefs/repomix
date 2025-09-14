@@ -109,6 +109,9 @@ repomix --style xml
 # Markdown
 repomix --style markdown
 
+# JSON
+repomix --style json
+
 # Văn bản thuần túy
 repomix --style plain
 ```

@@ -1,14 +1,10 @@
 # Định dạng đầu ra
 
-Repomix hỗ trợ nhiều định dạng đầu ra khác nhau để đáp ứng các nhu cầu khác nhau. Mỗi định dạng có ưu điểm riêng và phù hợp với các trường hợp sử dụng khác nhau.
-
-## Định dạng có sẵn
-
-Repomix hỗ trợ ba định dạng đầu ra chính:
-
-1. **XML** (mặc định)
-2. **Markdown**
-3. **Văn bản thuần túy**
+Repomix hỗ trợ bốn định dạng đầu ra:
+- XML (mặc định)
+- Markdown
+- JSON
+- Văn bản thuần túy
 
 Bạn có thể chỉ định định dạng đầu ra bằng cách sử dụng tùy chọn `--style`:
 
@@ -96,7 +92,7 @@ Lựa chọn XML của chúng tôi chủ yếu được ảnh hưởng bởi cá
 
 Ví dụ về đầu ra Markdown:
 
-```markdown
+````markdown
 # Repository: repomix
 
 ## Stats
@@ -137,12 +133,110 @@ src/core/output/outputGenerate.ts
 .github/workflows/ratchet-update.yml
 ```
 ...
-```
+````
 
 Định dạng Markdown đặc biệt hữu ích cho:
 - Đọc và xem xét bởi con người
 - Chia sẻ codebase trong các tài liệu hoặc wiki
 - Sử dụng với các công cụ hỗ trợ Markdown
+
+## Định dạng JSON
+
+```bash
+repomix --style json
+```
+
+Định dạng JSON cung cấp đầu ra có cấu trúc, có thể truy cập theo chương trình với tên thuộc tính camelCase:
+
+```json
+{
+  "fileSummary": {
+    "generationHeader": "File này là đại diện được hợp nhất của toàn bộ codebase, được kết hợp thành một tài liệu duy nhất bởi Repomix.",
+    "purpose": "File này chứa đại diện được đóng gói của toàn bộ nội dung repository...",
+    "fileFormat": "Nội dung được tổ chức như sau...",
+    "usageGuidelines": "- File này nên được xử lý như chỉ đọc...",
+    "notes": "- Một số file có thể đã được loại trừ dựa trên quy tắc .gitignore..."
+  },
+  "userProvidedHeader": "Văn bản header tùy chỉnh nếu được chỉ định",
+  "directoryStructure": "src/
+  cli/
+    cliOutput.ts
+    index.ts
+  config/
+    configLoader.ts",
+  "files": {
+    "src/index.js": "// Nội dung file ở đây",
+    "src/utils.js": "// Nội dung file ở đây"
+  },
+  "instruction": "Hướng dẫn tùy chỉnh từ instructionFilePath"
+}
+```
+
+### Ưu điểm của định dạng JSON
+
+Định dạng JSON lý tưởng cho:
+- **Xử lý theo chương trình**: Dễ dàng phân tích và thao tác với thư viện JSON trong bất kỳ ngôn ngữ lập trình nào
+- **Tích hợp API**: Tiêu thụ trực tiếp bởi dịch vụ web và ứng dụng
+- **Tương thích với công cụ AI**: Định dạng có cấu trúc được tối ưu hóa cho machine learning và hệ thống AI
+- **Phân tích dữ liệu**: Trích xuất thông tin cụ thể một cách đơn giản bằng các công cụ như `jq`
+
+### Làm việc với đầu ra JSON sử dụng `jq`
+
+Định dạng JSON giúp dễ dàng trích xuất thông tin cụ thể theo chương trình. Dưới đây là các ví dụ phổ biến:
+
+#### Thao tác file cơ bản
+```bash
+# Liệt kê tất cả đường dẫn file
+cat repomix-output.json | jq -r '.files | keys[]'
+
+# Đếm tổng số file
+cat repomix-output.json | jq '.files | keys | length'
+
+# Trích xuất nội dung file cụ thể
+cat repomix-output.json | jq -r '.files["README.md"]'
+cat repomix-output.json | jq -r '.files["src/index.js"]'
+```
+
+#### Lọc và phân tích file
+```bash
+# Tìm file theo phần mở rộng
+cat repomix-output.json | jq -r '.files | keys[] | select(endswith(".ts"))'
+cat repomix-output.json | jq -r '.files | keys[] | select(endswith(".js") or endswith(".ts"))'
+
+# Lấy file chứa văn bản cụ thể
+cat repomix-output.json | jq -r '.files | to_entries[] | select(.value | contains("function")) | .key'
+
+# Tạo danh sách file với số ký tự
+cat repomix-output.json | jq -r '.files | to_entries[] | "\(.key): \(.value | length) ký tự"'
+```
+
+#### Trích xuất metadata
+```bash
+# Trích xuất cấu trúc thư mục
+cat repomix-output.json | jq -r '.directoryStructure'
+
+# Lấy thông tin tóm tắt file
+cat repomix-output.json | jq '.fileSummary.purpose'
+cat repomix-output.json | jq -r '.fileSummary.generationHeader'
+
+# Trích xuất header do người dùng cung cấp (nếu tồn tại)
+cat repomix-output.json | jq -r '.userProvidedHeader // "Không có header được cung cấp"'
+
+# Lấy hướng dẫn tùy chỉnh
+cat repomix-output.json | jq -r '.instruction // "Không có hướng dẫn được cung cấp"'
+```
+
+#### Phân tích nâng cao
+```bash
+# Tìm file lớn nhất theo độ dài nội dung
+cat repomix-output.json | jq -r '.files | to_entries[] | [.key, (.value | length)] | @tsv' | sort -k2 -nr | head -10
+
+# Tìm kiếm file chứa các mẫu cụ thể
+cat repomix-output.json | jq -r '.files | to_entries[] | select(.value | test("import.*react"; "i")) | .key'
+
+# Trích xuất đường dẫn file khớp với nhiều phần mở rộng
+cat repomix-output.json | jq -r '.files | keys[] | select(test("\.(js|ts|jsx|tsx)$"))'
+```
 
 ## Định dạng văn bản thuần túy
 

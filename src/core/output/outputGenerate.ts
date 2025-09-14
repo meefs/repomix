@@ -14,6 +14,7 @@ import { sortOutputFiles } from './outputSort.js';
 import {
   generateHeader,
   generateSummaryFileFormat,
+  generateSummaryFileFormatJson,
   generateSummaryNotes,
   generateSummaryPurpose,
   generateSummaryUsageGuidelines,
@@ -112,6 +113,60 @@ const generateParsableXmlOutput = async (renderContext: RenderContext): Promise<
   }
 };
 
+const generateParsableJsonOutput = async (renderContext: RenderContext): Promise<string> => {
+  const jsonDocument = {
+    ...(renderContext.fileSummaryEnabled && {
+      fileSummary: {
+        generationHeader: renderContext.generationHeader,
+        purpose: renderContext.summaryPurpose,
+        fileFormat: generateSummaryFileFormatJson(),
+        usageGuidelines: renderContext.summaryUsageGuidelines,
+        notes: renderContext.summaryNotes,
+      },
+    }),
+    ...(renderContext.headerText && {
+      userProvidedHeader: renderContext.headerText,
+    }),
+    ...(renderContext.directoryStructureEnabled && {
+      directoryStructure: renderContext.treeString,
+    }),
+    ...(renderContext.filesEnabled && {
+      files: renderContext.processedFiles.reduce(
+        (acc, file) => {
+          acc[file.path] = file.content;
+          return acc;
+        },
+        {} as Record<string, string>,
+      ),
+    }),
+    ...(renderContext.gitDiffEnabled && {
+      gitDiffs: {
+        workTree: renderContext.gitDiffWorkTree,
+        staged: renderContext.gitDiffStaged,
+      },
+    }),
+    ...(renderContext.gitLogEnabled && {
+      gitLogs: renderContext.gitLogCommits?.map((commit) => ({
+        date: commit.date,
+        message: commit.message,
+        files: commit.files,
+      })),
+    }),
+    ...(renderContext.instruction && {
+      instruction: renderContext.instruction,
+    }),
+  };
+
+  try {
+    return JSON.stringify(jsonDocument, null, 2);
+  } catch (error) {
+    throw new RepomixError(
+      `Failed to generate JSON output: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      error instanceof Error ? { cause: error } : undefined,
+    );
+  }
+};
+
 const generateHandlebarOutput = async (
   config: RepomixConfigMerged,
   renderContext: RenderContext,
@@ -129,7 +184,7 @@ const generateHandlebarOutput = async (
       template = getPlainTemplate();
       break;
     default:
-      throw new RepomixError(`Unknown output style: ${config.output.style}`);
+      throw new RepomixError(`Unsupported output style for handlebars template: ${config.output.style}`);
   }
 
   try {
@@ -174,6 +229,7 @@ export const generateOutput = async (
     buildOutputGeneratorContext,
     generateHandlebarOutput,
     generateParsableXmlOutput,
+    generateParsableJsonOutput,
     sortOutputFiles,
   },
 ): Promise<string> => {
@@ -190,14 +246,18 @@ export const generateOutput = async (
   );
   const renderContext = createRenderContext(outputGeneratorContext);
 
-  if (!config.output.parsableStyle) return deps.generateHandlebarOutput(config, renderContext, sortedProcessedFiles);
   switch (config.output.style) {
     case 'xml':
-      return deps.generateParsableXmlOutput(renderContext);
+      return config.output.parsableStyle
+        ? deps.generateParsableXmlOutput(renderContext)
+        : deps.generateHandlebarOutput(config, renderContext, sortedProcessedFiles);
+    case 'json':
+      return deps.generateParsableJsonOutput(renderContext);
     case 'markdown':
+    case 'plain':
       return deps.generateHandlebarOutput(config, renderContext, sortedProcessedFiles);
     default:
-      return deps.generateHandlebarOutput(config, renderContext, sortedProcessedFiles);
+      throw new RepomixError(`Unsupported output style: ${config.output.style}`);
   }
 };
 

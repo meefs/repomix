@@ -14,7 +14,7 @@
 
 ## Repomix輸出選項
 - `-o, --output <file>`: 輸出檔案路徑（預設：repomix-output.xml，標準輸出使用 "-"）
-- `--style <type>`: 輸出格式：xml、markdown 或 plain（預設：xml）
+- `--style <type>`: 輸出格式：xml、markdown、json 或 plain（預設：xml）
 - `--parsable-style`: 基於所選樣式架構啟用可解析輸出。注意這可能會增加權杖數。
 - `--compress`: 執行智慧程式碼提取，專注於基本函數和類別簽名以減少權杖數
 - `--output-show-line-numbers`: 在輸出中顯示行號

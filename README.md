@@ -478,6 +478,76 @@ src/
 
 This format provides a clean, readable structure that is both human-friendly and easily parseable by AI systems.
 
+#### JSON Format
+
+To generate output in JSON format, use the `--style json` option:
+
+```bash
+repomix --style json
+```
+
+The JSON format structures the content as a hierarchical JSON object with camelCase property names:
+
+```json
+{
+  "fileSummary": {
+    "generationHeader": "This file is a merged representation of the entire codebase, combined into a single document by Repomix.",
+    "purpose": "This file contains a packed representation of the entire repository's contents...",
+    "fileFormat": "The content is organized as follows...",
+    "usageGuidelines": "- This file should be treated as read-only...",
+    "notes": "- Some files may have been excluded based on .gitignore rules..."
+  },
+  "userProvidedHeader": "Custom header text if specified",
+  "directoryStructure": "src/\n  cli/\n    cliOutput.ts\n    index.ts\n  config/\n    configLoader.ts",
+  "files": {
+    "src/index.js": "// File contents here",
+    "src/utils.js": "// File contents here"
+  },
+  "instruction": "Custom instructions from instructionFilePath"
+}
+```
+
+This format is ideal for:
+- **Programmatic processing**: Easy to parse and manipulate with JSON libraries
+- **API integration**: Direct consumption by web services and applications  
+- **AI tool compatibility**: Structured format for machine learning and AI systems
+- **Data analysis**: Straightforward extraction of specific information using tools like `jq`
+
+##### Working with JSON Output Using `jq`
+
+The JSON format makes it easy to extract specific information programmatically:
+
+```bash
+# List all file paths
+cat repomix-output.json | jq -r '.files | keys[]'
+
+# Count total number of files
+cat repomix-output.json | jq '.files | keys | length'
+
+# Extract specific file content
+cat repomix-output.json | jq -r '.files["README.md"]'
+cat repomix-output.json | jq -r '.files["src/index.js"]'
+
+# Find files by extension
+cat repomix-output.json | jq -r '.files | keys[] | select(endswith(".ts"))'
+
+# Get files containing specific text
+cat repomix-output.json | jq -r '.files | to_entries[] | select(.value | contains("function")) | .key'
+
+# Extract directory structure
+cat repomix-output.json | jq -r '.directoryStructure'
+
+# Get file summary information
+cat repomix-output.json | jq '.fileSummary.purpose'
+cat repomix-output.json | jq -r '.fileSummary.generationHeader'
+
+# Extract user-provided header (if exists)
+cat repomix-output.json | jq -r '.userProvidedHeader // "No header provided"'
+
+# Create a file list with sizes
+cat repomix-output.json | jq -r '.files | to_entries[] | "\(.key): \(.value | length) characters"'
+```
+
 #### Plain Text Format
 
 To generate output in plain text format, use the `--style plain` option:
@@ -544,7 +614,7 @@ Instruction
 
 #### Repomix Output Options
 - `-o, --output <file>`: Output file path (default: repomix-output.xml, use "-" for stdout)
-- `--style <style>`: Output format: xml, markdown, or plain (default: xml)
+- `--style <style>`: Output format: xml, markdown, json, or plain (default: xml)
 - `--parsable-style`: Escape special characters to ensure valid XML/Markdown (needed when output contains code that breaks formatting)
 - `--compress`: Extract essential code structure (classes, functions, interfaces) using Tree-sitter parsing
 - `--output-show-line-numbers`: Prefix each line with its line number in the output
@@ -937,7 +1007,7 @@ Here's an explanation of the configuration options:
 |----------------------------------|------------------------------------------------------------------------------------------------------------------------------|------------------------|
 | `input.maxFileSize`              | Maximum file size in bytes to process. Files larger than this will be skipped                                                | `50000000`            |
 | `output.filePath`                | The name of the output file                                                                                                  | `"repomix-output.xml"` |
-| `output.style`                   | The style of the output (`xml`, `markdown`, `plain`)                                                                         | `"xml"`                |
+| `output.style`                   | The style of the output (`xml`, `markdown`, `json`, `plain`)                                                                 | `"xml"`                |
 | `output.parsableStyle`           | Whether to escape the output based on the chosen style schema. Note that this can increase token count.                      | `false`                |
 | `output.compress`                | Whether to perform intelligent code extraction to reduce token count                                                         | `false`                |
 | `output.headerText`              | Custom text to include in the file header                                                                                    | `null`                 |
@@ -1203,6 +1273,14 @@ Use `--style` to generate output in different formats:
     style: markdown
 ```
 
+```yaml
+- name: Pack repository with Repomix (JSON format)
+  uses: yamadashy/repomix/.github/actions/repomix@main
+  with:
+    output: repomix-output.json
+    style: json
+```
+
 Pack specific directories with compression:
 
 ```yaml
@@ -1276,7 +1354,7 @@ See the complete workflow example [here](https://github.com/yamadashy/repomix/bl
 | `ignore` | Comma-separated glob patterns to ignore files (e.g., `**/*.test.ts,**/node_modules/**`) | `""` |
 | `output` | Relative path for the packed file (extension determines format: `.txt`, `.md`, `.xml`) | `repomix-output.xml` |
 | `compress` | Enable smart compression to reduce output size by pruning implementation details | `true` |
-| `style` | Output style (`xml`, `markdown`, `plain`) | `xml` |
+| `style` | Output style (`xml`, `markdown`, `json`, `plain`) | `xml` |
 | `additional-args` | Extra raw arguments for the repomix CLI (e.g., `--no-file-summary --no-security-check`) | `""` |
 | `repomix-version` | Version of the npm package to install (supports semver ranges, tags, or specific versions like `0.2.25`) | `latest` |
 

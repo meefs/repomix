@@ -14,7 +14,7 @@
 
 ## Options de sortie Repomix
 - `-o, --output <file>`: Chemin du fichier de sortie (par défaut : repomix-output.xml, utiliser "-" pour stdout)
-- `--style <type>`: Format de sortie : xml, markdown ou plain (par défaut : xml)
+- `--style <type>`: Format de sortie : xml, markdown, json ou plain (par défaut : xml)
 - `--parsable-style`: Activer la sortie analysable basée sur le schéma de style choisi. Notez que cela peut augmenter le nombre de jetons.
 - `--compress`: Effectuer une extraction de code intelligente, en se concentrant sur les signatures de fonctions et de classes essentielles pour réduire le nombre de jetons
 - `--output-show-line-numbers`: Afficher les numéros de ligne dans la sortie

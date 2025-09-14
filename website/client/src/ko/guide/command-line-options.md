@@ -14,7 +14,7 @@
 
 ## Repomix 출력 옵션
 - `-o, --output <file>`: 출력 파일 경로 (기본값: repomix-output.xml, 표준출력은 "-" 사용)
-- `--style <type>`: 출력 형식: xml, markdown, 또는 plain (기본값: xml)
+- `--style <type>`: 출력 형식: xml, markdown, json, 또는 plain (기본값: xml)
 - `--parsable-style`: 선택된 스타일 스키마를 기반으로 파싱 가능한 출력 활성화. 이는 토큰 수를 증가시킬 수 있습니다.
 - `--compress`: 토큰 수를 줄이기 위해 필수 함수 및 클래스 시그니처에 초점을 맞춘 지능형 코드 추출 수행
 - `--output-show-line-numbers`: 출력에 행 번호 표시

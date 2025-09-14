@@ -163,6 +163,11 @@ repomix --style xml
 repomix --style markdown
 ```
 
+### JSON
+```bash
+repomix --style json
+```
+
 ### Texto sin formato
 ```bash
 repomix --style plain

@@ -169,6 +169,12 @@ repomix --style xml
 repomix --style markdown
 ```
 
+### JSON
+
+```bash
+repomix --style json
+```
+
 ### Texte brut
 
 ```bash

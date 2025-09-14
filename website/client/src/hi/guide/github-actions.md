@@ -122,7 +122,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        output-style: [xml, markdown, plain]
+        output-style: [xml, markdown, json, plain]
         node-version: [20, 22]
     steps:
       - uses: actions/checkout@v3

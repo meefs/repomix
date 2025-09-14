@@ -98,7 +98,7 @@ export const run = async () => {
       // Repomix Output Options
       .optionsGroup('Repomix Output Options')
       .option('-o, --output <file>', 'Output file path (default: repomix-output.xml, use "-" for stdout)')
-      .option('--style <type>', 'Output format: xml, markdown, or plain (default: xml)')
+      .option('--style <type>', 'Output format: xml, markdown, json, or plain (default: xml)')
       .option(
         '--parsable-style',
         'Escape special characters to ensure valid XML/Markdown (needed when output contains code that breaks formatting)',

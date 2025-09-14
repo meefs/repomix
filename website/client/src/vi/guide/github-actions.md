@@ -39,6 +39,12 @@ jobs:
           style: 'xml'
           remove-comments: false
           show-line-numbers: false
+          
+      - name: Pack repository (JSON format)
+        uses: yamadashy/repomix-action@v1
+        with:
+          output-file: 'repomix-output.json'
+          style: 'json'
 
       - name: Upload packed output
         uses: actions/upload-artifact@v3
@@ -54,7 +60,7 @@ Hành động Repomix hỗ trợ các tùy chọn cấu hình sau:
 | Tùy chọn | Mô tả | Mặc định |
 | --- | --- | --- |
 | `output-file` | Tên tệp đầu ra | `repomix-output.xml` |
-| `style` | Định dạng đầu ra (xml, markdown, plain) | `xml` |
+| `style` | Định dạng đầu ra (xml, markdown, json, plain) | `xml` |
 | `remove-comments` | Xóa bình luận khỏi mã nguồn | `false` |
 | `show-line-numbers` | Hiển thị số dòng trong đầu ra | `false` |
 | `include` | Mẫu bao gồm (phân tách bằng dấu phẩy) | |

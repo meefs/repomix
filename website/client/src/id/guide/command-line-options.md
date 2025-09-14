@@ -14,7 +14,7 @@
 
 ## Opsi Output Repomix
 - `-o, --output <file>`: Jalur file output (default: repomix-output.xml, gunakan "-" untuk stdout)
-- `--style <type>`: Format output: xml, markdown atau plain (default: xml)
+- `--style <type>`: Format output: xml, markdown, json atau plain (default: xml)
 - `--parsable-style`: Mengaktifkan output yang dapat diurai berdasarkan skema gaya yang dipilih. Perhatikan bahwa ini dapat meningkatkan jumlah token.
 - `--compress`: Melakukan ekstraksi kode cerdas, fokus pada tanda tangan fungsi dan kelas penting untuk mengurangi jumlah token
 - `--output-show-line-numbers`: Menampilkan nomor baris dalam output

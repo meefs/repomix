@@ -10,6 +10,7 @@ describe('outputGenerate', () => {
     buildOutputGeneratorContext: vi.fn(),
     generateHandlebarOutput: vi.fn(),
     generateParsableXmlOutput: vi.fn(),
+    generateParsableJsonOutput: vi.fn(),
     sortOutputFiles: vi.fn(),
   };
   test('generateOutput should use sortOutputFiles before generating content', async () => {

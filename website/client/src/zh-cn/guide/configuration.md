@@ -21,7 +21,7 @@ repomix --init --global
 |----------------------------------|------------------------------------------------------------------------------------------------------------------------------|------------------------|
 | `input.maxFileSize`              | 要处理的最大文件大小（字节）。超过此大小的文件将被跳过。用于排除大型二进制文件或数据文件                                  | `50000000`            |
 | `output.filePath`                | 输出文件名。支持XML、Markdown和纯文本格式                                                                                   | `"repomix-output.xml"` |
-| `output.style`                   | 输出样式（`xml`、`markdown`、`plain`）。每种格式对不同的AI工具都有其优势                                                   | `"xml"`                |
+| `output.style`                   | 输出样式（`xml`、`markdown`、`json`、`plain`）。每种格式对不同的AI工具都有其优势                                                   | `"xml"`                |
 | `output.parsableStyle`           | 是否根据所选样式模式转义输出。可以提供更好的解析，但可能会增加令牌数量                                                    | `false`                |
 | `output.compress`                | 是否使用Tree-sitter执行智能代码提取，在保持结构的同时减少令牌数量                                                         | `false`                |
 | `output.headerText`              | 要包含在文件头部的自定义文本。对于为AI工具提供上下文或指令很有用                                                          | `null`                 |

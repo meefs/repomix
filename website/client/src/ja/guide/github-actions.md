@@ -25,6 +25,14 @@ GitHub ActionsワークフローにRepomixを組み込むことで、AI解析用
     style: markdown
 ```
 
+```yaml
+- name: Pack repository with Repomix (JSON format)
+  uses: yamadashy/repomix/.github/actions/repomix@main
+  with:
+    output: repomix-output.json
+    style: json
+```
+
 ## 複数ディレクトリ・圧縮オプション
 
 複数ディレクトリやinclude/excludeパターン、スマート圧縮も指定できます。
@@ -68,7 +76,7 @@ GitHub ActionsワークフローにRepomixを組み込むことで、AI解析用
 | `ignore`            | 除外するファイルのglobパターン（カンマ区切り） | `""`           |
 | `output`            | 出力ファイルパス                        | `repomix-output.xml`      |
 | `compress`          | スマート圧縮の有効化                    | `true`             |
-| `style`             | 出力スタイル（xml, markdown, plain）      | `xml`             |
+| `style`             | 出力スタイル（xml, markdown, json, plain）      | `xml`             |
 | `additional-args`   | repomix CLIへの追加引数                 | `""`           |
 | `repomix-version`   | インストールするnpmパッケージのバージョン | `latest`           |
 

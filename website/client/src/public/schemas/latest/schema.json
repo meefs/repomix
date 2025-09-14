@@ -25,6 +25,7 @@
           "enum": [
             "xml",
             "markdown",
+            "json",
             "plain"
           ]
         },

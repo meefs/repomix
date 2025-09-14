@@ -1,8 +1,9 @@
 # 출력 형식
 
-Repomix는 세 가지 출력 형식을 지원합니다:
+Repomix는 네 가지 출력 형식을 지원합니다:
 - XML (기본값)
 - Markdown
+- JSON
 - 일반 텍스트
 
 ## XML 형식
@@ -73,7 +74,7 @@ repomix --style markdown
 
 Markdown은 읽기 쉬운 형식을 제공합니다:
 
-```markdown
+````markdown
 이 파일은 전체 코드베이스를 하나의 문서로 통합한 것입니다...
 
 # 파일 요약
@@ -111,25 +112,104 @@ helper.ts
 
 **파일:**
 - .github/workflows/ratchet-update.yml
+````
+
+## JSON 형식
+
+```bash
+repomix --style json
 ```
 
-## AI 모델과의 사용
+JSON 형식은 camelCase 속성명을 사용하는 구조화되고 프로그래밍 방식으로 접근 가능한 출력을 제공합니다:
 
-각 형식은 AI 모델에서 잘 작동하지만, 다음 사항을 고려하세요:
-- Claude에는 XML 사용 (가장 정확한 파싱)
-- 일반적인 가독성을 위해서는 Markdown
-- 단순성과 호환성을 위해서는 일반 텍스트
-
-## 사용자 정의
-
-`repomix.config.json`에서 기본 형식 설정:
 ```json
 {
-  "output": {
-    "style": "xml",
-    "filePath": "output.xml"
-  }
+  "fileSummary": {
+    "generationHeader": "이 파일은 Repomix에 의해 전체 코드베이스를 하나의 문서로 통합한 것입니다.",
+    "purpose": "이 파일에는 저장소 전체 콘텐츠의 압축된 표현이 포함되어 있습니다...",
+    "fileFormat": "콘텐츠는 다음과 같이 구성되어 있습니다...",
+    "usageGuidelines": "- 이 파일은 읽기 전용으로 취급해야 합니다...",
+    "notes": "- 일부 파일은 .gitignore 규칙에 따라 제외될 수 있습니다..."
+  },
+  "userProvidedHeader": "지정된 경우의 사용자 정의 헤더 텍스트",
+  "directoryStructure": "src/
+  cli/
+    cliOutput.ts
+    index.ts
+  config/
+    configLoader.ts",
+  "files": {
+    "src/index.js": "// 파일 내용",
+    "src/utils.js": "// 파일 내용"
+  },
+  "instruction": "instructionFilePath에서 가져온 사용자 정의 지시사항"
 }
+```
+
+### JSON 형식의 장점
+
+JSON 형식은 다음 용도에 이상적입니다:
+- **프로그래밍 처리**: 모든 프로그래밍 언어에서 JSON 라이브러리를 사용하여 쉽게 파싱하고 조작 가능
+- **API 통합**: 웹 서비스 및 애플리케이션에서 직접 사용
+- **AI 도구 호환성**: 기계 학습 및 AI 시스템에 최적화된 구조화된 형식
+- **데이터 분석**: `jq`와 같은 도구를 사용하여 특정 정보를 간단히 추출
+
+### `jq`를 사용한 JSON 출력 활용
+
+JSON 형식을 사용하면 프로그래밍 방식으로 특정 정보를 쉽게 추출할 수 있습니다. 일반적인 예시는 다음과 같습니다:
+
+#### 기본 파일 작업
+```bash
+# 모든 파일 경로 나열
+cat repomix-output.json | jq -r '.files | keys[]'
+
+# 총 파일 수 계산
+cat repomix-output.json | jq '.files | keys | length'
+
+# 특정 파일 내용 추출
+cat repomix-output.json | jq -r '.files["README.md"]'
+cat repomix-output.json | jq -r '.files["src/index.js"]'
+```
+
+#### 파일 필터링 및 분석
+```bash
+# 확장자로 파일 찾기
+cat repomix-output.json | jq -r '.files | keys[] | select(endswith(".ts"))'
+cat repomix-output.json | jq -r '.files | keys[] | select(endswith(".js") or endswith(".ts"))'
+
+# 특정 텍스트를 포함한 파일 찾기
+cat repomix-output.json | jq -r '.files | to_entries[] | select(.value | contains("function")) | .key'
+
+# 문자 수와 함께 파일 목록 생성
+cat repomix-output.json | jq -r '.files | to_entries[] | "\(.key): \(.value | length) 문자"'
+```
+
+#### 메타데이터 추출
+```bash
+# 디렉토리 구조 추출
+cat repomix-output.json | jq -r '.directoryStructure'
+
+# 파일 요약 정보 가져오기
+cat repomix-output.json | jq '.fileSummary.purpose'
+cat repomix-output.json | jq -r '.fileSummary.generationHeader'
+
+# 사용자 제공 헤더 추출 (있는 경우)
+cat repomix-output.json | jq -r '.userProvidedHeader // "헤더가 제공되지 않음"'
+
+# 사용자 정의 지시사항 가져오기
+cat repomix-output.json | jq -r '.instruction // "지시사항이 제공되지 않음"'
+```
+
+#### 고급 분석
+```bash
+# 내용 길이별 최대 파일 찾기
+cat repomix-output.json | jq -r '.files | to_entries[] | [.key, (.value | length)] | @tsv' | sort -k2 -nr | head -10
+
+# 특정 패턴을 포함한 파일 검색
+cat repomix-output.json | jq -r '.files | to_entries[] | select(.value | test("import.*react"; "i")) | .key'
+
+# 여러 확장자와 일치하는 파일 경로 추출
+cat repomix-output.json | jq -r '.files | keys[] | select(test("\.(js|ts|jsx|tsx)$"))'
 ```
 
 ## 일반 텍스트 형식
@@ -184,4 +264,24 @@ Message: Merge pull request #795 from yamadashy/chore/ratchet-update-ci
 Files:
   - .github/workflows/ratchet-update.yml
 ================
+```
+
+## AI 모델과의 사용
+
+각 형식은 AI 모델에서 잘 작동하지만, 다음 사항을 고려하세요:
+- Claude에는 XML 사용 (가장 정확한 파싱)
+- 일반적인 가독성을 위해서는 Markdown
+- 프로그래밍 처리 및 API 통합에는 JSON
+- 단순성과 호환성을 위해서는 일반 텍스트
+
+## 사용자 정의
+
+`repomix.config.json`에서 기본 형식 설정:
+```json
+{
+  "output": {
+    "style": "xml",
+    "filePath": "output.xml"
+  }
+}
 ```

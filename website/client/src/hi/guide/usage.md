@@ -47,6 +47,9 @@ repomix --style xml
 # मार्कडाउन फॉर्मेट
 repomix --style markdown
 
+# JSON फॉर्मेट
+repomix --style json
+
 # प्लेन टेक्स्ट फॉर्मेट
 repomix --style plain
 ```

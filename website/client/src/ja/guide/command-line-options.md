@@ -14,7 +14,7 @@
 
 ## Repomix出力オプション
 - `-o, --output <file>`: 出力ファイルパス（デフォルト：repomix-output.xml、標準出力には「-」を使用）
-- `--style <type>`: 出力形式：xml、markdown、またはplain（デフォルト：xml）
+- `--style <type>`: 出力形式：xml、markdown、json、またはplain（デフォルト：xml）
 - `--parsable-style`: 特殊文字をエスケープして有効なXML/Markdownを保証（出力に形式を破損するコードが含まれる場合に必要）
 - `--compress`: Tree-sitter解析を使用して重要なコード構造（クラス、関数、インターフェース）を抽出
 - `--output-show-line-numbers`: 出力の各行に行番号を付ける

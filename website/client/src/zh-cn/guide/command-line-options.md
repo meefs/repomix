@@ -14,7 +14,7 @@
 
 ## Repomix输出选项
 - `-o, --output <file>`: 输出文件路径（默认：repomix-output.xml，使用"-"输出到标准输出）
-- `--style <type>`: 输出格式：xml、markdown或plain（默认：xml）
+- `--style <type>`: 输出格式：xml、markdown、json或plain（默认：xml）
 - `--parsable-style`: 转义特殊字符以确保有效的XML/Markdown（当输出包含破坏格式的代码时需要）
 - `--compress`: 使用Tree-sitter解析提取基本代码结构（类、函数、接口）
 - `--output-show-line-numbers`: 为输出中的每行添加行号前缀

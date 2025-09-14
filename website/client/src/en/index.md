@@ -188,6 +188,9 @@ repomix --style xml
 # Markdown format
 repomix --style markdown
 
+# JSON format
+repomix --style json
+
 # Plain text format
 repomix --style plain
 ```

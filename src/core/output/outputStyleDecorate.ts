@@ -115,6 +115,18 @@ The content is organized as follows:
 `.trim();
 };
 
+export const generateSummaryFileFormatJson = (): string => {
+  return `
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files, each consisting of:
+   - File path as a key
+   - Full contents of the file as the value
+`.trim();
+};
+
 export const generateSummaryUsageGuidelines = (config: RepomixConfigMerged, repositoryInstruction: string): string => {
   return `
 - This file should be treated as read-only. Any changes should be made to the

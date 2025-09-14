@@ -21,7 +21,7 @@ repomix --init --global
 |----------------------------------|------------------------------------------------------------------------------------------------------------------------------|------------------------|
 | `input.maxFileSize`              | Kích thước file tối đa tính bằng byte để xử lý. Các file lớn hơn sẽ bị bỏ qua. Hữu ích để loại trừ các file binary lớn hoặc file dữ liệu | `50000000`            |
 | `output.filePath`                | Tên file đầu ra. Hỗ trợ định dạng XML, Markdown và văn bản thuần túy                                                        | `"repomix-output.xml"` |
-| `output.style`                   | Kiểu đầu ra (`xml`, `markdown`, `plain`). Mỗi định dạng có những ưu điểm riêng cho các công cụ AI khác nhau               | `"xml"`                |
+| `output.style`                   | Kiểu đầu ra (`xml`, `markdown`, `json`, `plain`). Mỗi định dạng có những ưu điểm riêng cho các công cụ AI khác nhau               | `"xml"`                |
 | `output.parsableStyle`           | Có nên escape đầu ra dựa trên schema kiểu đã chọn hay không. Cho phép phân tích tốt hơn nhưng có thể tăng số lượng token | `false`                |
 | `output.compress`                | Có nên thực hiện trích xuất mã thông minh bằng Tree-sitter để giảm số lượng token trong khi bảo toàn cấu trúc hay không    | `false`                |
 | `output.headerText`              | Văn bản tùy chỉnh để đưa vào header file. Hữu ích để cung cấp ngữ cảnh hoặc hướng dẫn cho các công cụ AI                  | `null`                 |

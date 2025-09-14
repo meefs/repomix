@@ -188,6 +188,9 @@ repomix --style xml
 # Định dạng Markdown
 repomix --style markdown
 
+# Định dạng JSON
+repomix --style json
+
 # Định dạng văn bản thuần túy
 repomix --style plain
 ```

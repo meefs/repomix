@@ -61,6 +61,7 @@ describe('Output Generation with Diffs', () => {
     })),
     generateHandlebarOutput: vi.fn(),
     generateParsableXmlOutput: vi.fn(),
+    generateParsableJsonOutput: vi.fn(),
     sortOutputFiles: vi.fn().mockResolvedValue(mockProcessedFiles),
   };
 

@@ -14,7 +14,7 @@
 
 ## Tùy chọn Đầu ra Repomix
 - `-o, --output <file>`: Đường dẫn tệp đầu ra (mặc định: repomix-output.xml, sử dụng "-" cho stdout)
-- `--style <type>`: Định dạng đầu ra: xml, markdown hoặc plain (mặc định: xml)
+- `--style <type>`: Định dạng đầu ra: xml, markdown, json hoặc plain (mặc định: xml)
 - `--parsable-style`: Bật đầu ra có thể phân tích dựa trên lược đồ kiểu đã chọn. Lưu ý rằng điều này có thể làm tăng số lượng token.
 - `--compress`: Thực hiện trích xuất mã thông minh, tập trung vào các chữ ký hàm và lớp cần thiết để giảm số lượng token
 - `--output-show-line-numbers`: Hiển thị số dòng trong đầu ra

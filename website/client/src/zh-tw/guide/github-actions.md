@@ -25,6 +25,14 @@
     style: markdown
 ```
 
+```yaml
+- name: Pack repository with Repomix (JSON format)
+  uses: yamadashy/repomix/.github/actions/repomix@main
+  with:
+    output: repomix-output.json
+    style: json
+```
+
 ## 多目錄與壓縮選項
 
 可以指定多個目錄、包含/排除模式，並啟用智能壓縮：
@@ -67,7 +75,7 @@
 | `include`           | 包含的 glob 模式（逗號分隔）           | `""`           |
 | `ignore`            | 排除的 glob 模式（逗號分隔）           | `""`           |
 | `output`            | 輸出文件路徑                            | `repomix-output.xml`    |
-| `style`             | 輸出樣式（xml、markdown、plain）        | `xml`            |
+| `style`             | 輸出樣式（xml、markdown、json、plain）        | `xml`            |
 | `compress`          | 啟用智能壓縮                            | `true`           |
 | `additional-args`   | 傳遞給 repomix CLI 的額外參數           | `""`           |
 | `repomix-version`   | 要安裝的 npm 包版本                     | `latest`         |

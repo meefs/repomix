@@ -296,7 +296,6 @@ describe('mcpToolRuntime', () => {
             text: JSON.stringify(errorContent, null, 2),
           },
         ],
-        structuredContent: errorContent,
       });
     });
 
@@ -316,7 +315,6 @@ describe('mcpToolRuntime', () => {
             text: JSON.stringify(errorContent, null, 2),
           },
         ],
-        structuredContent: errorContent,
       });
     });
 

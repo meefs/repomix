@@ -44,7 +44,7 @@ GitHub Action Repomix mendukung semua opsi yang tersedia di CLI. Berikut adalah 
 | Opsi | Deskripsi | Default |
 |------|-----------|---------|
 | `output-path` | Jalur file output | `./repomix-output.xml` |
-| `style` | Format output (`xml`, `markdown`, `plain`) | `xml` |
+| `style` | Format output (`xml`, `markdown`, `json`, `plain`) | `xml` |
 | `ignore` | Pola glob untuk mengabaikan file | - |
 | `include` | Pola glob untuk menyertakan file | - |
 | `remove-comments` | Menghapus komentar dari kode sumber | `false` |
@@ -80,6 +80,13 @@ jobs:
           ignore: 'node_modules/**,*.log,tmp/**'
           remove-comments: 'true'
           compress: 'true'
+          
+      - name: Generate JSON Repomix File
+        uses: yamadashy/repomix-action@v1
+        with:
+          output-path: './docs/repomix-output.json'
+          style: 'json'
+          ignore: 'node_modules/**,*.log,tmp/**'
           
       - name: Commit and Push
         run: |

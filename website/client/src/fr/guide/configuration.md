@@ -21,7 +21,7 @@ repomix --init --global
 |----------------------------------|------------------------------------------------------------------------------------------------------------------------------|------------------------|
 | `input.maxFileSize`              | Taille maximale des fichiers à traiter en octets. Les fichiers plus grands seront ignorés. Utile pour exclure les fichiers binaires volumineux ou les fichiers de données | `50000000`            |
 | `output.filePath`                | Nom du fichier de sortie. Prend en charge les formats XML, Markdown et texte brut                                            | `"repomix-output.xml"` |
-| `output.style`                   | Style de sortie (`xml`, `markdown`, `plain`). Chaque format a ses propres avantages pour différents outils d'IA              | `"xml"`                |
+| `output.style`                   | Style de sortie (`xml`, `markdown`, `json`, `plain`). Chaque format a ses propres avantages pour différents outils d'IA              | `"xml"`                |
 | `output.parsableStyle`           | Indique s'il faut échapper la sortie selon le schéma de style choisi. Permet une meilleure analyse mais peut augmenter le nombre de tokens | `false`                |
 | `output.compress`                | Indique s'il faut effectuer une extraction intelligente du code à l'aide de Tree-sitter pour réduire le nombre de tokens tout en préservant la structure | `false`                |
 | `output.headerText`              | Texte personnalisé à inclure dans l'en-tête du fichier. Utile pour fournir du contexte ou des instructions aux outils d'IA   | `null`                 |
