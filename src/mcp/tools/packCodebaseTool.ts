@@ -4,6 +4,7 @@ import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import { z } from 'zod';
 import { runCli } from '../../cli/cliRun.js';
 import type { CliOptions } from '../../cli/types.js';
+import { defaultFilePathMap, repomixOutputStyleSchema } from '../../config/configSchema.js';
 import {
   buildMcpToolErrorResponse,
   convertErrorToJson,
@@ -33,9 +34,16 @@ const packCodebaseInputSchema = z.object({
     ),
   topFilesLength: z
     .number()
+    .int()
+    .min(1)
     .optional()
     .default(10)
     .describe('Number of largest files by size to display in the metrics summary for codebase analysis (default: 10)'),
+  style: repomixOutputStyleSchema
+    .default('xml')
+    .describe(
+      'Output format style: xml (structured tags, default), markdown (human-readable with code blocks), json (machine-readable key-value), or plain (simple text with separators)',
+    ),
 });
 
 const packCodebaseOutputSchema = z.object({
@@ -54,7 +62,7 @@ export const registerPackCodebaseTool = (mcpServer: McpServer) => {
     {
       title: 'Pack Local Codebase',
       description:
-        'Package a local code directory into a consolidated XML file for AI analysis. This tool analyzes the codebase structure, extracts relevant code content, and generates a comprehensive report including metrics, file tree, and formatted code content. Supports Tree-sitter compression for efficient token usage.',
+        'Package a local code directory into a consolidated file for AI analysis. This tool analyzes the codebase structure, extracts relevant code content, and generates a comprehensive report including metrics, file tree, and formatted code content. Supports multiple output formats: XML (structured with <file> tags), Markdown (human-readable with ## headers and code blocks), JSON (machine-readable with files as key-value pairs), and Plain text (simple format with separators). Also supports Tree-sitter compression for efficient token usage.',
       inputSchema: packCodebaseInputSchema.shape,
       outputSchema: packCodebaseOutputSchema.shape,
       annotations: {
@@ -64,19 +72,27 @@ export const registerPackCodebaseTool = (mcpServer: McpServer) => {
         openWorldHint: false,
       },
     },
-    async ({ directory, compress, includePatterns, ignorePatterns, topFilesLength }): Promise<CallToolResult> => {
+    async ({
+      directory,
+      compress,
+      includePatterns,
+      ignorePatterns,
+      topFilesLength,
+      style,
+    }): Promise<CallToolResult> => {
       let tempDir = '';
 
       try {
         tempDir = await createToolWorkspace();
-        const outputFilePath = path.join(tempDir, 'repomix-output.xml');
+        const outputFileName = defaultFilePathMap[style];
+        const outputFilePath = path.join(tempDir, outputFileName);
 
         const cliOptions = {
           compress,
           include: includePatterns,
           ignore: ignorePatterns,
           output: outputFilePath,
-          style: 'xml',
+          style,
           securityCheck: true,
           topFilesLen: topFilesLength,
           quiet: true,

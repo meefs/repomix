@@ -4,6 +4,7 @@ import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import { z } from 'zod';
 import { runCli } from '../../cli/cliRun.js';
 import type { CliOptions } from '../../cli/types.js';
+import { defaultFilePathMap, repomixOutputStyleSchema } from '../../config/configSchema.js';
 import {
   buildMcpToolErrorResponse,
   convertErrorToJson,
@@ -37,9 +38,16 @@ const packRemoteRepositoryInputSchema = z.object({
     ),
   topFilesLength: z
     .number()
+    .int()
+    .min(1)
     .optional()
     .default(10)
     .describe('Number of largest files by size to display in the metrics summary for codebase analysis (default: 10)'),
+  style: repomixOutputStyleSchema
+    .default('xml')
+    .describe(
+      'Output format style: xml (structured tags, default), markdown (human-readable with code blocks), json (machine-readable key-value), or plain (simple text with separators)',
+    ),
 });
 
 const packRemoteRepositoryOutputSchema = z.object({
@@ -58,7 +66,7 @@ export const registerPackRemoteRepositoryTool = (mcpServer: McpServer) => {
     {
       title: 'Pack Remote Repository',
       description:
-        'Fetch, clone, and package a GitHub repository into a consolidated XML file for AI analysis. This tool automatically clones the remote repository, analyzes its structure, and generates a comprehensive report. Supports various GitHub URL formats and includes security checks to prevent exposure of sensitive information.',
+        'Fetch, clone, and package a GitHub repository into a consolidated file for AI analysis. This tool automatically clones the remote repository, analyzes its structure, and generates a comprehensive report. Supports multiple output formats: XML (structured with <file> tags), Markdown (human-readable with ## headers and code blocks), JSON (machine-readable with files as key-value pairs), and Plain text (simple format with separators). Also supports various GitHub URL formats and includes security checks to prevent exposure of sensitive information.',
       inputSchema: packRemoteRepositoryInputSchema.shape,
       outputSchema: packRemoteRepositoryOutputSchema.shape,
       annotations: {
@@ -68,12 +76,13 @@ export const registerPackRemoteRepositoryTool = (mcpServer: McpServer) => {
         openWorldHint: true,
       },
     },
-    async ({ remote, compress, includePatterns, ignorePatterns, topFilesLength }): Promise<CallToolResult> => {
+    async ({ remote, compress, includePatterns, ignorePatterns, topFilesLength, style }): Promise<CallToolResult> => {
       let tempDir = '';
 
       try {
         tempDir = await createToolWorkspace();
-        const outputFilePath = path.join(tempDir, 'repomix-output.xml');
+        const outputFileName = defaultFilePathMap[style];
+        const outputFilePath = path.join(tempDir, outputFileName);
 
         const cliOptions = {
           remote,
@@ -81,7 +90,7 @@ export const registerPackRemoteRepositoryTool = (mcpServer: McpServer) => {
           include: includePatterns,
           ignore: ignorePatterns,
           output: outputFilePath,
-          style: 'xml',
+          style,
           securityCheck: true,
           topFilesLen: topFilesLength,
           quiet: true,
