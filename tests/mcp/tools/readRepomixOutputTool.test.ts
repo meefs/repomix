@@ -165,4 +165,38 @@ describe('readRepomixOutputTool', () => {
     const parsedResult = JSON.parse(result.content[0].text);
     expect(parsedResult.errorMessage).toContain('Error: Start line (4) cannot be greater than end line (2)');
   });
+
+  it('should handle string parameters by coercing them to numbers', async () => {
+    vi.mocked(mcpToolRuntime.getOutputFilePath).mockReturnValue('/path/to/file.xml');
+    vi.mocked(fs.access).mockResolvedValue(undefined);
+    vi.mocked(fs.readFile).mockResolvedValue('Line 1\nLine 2\nLine 3\nLine 4\nLine 5' as unknown as Buffer);
+
+    // Simulate Cursor AI sending strings instead of numbers
+    const result = await toolHandler({
+      outputId: 'test-id',
+      startLine: '2' as unknown as number,
+      endLine: '4' as unknown as number,
+    });
+
+    expect(fs.readFile).toHaveBeenCalledWith('/path/to/file.xml', 'utf8');
+    expect(result.isError).toBeUndefined();
+    expect(result.content).toHaveLength(1);
+    // The structured content is handled internally by the MCP framework
+  });
+
+  it('should handle mixed string and number parameters', async () => {
+    vi.mocked(mcpToolRuntime.getOutputFilePath).mockReturnValue('/path/to/file.xml');
+    vi.mocked(fs.access).mockResolvedValue(undefined);
+    vi.mocked(fs.readFile).mockResolvedValue('Line 1\nLine 2\nLine 3\nLine 4\nLine 5' as unknown as Buffer);
+
+    // Test with startLine as string and endLine as number
+    const result = await toolHandler({
+      outputId: 'test-id',
+      startLine: '2' as unknown as number,
+      endLine: 4,
+    });
+
+    expect(result.isError).toBeUndefined();
+    expect(result.content).toHaveLength(1);
+  });
 });

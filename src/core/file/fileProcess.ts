@@ -25,7 +25,7 @@ export const processFiles = async (
     numOfTasks: rawFiles.length,
     workerPath: new URL('./workers/fileProcessWorker.js', import.meta.url).href,
     // High memory usage and leak risk
-    runtime: 'child_process',
+    runtime: 'worker_threads',
   });
   const tasks = rawFiles.map(
     (rawFile, _index) =>

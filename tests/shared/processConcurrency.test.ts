@@ -85,6 +85,11 @@ describe('processConcurrency', () => {
         workerData: {
           logLevel: 2,
         },
+        env: expect.objectContaining({
+          REPOMIX_LOG_LEVEL: '2',
+          FORCE_COLOR: expect.any(String),
+          TERM: expect.any(String),
+        }),
       });
       expect(tinypool).toBeDefined();
     });

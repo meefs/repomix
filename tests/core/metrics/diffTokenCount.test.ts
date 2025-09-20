@@ -88,6 +88,10 @@ index 123..456 100644
     });
 
     // Mock dependency functions
+    const mockTaskRunner = {
+      run: vi.fn(),
+      cleanup: vi.fn(),
+    };
 
     const mockCalculateOutputMetrics = vi.fn().mockResolvedValue(15);
 
@@ -106,6 +110,7 @@ index 123..456 100644
         calculateOutputMetrics: mockCalculateOutputMetrics,
         calculateGitDiffMetrics: vi.fn().mockResolvedValue(25),
         calculateGitLogMetrics: vi.fn().mockResolvedValue({ gitLogTokenCount: 0 }),
+        taskRunner: mockTaskRunner,
       },
     );
 
@@ -166,6 +171,10 @@ index 123..456 100644
     });
 
     // Mock dependency functions
+    const mockTaskRunner = {
+      run: vi.fn(),
+      cleanup: vi.fn(),
+    };
 
     const mockCalculateOutputMetrics = vi.fn().mockResolvedValue(15);
 
@@ -181,6 +190,7 @@ index 123..456 100644
         calculateOutputMetrics: mockCalculateOutputMetrics,
         calculateGitDiffMetrics: vi.fn().mockResolvedValue(0),
         calculateGitLogMetrics: vi.fn().mockResolvedValue({ gitLogTokenCount: 0 }),
+        taskRunner: mockTaskRunner,
       },
     );
 
@@ -239,6 +249,10 @@ index 123..456 100644
     });
 
     // Mock dependency functions
+    const mockTaskRunner = {
+      run: vi.fn(),
+      cleanup: vi.fn(),
+    };
 
     const mockCalculateOutputMetrics = vi.fn().mockResolvedValue(15);
 
@@ -254,6 +268,7 @@ index 123..456 100644
         calculateOutputMetrics: mockCalculateOutputMetrics,
         calculateGitDiffMetrics: vi.fn().mockResolvedValue(0),
         calculateGitLogMetrics: vi.fn().mockResolvedValue({ gitLogTokenCount: 0 }),
+        taskRunner: mockTaskRunner,
       },
     );
 

@@ -51,6 +51,18 @@ export const createWorkerPool = (options: WorkerOptions): Tinypool => {
     workerData: {
       logLevel: logger.getLogLevel(),
     },
+    // Only add env for child_process workers
+    ...(runtime === 'child_process' && {
+      env: {
+        ...process.env,
+        // Pass log level as environment variable for child_process workers
+        REPOMIX_LOG_LEVEL: logger.getLogLevel().toString(),
+        // Ensure color support in child_process workers
+        FORCE_COLOR: process.env.FORCE_COLOR || (process.stdout.isTTY ? '1' : '0'),
+        // Pass terminal capabilities
+        TERM: process.env.TERM || 'xterm-256color',
+      },
+    }),
   });
 
   const endTime = process.hrtime.bigint();

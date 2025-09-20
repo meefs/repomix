@@ -1,8 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { ProcessedFile } from '../../../src/core/file/fileTypes.js';
 import { calculateSelectiveFileMetrics } from '../../../src/core/metrics/calculateSelectiveFileMetrics.js';
-import type { FileMetricsTask } from '../../../src/core/metrics/workers/fileMetricsWorker.js';
-import fileMetricsWorker from '../../../src/core/metrics/workers/fileMetricsWorker.js';
+import { type TokenCountTask, countTokens } from '../../../src/core/metrics/workers/calculateMetricsWorker.js';
 import type { WorkerOptions } from '../../../src/shared/processConcurrency.js';
 import type { RepomixProgressCallback } from '../../../src/shared/types.js';
 
@@ -13,7 +12,7 @@ vi.mock('../../shared/processConcurrency', () => ({
 const mockInitTaskRunner = <T, R>(_options: WorkerOptions) => {
   return {
     run: async (task: T) => {
-      return (await fileMetricsWorker(task as FileMetricsTask)) as R;
+      return (await countTokens(task as TokenCountTask)) as R;
     },
     cleanup: async () => {
       // Mock cleanup - no-op for tests
@@ -37,7 +36,7 @@ describe('calculateSelectiveFileMetrics', () => {
       'o200k_base',
       progressCallback,
       {
-        initTaskRunner: mockInitTaskRunner,
+        taskRunner: mockInitTaskRunner({ numOfTasks: 1, workerPath: '', runtime: 'worker_threads' }),
       },
     );
 
@@ -58,7 +57,7 @@ describe('calculateSelectiveFileMetrics', () => {
       'o200k_base',
       progressCallback,
       {
-        initTaskRunner: mockInitTaskRunner,
+        taskRunner: mockInitTaskRunner({ numOfTasks: 1, workerPath: '', runtime: 'worker_threads' }),
       },
     );
 

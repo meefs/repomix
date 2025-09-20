@@ -1,7 +1,7 @@
 import type { TiktokenEncoding } from 'tiktoken';
 import { logger } from '../../shared/logger.js';
-import { initTaskRunner } from '../../shared/processConcurrency.js';
-import type { OutputMetricsTask } from './workers/outputMetricsWorker.js';
+import type { TaskRunner } from '../../shared/processConcurrency.js';
+import type { TokenCountTask } from './workers/calculateMetricsWorker.js';
 
 const CHUNK_SIZE = 1000;
 const MIN_CONTENT_LENGTH_FOR_PARALLEL = 1_000_000; // 1000KB
@@ -9,18 +9,10 @@ const MIN_CONTENT_LENGTH_FOR_PARALLEL = 1_000_000; // 1000KB
 export const calculateOutputMetrics = async (
   content: string,
   encoding: TiktokenEncoding,
-  path?: string,
-  deps = {
-    initTaskRunner,
-  },
+  path: string | undefined,
+  deps: { taskRunner: TaskRunner<TokenCountTask, number> },
 ): Promise<number> => {
   const shouldRunInParallel = content.length > MIN_CONTENT_LENGTH_FOR_PARALLEL;
-  const numOfTasks = shouldRunInParallel ? CHUNK_SIZE : 1;
-  const taskRunner = deps.initTaskRunner<OutputMetricsTask, number>({
-    numOfTasks,
-    workerPath: new URL('./workers/outputMetricsWorker.js', import.meta.url).href,
-    runtime: 'child_process',
-  });
 
   try {
     logger.trace(`Starting output token count for ${path || 'output'}`);
@@ -39,20 +31,24 @@ export const calculateOutputMetrics = async (
 
       // Process chunks in parallel
       const chunkResults = await Promise.all(
-        chunks.map((chunk, index) =>
-          taskRunner.run({
+        chunks.map(async (chunk, index) => {
+          return deps.taskRunner.run({
             content: chunk,
             encoding,
             path: path ? `${path}-chunk-${index}` : undefined,
-          }),
-        ),
+          });
+        }),
       );
 
       // Sum up the results
       result = chunkResults.reduce((sum, count) => sum + count, 0);
     } else {
       // Process small content directly
-      result = await taskRunner.run({ content, encoding, path });
+      result = await deps.taskRunner.run({
+        content,
+        encoding,
+        path,
+      });
     }
 
     const endTime = process.hrtime.bigint();
@@ -63,8 +59,5 @@ export const calculateOutputMetrics = async (
   } catch (error) {
     logger.error('Error during token count:', error);
     throw error;
-  } finally {
-    // Always cleanup worker pool
-    await taskRunner.cleanup();
   }
 };

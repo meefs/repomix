@@ -703,5 +703,50 @@ describe('grepRepomixOutputTool', () => {
       expect(formattedOutputString).toContain('2:NIPPON語test');
       expect(formattedOutputString).toContain('4:TEST中文');
     });
+
+    it('should handle string parameters by coercing them to numbers', async () => {
+      vi.mocked(mcpToolRuntime.getOutputFilePath).mockReturnValue('/path/to/file.xml');
+      vi.mocked(fs.access).mockResolvedValue(undefined);
+      vi.mocked(fs.readFile).mockResolvedValue(
+        'line 1\npattern match\nline 3\nanother pattern\nline 5' as unknown as Buffer,
+      );
+
+      // Simulate Cursor AI sending strings instead of numbers
+      const result = await toolHandler({
+        outputId: 'test-id',
+        pattern: 'pattern',
+        contextLines: '1' as unknown as number,
+        beforeLines: '2' as unknown as number,
+        afterLines: '1' as unknown as number,
+      });
+
+      expect(result.isError).toBeUndefined();
+      expect(result.content).toHaveLength(1);
+      const parsedResult = JSON.parse(result.content[0].text);
+      expect(parsedResult.description).toContain('Found 2 match(es)');
+      expect(parsedResult.formattedOutput.length).toBeGreaterThan(0);
+    });
+
+    it('should handle mixed string and number parameters', async () => {
+      vi.mocked(mcpToolRuntime.getOutputFilePath).mockReturnValue('/path/to/file.xml');
+      vi.mocked(fs.access).mockResolvedValue(undefined);
+      vi.mocked(fs.readFile).mockResolvedValue(
+        'line 1\npattern match\nline 3\nanother pattern\nline 5' as unknown as Buffer,
+      );
+
+      // Test with some parameters as strings and others as numbers
+      const result = await toolHandler({
+        outputId: 'test-id',
+        pattern: 'pattern',
+        contextLines: '1' as unknown as number,
+        beforeLines: 2,
+        afterLines: '0' as unknown as number,
+      });
+
+      expect(result.isError).toBeUndefined();
+      expect(result.content).toHaveLength(1);
+      const parsedResult = JSON.parse(result.content[0].text);
+      expect(parsedResult.description).toContain('Found 2 match(es)');
+    });
   });
 });

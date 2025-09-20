@@ -1,13 +1,14 @@
 import type { Stats } from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { globby } from 'globby';
 import { minimatch } from 'minimatch';
 import type { RepomixConfigMerged } from '../../config/configSchema.js';
 import { defaultIgnoreList } from '../../config/defaultIgnore.js';
 import { RepomixError } from '../../shared/errorHandle.js';
 import { logger } from '../../shared/logger.js';
 import { sortPaths } from './filePathSort.js';
-import { executeGlobbyInWorker } from './globbyExecute.js';
+
 import { PermissionError, checkDirectoryPermissions } from './permissionCheck.js';
 
 export interface FileSearchResult {
@@ -191,7 +192,7 @@ export const searchFiles = async (
 
     logger.trace('Include patterns with explicit files:', includePatterns);
 
-    const filePaths = await executeGlobbyInWorker(includePatterns, {
+    const filePaths = await globby(includePatterns, {
       cwd: rootDir,
       ignore: [...adjustedIgnorePatterns],
       ignoreFiles: [...ignoreFilePatterns],
@@ -199,9 +200,10 @@ export const searchFiles = async (
       absolute: false,
       dot: true,
       followSymbolicLinks: false,
-    }).catch((error) => {
+    }).catch((error: unknown) => {
       // Handle EPERM errors specifically
-      if (error.code === 'EPERM' || error.code === 'EACCES') {
+      const code = (error as NodeJS.ErrnoException | { code?: string })?.code;
+      if (code === 'EPERM' || code === 'EACCES') {
         throw new PermissionError(
           `Permission denied while scanning directory. Please check folder access permissions for your terminal app. path: ${rootDir}`,
           rootDir,
@@ -212,7 +214,7 @@ export const searchFiles = async (
 
     let emptyDirPaths: string[] = [];
     if (config.output.includeEmptyDirectories) {
-      const directories = await executeGlobbyInWorker(includePatterns, {
+      const directories = await globby(includePatterns, {
         cwd: rootDir,
         ignore: [...adjustedIgnorePatterns],
         ignoreFiles: [...ignoreFilePatterns],

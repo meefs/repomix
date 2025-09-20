@@ -1,4 +1,3 @@
-import path from 'node:path';
 import { loadFileConfig, mergeConfigs } from '../../config/configLoad.js';
 import {
   type RepomixConfigCli,
@@ -7,16 +6,20 @@ import {
   type RepomixOutputStyle,
   repomixConfigCliSchema,
 } from '../../config/configSchema.js';
-import { readFilePathsFromStdin } from '../../core/file/fileStdin.js';
-import { type PackResult, pack } from '../../core/packager.js';
-import { RepomixError } from '../../shared/errorHandle.js';
+import type { PackResult } from '../../core/packager.js';
 import { rethrowValidationErrorIfZodError } from '../../shared/errorHandle.js';
 import { logger } from '../../shared/logger.js';
 import { splitPatterns } from '../../shared/patternUtils.js';
+import { initTaskRunner } from '../../shared/processConcurrency.js';
 import { reportResults } from '../cliReport.js';
-import { Spinner } from '../cliSpinner.js';
 import type { CliOptions } from '../types.js';
 import { runMigrationAction } from './migrationAction.js';
+import type {
+  DefaultActionTask,
+  DefaultActionWorkerResult,
+  PingResult,
+  PingTask,
+} from './workers/defaultActionWorker.js';
 
 export interface DefaultActionRunnerResult {
   packResult: PackResult;
@@ -33,7 +36,7 @@ export const runDefaultAction = async (
   // Run migration before loading config
   await runMigrationAction(cwd);
 
-  // Load the config file
+  // Load the config file in main process
   const fileConfig: RepomixConfigFile = await loadFileConfig(cwd, cliOptions.config ?? null);
   logger.trace('Loaded file config:', fileConfig);
 
@@ -45,95 +48,40 @@ export const runDefaultAction = async (
   const config: RepomixConfigMerged = mergeConfigs(cwd, fileConfig, cliConfig);
   logger.trace('Merged config:', config);
 
-  // Initialize spinner that can be shared across operations
-  const spinner = new Spinner('Initializing...', cliOptions);
-  spinner.start();
-
-  const result = cliOptions.stdin
-    ? await handleStdinProcessing(directories, cwd, config, spinner)
-    : await handleDirectoryProcessing(directories, cwd, config, spinner);
-
-  spinner.succeed('Packing completed successfully!');
-
-  const packResult = result.packResult;
-
-  reportResults(cwd, packResult, config);
-
-  return {
-    packResult,
-    config,
-  };
-};
-
-/**
- * Handles stdin processing workflow for file paths input.
- */
-export const handleStdinProcessing = async (
-  directories: string[],
-  cwd: string,
-  config: RepomixConfigMerged,
-  spinner: Spinner,
-): Promise<DefaultActionRunnerResult> => {
-  // Validate directory arguments for stdin mode
-  const firstDir = directories[0] ?? '.';
-  if (directories.length > 1 || firstDir !== '.') {
-    throw new RepomixError(
-      'When using --stdin, do not specify directory arguments. File paths will be read from stdin.',
-    );
-  }
-
-  let packResult: PackResult;
+  // Create worker task runner
+  const taskRunner = initTaskRunner<DefaultActionTask | PingTask, DefaultActionWorkerResult | PingResult>({
+    numOfTasks: 1,
+    workerPath: new URL('./workers/defaultActionWorker.js', import.meta.url).href,
+    runtime: 'child_process',
+  });
 
   try {
-    const stdinResult = await readFilePathsFromStdin(cwd);
+    // Wait for worker to be ready (Bun compatibility)
+    await waitForWorkerReady(taskRunner);
 
-    // Use pack with predefined files from stdin
-    packResult = await pack(
-      [cwd],
+    // Create task for worker (now with pre-loaded config)
+    const task: DefaultActionTask = {
+      directories,
+      cwd,
       config,
-      (message) => {
-        spinner.update(message);
-      },
-      {},
-      stdinResult.filePaths,
-    );
-  } catch (error) {
-    spinner.fail('Error reading from stdin or during packing');
-    throw error;
+      cliOptions,
+      isStdin: !!cliOptions.stdin,
+    };
+
+    // Run the task in worker (spinner is handled inside worker)
+    const result = (await taskRunner.run(task)) as DefaultActionWorkerResult;
+
+    // Report results in main process
+    reportResults(cwd, result.packResult, result.config);
+
+    return {
+      packResult: result.packResult,
+      config: result.config,
+    };
+  } finally {
+    // Always cleanup worker pool
+    await taskRunner.cleanup();
   }
-
-  return {
-    packResult,
-    config,
-  };
-};
-
-/**
- * Handles normal directory processing workflow.
- */
-export const handleDirectoryProcessing = async (
-  directories: string[],
-  cwd: string,
-  config: RepomixConfigMerged,
-  spinner: Spinner,
-): Promise<DefaultActionRunnerResult> => {
-  const targetPaths = directories.map((directory) => path.resolve(cwd, directory));
-
-  let packResult: PackResult;
-
-  try {
-    packResult = await pack(targetPaths, config, (message) => {
-      spinner.update(message);
-    });
-  } catch (error) {
-    spinner.fail('Error during packing');
-    throw error;
-  }
-
-  return {
-    packResult,
-    config,
-  };
 };
 
 /**
@@ -315,5 +263,44 @@ export const buildCliConfig = (options: CliOptions): RepomixConfigCli => {
   } catch (error) {
     rethrowValidationErrorIfZodError(error, 'Invalid cli arguments');
     throw error;
+  }
+};
+
+/**
+ * Wait for worker to be ready by sending a ping request.
+ * This is specifically needed for Bun compatibility due to ES module initialization timing issues.
+ */
+const waitForWorkerReady = async (taskRunner: {
+  run: (task: DefaultActionTask | PingTask) => Promise<DefaultActionWorkerResult | PingResult>;
+}): Promise<void> => {
+  const isBun = process.versions?.bun;
+  if (!isBun) {
+    // No need to wait for Node.js
+    return;
+  }
+
+  const maxRetries = 3;
+  const retryDelay = 50; // ms
+  let pingSuccessful = false;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      await taskRunner.run({
+        ping: true,
+      });
+      logger.debug(`Worker initialization ping successful on attempt ${attempt}`);
+      pingSuccessful = true;
+      break;
+    } catch (error) {
+      logger.debug(`Worker ping failed on attempt ${attempt}/${maxRetries}:`, error);
+      if (attempt < maxRetries) {
+        logger.debug(`Waiting ${retryDelay}ms before retry...`);
+        await new Promise((resolve) => setTimeout(resolve, retryDelay));
+      }
+    }
+  }
+
+  if (!pingSuccessful) {
+    logger.debug('All Worker ping attempts failed, proceeding anyway...');
   }
 };

@@ -13,17 +13,17 @@ import {
 const grepRepomixOutputInputSchema = z.object({
   outputId: z.string().describe('ID of the Repomix output file to search'),
   pattern: z.string().describe('Search pattern (JavaScript RegExp regular expression syntax)'),
-  contextLines: z
+  contextLines: z.coerce
     .number()
     .default(0)
     .describe(
       'Number of context lines to show before and after each match (default: 0). Overridden by beforeLines/afterLines if specified.',
     ),
-  beforeLines: z
+  beforeLines: z.coerce
     .number()
     .optional()
     .describe('Number of context lines to show before each match (like grep -B). Takes precedence over contextLines.'),
-  afterLines: z
+  afterLines: z.coerce
     .number()
     .optional()
     .describe('Number of context lines to show after each match (like grep -A). Takes precedence over contextLines.'),

@@ -12,11 +12,14 @@ import {
 
 const readRepomixOutputInputSchema = z.object({
   outputId: z.string().describe('ID of the Repomix output file to read'),
-  startLine: z
+  startLine: z.coerce
     .number()
     .optional()
     .describe('Starting line number (1-based, inclusive). If not specified, reads from beginning.'),
-  endLine: z.number().optional().describe('Ending line number (1-based, inclusive). If not specified, reads to end.'),
+  endLine: z.coerce
+    .number()
+    .optional()
+    .describe('Ending line number (1-based, inclusive). If not specified, reads to end.'),
 });
 
 const readRepomixOutputOutputSchema = z.object({

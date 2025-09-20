@@ -96,16 +96,31 @@ export const setLogLevel = (level: RepomixLogLevel) => {
  * Set logger log level from workerData if valid.
  * This is used in worker threads where configuration is passed via workerData.
  */
+const isValidLogLevel = (level: number): level is RepomixLogLevel => {
+  return (
+    level === repomixLogLevels.SILENT ||
+    level === repomixLogLevels.ERROR ||
+    level === repomixLogLevels.WARN ||
+    level === repomixLogLevels.INFO ||
+    level === repomixLogLevels.DEBUG
+  );
+};
+
 export const setLogLevelByWorkerData = () => {
+  // Try to get log level from environment variable first (for child_process workers)
+  const envLogLevel = process.env.REPOMIX_LOG_LEVEL;
+  if (envLogLevel !== undefined) {
+    const logLevel = Number(envLogLevel);
+    if (!Number.isNaN(logLevel) && isValidLogLevel(logLevel)) {
+      setLogLevel(logLevel);
+      return;
+    }
+  }
+
+  // Fallback to workerData for worker_threads
   if (Array.isArray(workerData) && workerData.length > 1 && workerData[1]?.logLevel !== undefined) {
     const logLevel = workerData[1].logLevel;
-    if (
-      logLevel === repomixLogLevels.SILENT ||
-      logLevel === repomixLogLevels.ERROR ||
-      logLevel === repomixLogLevels.WARN ||
-      logLevel === repomixLogLevels.INFO ||
-      logLevel === repomixLogLevels.DEBUG
-    ) {
+    if (isValidLogLevel(logLevel)) {
       setLogLevel(logLevel);
     }
   }

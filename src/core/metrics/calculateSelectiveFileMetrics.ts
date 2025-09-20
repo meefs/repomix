@@ -1,10 +1,10 @@
 import pc from 'picocolors';
 import type { TiktokenEncoding } from 'tiktoken';
 import { logger } from '../../shared/logger.js';
-import { initTaskRunner } from '../../shared/processConcurrency.js';
+import type { TaskRunner } from '../../shared/processConcurrency.js';
 import type { RepomixProgressCallback } from '../../shared/types.js';
 import type { ProcessedFile } from '../file/fileTypes.js';
-import type { FileMetricsTask } from './workers/fileMetricsWorker.js';
+import type { TokenCountTask } from './workers/calculateMetricsWorker.js';
 import type { FileMetrics } from './workers/types.js';
 
 export const calculateSelectiveFileMetrics = async (
@@ -12,9 +12,7 @@ export const calculateSelectiveFileMetrics = async (
   targetFilePaths: string[],
   tokenCounterEncoding: TiktokenEncoding,
   progressCallback: RepomixProgressCallback,
-  deps = {
-    initTaskRunner,
-  },
+  deps: { taskRunner: TaskRunner<TokenCountTask, number> },
 ): Promise<FileMetrics[]> => {
   const targetFileSet = new Set(targetFilePaths);
   const filesToProcess = processedFiles.filter((file) => targetFileSet.has(file.path));
@@ -23,35 +21,30 @@ export const calculateSelectiveFileMetrics = async (
     return [];
   }
 
-  const taskRunner = deps.initTaskRunner<FileMetricsTask, FileMetrics>({
-    numOfTasks: filesToProcess.length,
-    workerPath: new URL('./workers/fileMetricsWorker.js', import.meta.url).href,
-    runtime: 'child_process',
-  });
-  const tasks = filesToProcess.map(
-    (file, index) =>
-      ({
-        file,
-        index,
-        totalFiles: filesToProcess.length,
-        encoding: tokenCounterEncoding,
-      }) satisfies FileMetricsTask,
-  );
-
   try {
     const startTime = process.hrtime.bigint();
     logger.trace(`Starting selective metrics calculation for ${filesToProcess.length} files using worker pool`);
 
     let completedTasks = 0;
     const results = await Promise.all(
-      tasks.map((task) =>
-        taskRunner.run(task).then((result) => {
-          completedTasks++;
-          progressCallback(`Calculating metrics... (${completedTasks}/${task.totalFiles}) ${pc.dim(task.file.path)}`);
-          logger.trace(`Calculating metrics... (${completedTasks}/${task.totalFiles}) ${task.file.path}`);
-          return result;
-        }),
-      ),
+      filesToProcess.map(async (file) => {
+        const tokenCount = await deps.taskRunner.run({
+          content: file.content,
+          encoding: tokenCounterEncoding,
+          path: file.path,
+        });
+
+        const result: FileMetrics = {
+          path: file.path,
+          charCount: file.content.length,
+          tokenCount,
+        };
+
+        completedTasks++;
+        progressCallback(`Calculating metrics... (${completedTasks}/${filesToProcess.length}) ${pc.dim(file.path)}`);
+        logger.trace(`Calculating metrics... (${completedTasks}/${filesToProcess.length}) ${file.path}`);
+        return result;
+      }),
     );
 
     const endTime = process.hrtime.bigint();
@@ -62,8 +55,5 @@ export const calculateSelectiveFileMetrics = async (
   } catch (error) {
     logger.error('Error during selective metrics calculation:', error);
     throw error;
-  } finally {
-    // Always cleanup worker pool
-    await taskRunner.cleanup();
   }
 };
