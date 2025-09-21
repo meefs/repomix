@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { calculateOutputMetrics } from '../../../src/core/metrics/calculateOutputMetrics.js';
-import { type TokenCountTask, countTokens } from '../../../src/core/metrics/workers/calculateMetricsWorker.js';
+import { countTokens, type TokenCountTask } from '../../../src/core/metrics/workers/calculateMetricsWorker.js';
 import { logger } from '../../../src/shared/logger.js';
 import type { WorkerOptions } from '../../../src/shared/processConcurrency.js';
 

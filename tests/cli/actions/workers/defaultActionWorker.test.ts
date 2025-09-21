@@ -3,8 +3,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import defaultActionWorker, {
   type DefaultActionTask,
   type DefaultActionWorkerResult,
-  type PingTask,
   type PingResult,
+  type PingTask,
 } from '../../../../src/cli/actions/workers/defaultActionWorker.js';
 import type { CliOptions } from '../../../../src/cli/types.js';
 import type { RepomixConfigMerged } from '../../../../src/config/configSchema.js';

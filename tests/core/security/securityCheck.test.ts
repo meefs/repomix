@@ -7,8 +7,7 @@ import type { GitDiffResult } from '../../../src/core/git/gitDiffHandle.js';
 import { runSecurityCheck } from '../../../src/core/security/securityCheck.js';
 import type { SecurityCheckTask } from '../../../src/core/security/workers/securityCheckWorker.js';
 import securityCheckWorker from '../../../src/core/security/workers/securityCheckWorker.js';
-import { logger } from '../../../src/shared/logger.js';
-import { repomixLogLevels } from '../../../src/shared/logger.js';
+import { logger, repomixLogLevels } from '../../../src/shared/logger.js';
 import type { WorkerOptions } from '../../../src/shared/processConcurrency.js';
 
 vi.mock('../../../src/shared/logger');

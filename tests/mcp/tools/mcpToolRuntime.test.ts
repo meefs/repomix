@@ -13,6 +13,7 @@ function hasResult(obj: unknown): obj is { result: string } {
     typeof (obj as Record<string, unknown>).result === 'string'
   );
 }
+
 import {
   buildMcpToolErrorResponse,
   buildMcpToolSuccessResponse,

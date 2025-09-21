@@ -173,7 +173,7 @@ index 123..456 100644
       };
     });
 
-    const mockGenerateHandlebarOutput = vi.fn().mockImplementation(async (config, renderContext: RenderContext) => {
+    const mockGenerateHandlebarOutput = vi.fn().mockImplementation(async (_config, renderContext: RenderContext) => {
       // Check that renderContext has gitDiffs for markdown template
       expect(renderContext.gitDiffWorkTree).toBe(sampleDiff);
       return `# Markdown output with diffs\n\`\`\`diff\n${sampleDiff}\n\`\`\``;

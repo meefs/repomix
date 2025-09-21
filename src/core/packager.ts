@@ -1,7 +1,7 @@
 import type { RepomixConfigMerged } from '../config/configSchema.js';
 import { logMemoryUsage, withMemoryLogging } from '../shared/memoryUtils.js';
 import type { RepomixProgressCallback } from '../shared/types.js';
-import { type SkippedFileInfo, collectFiles } from './file/fileCollect.js';
+import { collectFiles, type SkippedFileInfo } from './file/fileCollect.js';
 import { sortPaths } from './file/filePathSort.js';
 import { processFiles } from './file/fileProcess.js';
 import { searchFiles } from './file/fileSearch.js';

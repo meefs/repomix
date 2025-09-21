@@ -173,7 +173,7 @@ export const reportTopFiles = (
   });
 };
 
-export const reportSkippedFiles = (rootDir: string, skippedFiles: SkippedFileInfo[]) => {
+export const reportSkippedFiles = (_rootDir: string, skippedFiles: SkippedFileInfo[]) => {
   const binaryContentFiles = skippedFiles.filter((file) => file.reason === 'binary-content');
 
   if (binaryContentFiles.length === 0) {

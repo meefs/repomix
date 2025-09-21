@@ -23,10 +23,7 @@ describe('AttachPackedOutputTool', () => {
     registerTool: vi.fn().mockReturnThis(),
   } as unknown as McpServer;
 
-  let toolHandler: (args: {
-    path: string;
-    topFilesLength?: number;
-  }) => Promise<CallToolResult>;
+  let toolHandler: (args: { path: string; topFilesLength?: number }) => Promise<CallToolResult>;
 
   const mockXmlContent = `
     <repomix>

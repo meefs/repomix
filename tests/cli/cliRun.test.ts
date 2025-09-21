@@ -7,7 +7,7 @@ import * as versionAction from '../../src/cli/actions/versionAction.js';
 import { run, runCli } from '../../src/cli/cliRun.js';
 import type { CliOptions } from '../../src/cli/types.js';
 import type { PackResult } from '../../src/core/packager.js';
-import { type RepomixLogLevel, logger, repomixLogLevels } from '../../src/shared/logger.js';
+import { logger, type RepomixLogLevel, repomixLogLevels } from '../../src/shared/logger.js';
 import { createMockConfig } from '../testing/testUtils.js';
 
 let logLevel: RepomixLogLevel;

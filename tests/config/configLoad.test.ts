@@ -207,7 +207,7 @@ describe('configLoad', () => {
         output: { filePath: 'file-output.txt', style: 'plain' },
       };
       const cliConfig: RepomixConfigCli = {
-        // @ts-ignore
+        // @ts-expect-error
         output: { style: 'invalid' }, // Invalid style
       };
 

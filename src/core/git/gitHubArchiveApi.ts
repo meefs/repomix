@@ -79,7 +79,7 @@ export const checkGitHubResponse = (response: Response): void => {
     const rateLimitRemaining = response.headers.get('X-RateLimit-Remaining');
     if (rateLimitRemaining === '0') {
       const resetTime = response.headers.get('X-RateLimit-Reset');
-      const resetDate = resetTime ? new Date(Number.parseInt(resetTime) * 1000) : null;
+      const resetDate = resetTime ? new Date(Number.parseInt(resetTime, 10) * 1000) : null;
       throw new RepomixError(
         `GitHub API rate limit exceeded. ${resetDate ? `Rate limit resets at ${resetDate.toISOString()}` : 'Please try again later.'}`,
       );

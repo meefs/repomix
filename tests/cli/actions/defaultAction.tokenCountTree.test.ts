@@ -1,4 +1,4 @@
-import { type Mock, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, type Mock, test, vi } from 'vitest';
 import { runDefaultAction } from '../../../src/cli/actions/defaultAction.js';
 import * as cliReport from '../../../src/cli/cliReport.js';
 import type { CliOptions } from '../../../src/cli/types.js';

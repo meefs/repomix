@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { RepomixConfigMerged } from '../../../src/config/configSchema.js';
 import type { GitLogResult } from '../../../src/core/git/gitLogHandle.js';
 import { calculateGitLogMetrics } from '../../../src/core/metrics/calculateGitLogMetrics.js';
-import { type TokenCountTask, countTokens } from '../../../src/core/metrics/workers/calculateMetricsWorker.js';
+import { countTokens, type TokenCountTask } from '../../../src/core/metrics/workers/calculateMetricsWorker.js';
 import { logger } from '../../../src/shared/logger.js';
 import type { TaskRunner, WorkerOptions } from '../../../src/shared/processConcurrency.js';
 

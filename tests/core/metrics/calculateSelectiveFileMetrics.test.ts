@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { ProcessedFile } from '../../../src/core/file/fileTypes.js';
 import { calculateSelectiveFileMetrics } from '../../../src/core/metrics/calculateSelectiveFileMetrics.js';
-import { type TokenCountTask, countTokens } from '../../../src/core/metrics/workers/calculateMetricsWorker.js';
+import { countTokens, type TokenCountTask } from '../../../src/core/metrics/workers/calculateMetricsWorker.js';
 import type { WorkerOptions } from '../../../src/shared/processConcurrency.js';
 import type { RepomixProgressCallback } from '../../../src/shared/types.js';
 

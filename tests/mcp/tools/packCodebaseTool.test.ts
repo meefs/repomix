@@ -62,7 +62,7 @@ describe('PackCodebaseTool', () => {
     });
 
     // runCliのデフォルト動作
-    vi.mocked(runCli).mockImplementation(async (directories, cwd, opts = {}) => ({
+    vi.mocked(runCli).mockImplementation(async (_directories, cwd, opts = {}) => ({
       packResult: defaultPackResult,
       config: createMockConfig({
         input: {

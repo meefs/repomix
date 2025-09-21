@@ -1,5 +1,5 @@
 import type { RepomixConfigMerged } from '../../config/configSchema.js';
-import { type TaskRunner, initTaskRunner } from '../../shared/processConcurrency.js';
+import { initTaskRunner, type TaskRunner } from '../../shared/processConcurrency.js';
 import type { RepomixProgressCallback } from '../../shared/types.js';
 import type { ProcessedFile } from '../file/fileTypes.js';
 import type { GitDiffResult } from '../git/gitDiffHandle.js';

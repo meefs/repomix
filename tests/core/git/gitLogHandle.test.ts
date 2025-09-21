@@ -1,7 +1,11 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import type { RepomixConfigMerged } from '../../../src/config/configSchema.js';
-import { GIT_LOG_FORMAT_SEPARATOR, GIT_LOG_RECORD_SEPARATOR } from '../../../src/core/git/gitLogHandle.js';
-import { getGitLog, getGitLogs } from '../../../src/core/git/gitLogHandle.js';
+import {
+  GIT_LOG_FORMAT_SEPARATOR,
+  GIT_LOG_RECORD_SEPARATOR,
+  getGitLog,
+  getGitLogs,
+} from '../../../src/core/git/gitLogHandle.js';
 import { RepomixError } from '../../../src/shared/errorHandle.js';
 import { logger } from '../../../src/shared/logger.js';
 

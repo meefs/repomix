@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
 // Mock globby worker for integration tests to avoid worker file loading issues
 
@@ -17,9 +17,9 @@ import fileCollectWorker from '../../src/core/file/workers/fileCollectWorker.js'
 import fileProcessWorker from '../../src/core/file/workers/fileProcessWorker.js';
 import type { GitDiffResult } from '../../src/core/git/gitDiffHandle.js';
 import { generateOutput } from '../../src/core/output/outputGenerate.js';
-import { pack } from '../../src/core/packager.js';
 import { copyToClipboardIfEnabled } from '../../src/core/packager/copyToClipboardIfEnabled.js';
 import { writeOutputToDisk } from '../../src/core/packager/writeOutputToDisk.js';
+import { pack } from '../../src/core/packager.js';
 import { filterOutUntrustedFiles } from '../../src/core/security/filterOutUntrustedFiles.js';
 import { validateFileSafety } from '../../src/core/security/validateFileSafety.js';
 import type { WorkerOptions } from '../../src/shared/processConcurrency.js';

@@ -5,7 +5,7 @@ import type { RawFile } from '../file/fileTypes.js';
 import type { GitDiffResult } from '../git/gitDiffHandle.js';
 import type { GitLogResult } from '../git/gitLogHandle.js';
 import { filterOutUntrustedFiles } from './filterOutUntrustedFiles.js';
-import { type SuspiciousFileResult, runSecurityCheck } from './securityCheck.js';
+import { runSecurityCheck, type SuspiciousFileResult } from './securityCheck.js';
 
 // Marks which files are suspicious and which are safe
 // Returns Git diff results separately so they can be included in the output

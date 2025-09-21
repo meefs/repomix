@@ -9,7 +9,7 @@ import { RepomixError } from '../../shared/errorHandle.js';
 import { logger } from '../../shared/logger.js';
 import { sortPaths } from './filePathSort.js';
 
-import { PermissionError, checkDirectoryPermissions } from './permissionCheck.js';
+import { checkDirectoryPermissions, PermissionError } from './permissionCheck.js';
 
 export interface FileSearchResult {
   filePaths: string[];

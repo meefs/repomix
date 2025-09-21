@@ -2,9 +2,9 @@ import pc from 'picocolors';
 import type { RepomixConfigMerged } from '../../config/configSchema.js';
 import type { ProcessedFile } from '../../core/file/fileTypes.js';
 import {
+  buildTokenCountTree,
   type FileWithTokens,
   type TreeNode,
-  buildTokenCountTree,
 } from '../../core/tokenCount/buildTokenCountStructure.js';
 import { logger } from '../../shared/logger.js';
 

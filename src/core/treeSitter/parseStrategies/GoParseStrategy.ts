@@ -121,7 +121,7 @@ export class GoParseStrategy implements ParseStrategy {
     lines: string[],
     startRow: number,
     endRow: number,
-    openToken: string,
+    _openToken: string,
     closeToken: string,
   ): number {
     for (let i = startRow; i <= endRow; i++) {

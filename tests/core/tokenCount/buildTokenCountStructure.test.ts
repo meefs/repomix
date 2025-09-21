@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { type FileWithTokens, buildTokenCountTree } from '../../../src/core/tokenCount/buildTokenCountStructure.js';
+import { buildTokenCountTree, type FileWithTokens } from '../../../src/core/tokenCount/buildTokenCountStructure.js';
 import type { DirectoryTokenInfo, FileTokenInfo, TokenCountOutput } from '../../../src/core/tokenCount/types.js';
 
 interface TreeNode {

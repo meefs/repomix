@@ -2,7 +2,7 @@ import process from 'node:process';
 import { Option, program } from 'commander';
 import pc from 'picocolors';
 import { getVersion } from '../core/file/packageJsonParse.js';
-import { RepomixError, handleError } from '../shared/errorHandle.js';
+import { handleError, RepomixError } from '../shared/errorHandle.js';
 import { logger, repomixLogLevels } from '../shared/logger.js';
 import { runDefaultAction } from './actions/defaultAction.js';
 import { runInitAction } from './actions/initAction.js';
