@@ -1,3 +1,5 @@
+import './styles.css';
+
 interface RepositoryInfo {
   owner: string;
   repo: string;
@@ -146,9 +148,16 @@ function initRepomixIntegration(): void {
   }
 }
 
-// Initialize when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => initRepomixIntegration());
-} else {
-  initRepomixIntegration();
-}
+export default defineContentScript({
+  matches: ['https://github.com/*'],
+  runAt: 'document_start',
+  allFrames: true,
+  main() {
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => initRepomixIntegration());
+    } else {
+      initRepomixIntegration();
+    }
+  },
+});

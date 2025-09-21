@@ -106,6 +106,9 @@ jobs:
       - name: Install browser extension dependencies
         working-directory: browser
         run: npm ci
+      - name: Prepare WXT
+        working-directory: browser
+        run: npm run prepare
       - name: Lint browser extension
         working-directory: browser
         run: npm run lint
@@ -200,6 +203,9 @@ jobs:
       - name: Install browser extension dependencies
         working-directory: browser
         run: npm ci
+      - name: Prepare WXT
+        working-directory: browser
+        run: npm run prepare
       - name: Test browser extension
         working-directory: browser
         run: npm run test
