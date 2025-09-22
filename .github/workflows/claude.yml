@@ -25,12 +25,12 @@ jobs:
       id-token: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # ratchet:actions/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 1
 
       - name: Run Claude Code
         id: claude
-        uses: anthropics/claude-code-action@063d17ebb2e542d339d26f1485c9a5abbf45660a # ratchet:anthropics/claude-code-action@main
+        uses: anthropics/claude-code-action@93028b410ecfe1d5beca3c0196363bbb7c31167b # ratchet:anthropics/claude-code-action@main
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}

@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # ratchet:actions/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
 
       - name: Pack repository with Repomix
         uses: yamadashy/repomix/.github/actions/repomix@dbf406cd7f1651ec410a722eb9ebf2b1a1255b34 # ratchet:yamadashy/repomix/.github/actions/repomix@main
