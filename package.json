@@ -42,8 +42,8 @@
     "npm-release-patch": "npm version patch && node --run npm-publish",
     "npm-release-minor": "npm version minor && node --run npm-publish",
     "npm-release-prerelease": "npm version prerelease && node --run npm-publish",
-    "ratchet-pin": "ratchet pin .github/workflows/*",
-    "ratchet-update": "ratchet update .github/workflows/*"
+    "pinact-run": "pinact run",
+    "pinact-check": "pinact run --check"
   },
   "keywords": [
     "repository",
