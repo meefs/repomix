@@ -53,6 +53,7 @@
           <PackButton
             :loading="loading"
             :isValid="isSubmitValid"
+            @cancel="handleCancel"
           />
           <div
             v-if="shouldShowReset"
@@ -92,6 +93,7 @@
           :result="result"
           :loading="loading"
           :error="error"
+          :error-type="errorType"
           :repository-url="inputRepositoryUrl"
           @repack="handleRepack"
         />
@@ -129,6 +131,7 @@ const {
   // Request states
   loading,
   error,
+  errorType,
   result,
   hasExecuted,
 
@@ -141,6 +144,7 @@ const {
   submitRequest,
   repackWithSelectedFiles,
   resetOptions,
+  cancelRequest,
 } = usePackRequest();
 
 // Check if reset button should be shown
@@ -179,6 +183,12 @@ function updateUrlFromCurrentState() {
 }
 
 async function handleSubmit(event?: SubmitEvent) {
+  // Prevent form submission when already loading
+  if (loading.value) {
+    event?.preventDefault();
+    return;
+  }
+
   // Prevent accidental form submissions from unintended buttons
   if (event?.submitter && !isSubmitValid.value) {
     const submitter = event.submitter as HTMLElement;
@@ -211,6 +221,10 @@ function handleReset() {
 
 function handleRepack(selectedFiles: FileInfo[]) {
   repackWithSelectedFiles(selectedFiles);
+}
+
+function handleCancel() {
+  cancelRequest();
 }
 
 // Watch for changes in packOptions and inputUrl to update URL in real-time

@@ -11,6 +11,7 @@ interface Props {
   result?: PackResult | null;
   loading?: boolean;
   error?: string | null;
+  errorType?: 'error' | 'warning';
   repositoryUrl?: string;
 }
 
@@ -50,6 +51,7 @@ const handleRepack = (selectedFiles: FileInfo[]) => {
     <TryItResultErrorContent
       v-else-if="error"
       :message="error"
+      :error-type="errorType"
       :repository-url="repositoryUrl"
     />
     <div v-else-if="result" class="result-content">

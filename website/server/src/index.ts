@@ -10,6 +10,8 @@ import { rateLimitMiddleware } from './middlewares/rateLimit.js';
 import { logInfo, logMemoryUsage } from './utils/logger.js';
 import { getProcessConcurrency } from './utils/processConcurrency.js';
 
+const API_TIMEOUT_MS = 35_000;
+
 // Log server metrics on startup
 logInfo('Server starting', {
   metrics: {
@@ -31,7 +33,7 @@ app.use('/*', corsMiddleware);
 app.use(compress());
 
 // Set timeout for API routes
-app.use('/api', timeout(30000));
+app.use('/api', timeout(API_TIMEOUT_MS));
 
 // Setup custom logger
 app.use('*', cloudLoggerMiddleware());

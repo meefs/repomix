@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { AlertTriangle, Copy } from 'lucide-vue-next';
+import { AlertCircle, AlertTriangle, Copy } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
   message: string;
   repositoryUrl?: string;
+  errorType?: 'error' | 'warning';
 }>();
 
 const copied = ref(false);
@@ -25,10 +26,11 @@ const copyCommand = async (event: Event) => {
 </script>
 
 <template>
-  <div class="error">
-    <div class="error-content">
-      <AlertTriangle :size="32" class="error-icon" />
-      <p class="error-message">{{ message }}</p>
+  <div :class="errorType === 'warning' ? 'warning' : 'error'">
+    <div class="content">
+      <AlertCircle v-if="errorType === 'warning'" :size="32" class="warning-icon" />
+      <AlertTriangle v-else :size="32" class="error-icon" />
+      <p :class="errorType === 'warning' ? 'warning-message' : 'error-message'">{{ message }}</p>
       <div class="suggestion">
         <p>Try using the command line tool instead:</p>
         <div class="command-block">
@@ -47,14 +49,15 @@ const copyCommand = async (event: Event) => {
 </template>
 
 <style scoped>
-.error {
+.error,
+.warning {
   padding: 32px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.error-content {
+.content {
   max-width: 700px;
   width: 100%;
   display: flex;
@@ -68,10 +71,23 @@ const copyCommand = async (event: Event) => {
   margin-bottom: 16px;
 }
 
+.warning-icon {
+  color: var(--vp-c-warning-1);
+  margin-bottom: 16px;
+}
+
 .error-message {
   color: var(--vp-c-danger-1);
   font-size: 1.1em;
   margin: 0 0 24px;
+  white-space: pre-wrap;
+}
+
+.warning-message {
+  color: var(--vp-c-warning-1);
+  font-size: 1.1em;
+  margin: 0 0 24px;
+  white-space: pre-wrap;
 }
 
 .suggestion {

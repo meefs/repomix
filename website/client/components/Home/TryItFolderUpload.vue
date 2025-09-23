@@ -11,6 +11,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   upload: [file: File];
+  cancel: [];
 }>();
 
 const { createZipFromFiles } = useZipProcessor();
@@ -110,6 +111,7 @@ function clearFolder() {
     <PackButton
       :loading="loading"
       :isValid="isValid"
+      @cancel="$emit('cancel')"
     />
   </div>
 </template>
