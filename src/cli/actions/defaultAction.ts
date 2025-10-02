@@ -6,8 +6,9 @@ import {
   type RepomixOutputStyle,
   repomixConfigCliSchema,
 } from '../../config/configSchema.js';
+import { readFilePathsFromStdin } from '../../core/file/fileStdin.js';
 import type { PackResult } from '../../core/packager.js';
-import { rethrowValidationErrorIfZodError } from '../../shared/errorHandle.js';
+import { RepomixError, rethrowValidationErrorIfZodError } from '../../shared/errorHandle.js';
 import { logger } from '../../shared/logger.js';
 import { splitPatterns } from '../../shared/patternUtils.js';
 import { initTaskRunner } from '../../shared/processConcurrency.js';
@@ -48,6 +49,23 @@ export const runDefaultAction = async (
   const config: RepomixConfigMerged = mergeConfigs(cwd, fileConfig, cliConfig);
   logger.trace('Merged config:', config);
 
+  // Handle stdin processing in main process (before worker creation)
+  // This is necessary because child_process workers don't inherit stdin
+  let stdinFilePaths: string[] | undefined;
+  if (cliOptions.stdin) {
+    // Validate directory arguments for stdin mode
+    const firstDir = directories[0] ?? '.';
+    if (directories.length > 1 || firstDir !== '.') {
+      throw new RepomixError(
+        'When using --stdin, do not specify directory arguments. File paths will be read from stdin.',
+      );
+    }
+
+    const stdinResult = await readFilePathsFromStdin(cwd);
+    stdinFilePaths = stdinResult.filePaths;
+    logger.trace(`Read ${stdinFilePaths.length} file paths from stdin in main process`);
+  }
+
   // Create worker task runner
   const taskRunner = initTaskRunner<DefaultActionTask | PingTask, DefaultActionWorkerResult | PingResult>({
     numOfTasks: 1,
@@ -59,13 +77,13 @@ export const runDefaultAction = async (
     // Wait for worker to be ready (Bun compatibility)
     await waitForWorkerReady(taskRunner);
 
-    // Create task for worker (now with pre-loaded config)
+    // Create task for worker (now with pre-loaded config and stdin file paths)
     const task: DefaultActionTask = {
       directories,
       cwd,
       config,
       cliOptions,
-      isStdin: !!cliOptions.stdin,
+      stdinFilePaths,
     };
 
     // Run the task in worker (spinner is handled inside worker)

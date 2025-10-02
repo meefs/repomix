@@ -4,6 +4,7 @@ import { buildCliConfig, runDefaultAction } from '../../../src/cli/actions/defau
 import { Spinner } from '../../../src/cli/cliSpinner.js';
 import type { CliOptions } from '../../../src/cli/types.js';
 import * as configLoader from '../../../src/config/configLoad.js';
+import * as fileStdin from '../../../src/core/file/fileStdin.js';
 import * as packageJsonParser from '../../../src/core/file/packageJsonParse.js';
 import * as packager from '../../../src/core/packager.js';
 
@@ -13,6 +14,7 @@ import { createMockConfig } from '../../testing/testUtils.js';
 vi.mock('../../../src/core/packager');
 vi.mock('../../../src/config/configLoad');
 vi.mock('../../../src/core/file/packageJsonParse');
+vi.mock('../../../src/core/file/fileStdin');
 vi.mock('../../../src/shared/logger');
 vi.mock('../../../src/shared/processConcurrency');
 
@@ -85,6 +87,10 @@ describe('defaultAction', () => {
         },
       }),
     );
+    vi.mocked(fileStdin.readFilePathsFromStdin).mockResolvedValue({
+      filePaths: ['test1.txt', 'test2.txt'],
+      emptyDirPaths: [],
+    });
     vi.mocked(packager.pack).mockResolvedValue({
       totalFiles: 10,
       totalCharacters: 1000,
@@ -168,7 +174,6 @@ describe('defaultAction', () => {
       cliOptions: expect.objectContaining({
         include: '*.js,*.ts',
       }),
-      isStdin: false,
     });
   });
 
@@ -188,7 +193,7 @@ describe('defaultAction', () => {
       cliOptions: expect.objectContaining({
         stdin: true,
       }),
-      isStdin: true,
+      stdinFilePaths: expect.any(Array),
     });
   });
 

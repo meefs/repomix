@@ -1,8 +1,6 @@
 import path from 'node:path';
 import type { RepomixConfigMerged } from '../../../config/configSchema.js';
-import { readFilePathsFromStdin } from '../../../core/file/fileStdin.js';
 import { type PackResult, pack } from '../../../core/packager.js';
-import { RepomixError } from '../../../shared/errorHandle.js';
 import { logger, setLogLevelByWorkerData } from '../../../shared/logger.js';
 import { Spinner } from '../../cliSpinner.js';
 import type { CliOptions } from '../../types.js';
@@ -16,7 +14,7 @@ export interface DefaultActionTask {
   cwd: string;
   config: RepomixConfigMerged;
   cliOptions: CliOptions;
-  isStdin: boolean;
+  stdinFilePaths?: string[];
 }
 
 export interface PingTask {
@@ -46,7 +44,7 @@ async function defaultActionWorker(
   }
 
   // At this point, task is guaranteed to be DefaultActionTask
-  const { directories, cwd, config, cliOptions, isStdin } = task;
+  const { directories, cwd, config, cliOptions, stdinFilePaths } = task;
 
   logger.trace('Worker: Using pre-loaded config:', config);
 
@@ -57,17 +55,10 @@ async function defaultActionWorker(
   let packResult: PackResult;
 
   try {
-    if (isStdin) {
-      // Handle stdin processing
-      // Validate directory arguments for stdin mode
-      const firstDir = directories[0] ?? '.';
-      if (directories.length > 1 || firstDir !== '.') {
-        throw new RepomixError(
-          'When using --stdin, do not specify directory arguments. File paths will be read from stdin.',
-        );
-      }
-
-      const stdinResult = await readFilePathsFromStdin(cwd);
+    if (stdinFilePaths) {
+      // Handle stdin processing with file paths from main process
+      // File paths were already read from stdin in the main process
+      logger.trace(`Worker: Processing ${stdinFilePaths.length} files from stdin`);
 
       // Use pack with predefined files from stdin
       packResult = await pack(
@@ -77,7 +68,7 @@ async function defaultActionWorker(
           spinner.update(message);
         },
         {},
-        stdinResult.filePaths,
+        stdinFilePaths,
       );
     } else {
       // Handle directory processing

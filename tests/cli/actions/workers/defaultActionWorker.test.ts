@@ -8,12 +8,9 @@ import defaultActionWorker, {
 } from '../../../../src/cli/actions/workers/defaultActionWorker.js';
 import type { CliOptions } from '../../../../src/cli/types.js';
 import type { RepomixConfigMerged } from '../../../../src/config/configSchema.js';
-import { readFilePathsFromStdin } from '../../../../src/core/file/fileStdin.js';
 import { pack } from '../../../../src/core/packager.js';
-import { RepomixError } from '../../../../src/shared/errorHandle.js';
 
 // Mock dependencies
-vi.mock('../../../../src/core/file/fileStdin.js');
 vi.mock('../../../../src/core/packager.js');
 vi.mock('../../../../src/shared/logger.js', () => ({
   logger: {
@@ -30,7 +27,6 @@ vi.mock('../../../../src/cli/cliSpinner.js', () => ({
   })),
 }));
 
-const mockReadFilePathsFromStdin = vi.mocked(readFilePathsFromStdin);
 const mockPack = vi.mocked(pack);
 
 describe('defaultActionWorker', () => {
@@ -149,7 +145,6 @@ describe('defaultActionWorker', () => {
         cwd: '/test/project',
         config: mockConfig,
         cliOptions: mockCliOptions,
-        isStdin: false,
       };
 
       mockPack.mockResolvedValueOnce(mockPackResult);
@@ -173,7 +168,6 @@ describe('defaultActionWorker', () => {
         cwd: '/test/project',
         config: mockConfig,
         cliOptions: mockCliOptions,
-        isStdin: false,
       };
 
       mockPack.mockResolvedValueOnce(mockPackResult);
@@ -193,7 +187,6 @@ describe('defaultActionWorker', () => {
         cwd: '/test/project',
         config: mockConfig,
         cliOptions: mockCliOptions,
-        isStdin: false,
       };
 
       mockPack.mockResolvedValueOnce(mockPackResult);
@@ -205,25 +198,19 @@ describe('defaultActionWorker', () => {
   });
 
   describe('stdin processing', () => {
-    it('should process stdin successfully with current directory', async () => {
+    it('should process stdin successfully with file paths from main process', async () => {
       const task: DefaultActionTask = {
         directories: ['.'],
         cwd: '/test/project',
         config: mockConfig,
         cliOptions: mockCliOptions,
-        isStdin: true,
+        stdinFilePaths: ['file1.txt', 'file2.txt'],
       };
 
-      const stdinResult = {
-        filePaths: ['file1.txt', 'file2.txt'],
-        emptyDirPaths: [],
-      };
-      mockReadFilePathsFromStdin.mockResolvedValueOnce(stdinResult);
       mockPack.mockResolvedValueOnce(mockPackResult);
 
       const result = (await defaultActionWorker(task)) as DefaultActionWorkerResult;
 
-      expect(mockReadFilePathsFromStdin).toHaveBeenCalledWith('/test/project');
       expect(mockPack).toHaveBeenCalledWith(['/test/project'], mockConfig, expect.any(Function), {}, [
         'file1.txt',
         'file2.txt',
@@ -240,50 +227,14 @@ describe('defaultActionWorker', () => {
         cwd: '/test/project',
         config: mockConfig,
         cliOptions: mockCliOptions,
-        isStdin: true,
+        stdinFilePaths: ['file1.txt'],
       };
 
-      const stdinResult = {
-        filePaths: ['file1.txt'],
-        emptyDirPaths: [],
-      };
-      mockReadFilePathsFromStdin.mockResolvedValueOnce(stdinResult);
       mockPack.mockResolvedValueOnce(mockPackResult);
 
       await defaultActionWorker(task);
 
-      expect(mockReadFilePathsFromStdin).toHaveBeenCalledWith('/test/project');
       expect(mockPack).toHaveBeenCalledWith(['/test/project'], mockConfig, expect.any(Function), {}, ['file1.txt']);
-    });
-
-    it('should throw error when multiple directories are specified with stdin', async () => {
-      const task: DefaultActionTask = {
-        directories: ['src', 'tests'],
-        cwd: '/test/project',
-        config: mockConfig,
-        cliOptions: mockCliOptions,
-        isStdin: true,
-      };
-
-      await expect(defaultActionWorker(task)).rejects.toThrow(RepomixError);
-      await expect(defaultActionWorker(task)).rejects.toThrow(
-        'When using --stdin, do not specify directory arguments. File paths will be read from stdin.',
-      );
-    });
-
-    it('should throw error when non-current directory is specified with stdin', async () => {
-      const task: DefaultActionTask = {
-        directories: ['src'],
-        cwd: '/test/project',
-        config: mockConfig,
-        cliOptions: mockCliOptions,
-        isStdin: true,
-      };
-
-      await expect(defaultActionWorker(task)).rejects.toThrow(RepomixError);
-      await expect(defaultActionWorker(task)).rejects.toThrow(
-        'When using --stdin, do not specify directory arguments. File paths will be read from stdin.',
-      );
     });
   });
 
@@ -294,7 +245,6 @@ describe('defaultActionWorker', () => {
         cwd: '/test/project',
         config: mockConfig,
         cliOptions: mockCliOptions,
-        isStdin: false,
       };
 
       const packError = new Error('Pack failed');
@@ -303,35 +253,14 @@ describe('defaultActionWorker', () => {
       await expect(defaultActionWorker(task)).rejects.toThrow('Pack failed');
     });
 
-    it('should handle stdin read errors', async () => {
-      const task: DefaultActionTask = {
-        directories: ['.'],
-        cwd: '/test/project',
-        config: mockConfig,
-        cliOptions: mockCliOptions,
-        isStdin: true,
-      };
-
-      const stdinError = new Error('Stdin read failed');
-      mockReadFilePathsFromStdin.mockRejectedValueOnce(stdinError);
-
-      await expect(defaultActionWorker(task)).rejects.toThrow('Stdin read failed');
-    });
-
     it('should handle pack errors during stdin processing', async () => {
       const task: DefaultActionTask = {
         directories: ['.'],
         cwd: '/test/project',
         config: mockConfig,
         cliOptions: mockCliOptions,
-        isStdin: true,
+        stdinFilePaths: ['file1.txt'],
       };
-
-      const stdinResult = {
-        filePaths: ['file1.txt'],
-        emptyDirPaths: [],
-      };
-      mockReadFilePathsFromStdin.mockResolvedValueOnce(stdinResult);
 
       const packError = new Error('Pack failed during stdin');
       mockPack.mockRejectedValueOnce(packError);
@@ -347,7 +276,6 @@ describe('defaultActionWorker', () => {
         cwd: '/test/project',
         config: mockConfig,
         cliOptions: mockCliOptions,
-        isStdin: false,
       };
 
       mockPack.mockImplementationOnce(async (_paths, _config, progressCallback) => {
@@ -376,7 +304,6 @@ describe('defaultActionWorker', () => {
         cwd: '/test/project',
         config: mockConfig,
         cliOptions: mockCliOptions,
-        isStdin: false,
       };
 
       mockPack.mockRejectedValueOnce(new Error('Pack failed'));
@@ -397,7 +324,6 @@ describe('defaultActionWorker', () => {
         cwd: '/test/project',
         config: mockConfig,
         cliOptions: mockCliOptions,
-        isStdin: false,
       };
 
       mockPack.mockResolvedValueOnce(mockPackResult);
@@ -421,7 +347,6 @@ describe('defaultActionWorker', () => {
         cwd: '/test/project',
         config: mockConfig,
         cliOptions: mockCliOptions,
-        isStdin: false,
       };
 
       mockPack.mockResolvedValueOnce(mockPackResult);
