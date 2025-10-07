@@ -1,5 +1,5 @@
 import * as path from 'node:path';
-import Parser from 'web-tree-sitter';
+import { Parser, Query } from 'web-tree-sitter';
 
 import { RepomixError } from '../../shared/errorHandle.js';
 import { logger } from '../../shared/logger.js';
@@ -11,7 +11,7 @@ import { createParseStrategy, type ParseStrategy } from './parseStrategies/Parse
 interface LanguageResources {
   lang: SupportedLang;
   parser: Parser;
-  query: Parser.Query;
+  query: Query;
   strategy: ParseStrategy;
 }
 
@@ -28,7 +28,7 @@ export class LanguageParser {
       const lang = await loadLanguage(name);
       const parser = new Parser();
       parser.setLanguage(lang);
-      const query = lang.query(lang2Query[name]);
+      const query = new Query(lang, lang2Query[name]);
       const strategy = createParseStrategy(name);
 
       const resources: LanguageResources = {
@@ -63,7 +63,7 @@ export class LanguageParser {
     return resources.parser;
   }
 
-  public async getQueryForLang(name: SupportedLang): Promise<Parser.Query> {
+  public async getQueryForLang(name: SupportedLang): Promise<Query> {
     const resources = await this.getResources(name);
     return resources.query;
   }

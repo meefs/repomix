@@ -1,4 +1,4 @@
-import type { SyntaxNode } from 'web-tree-sitter';
+import type { Node } from 'web-tree-sitter';
 import type { ParseContext, ParseStrategy } from './ParseStrategy.js';
 
 enum CaptureType {
@@ -22,7 +22,7 @@ export class TypeScriptParseStrategy implements ParseStrategy {
   private static readonly FUNCTION_NAME_PATTERN = /(?:export\s+)?(?:const|let|var)\s+([a-zA-Z0-9_$]+)\s*=/;
 
   parseCapture(
-    capture: { node: SyntaxNode; name: string },
+    capture: { node: Node; name: string },
     lines: string[],
     processedChunks: Set<string>,
     _context: ParseContext,

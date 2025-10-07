@@ -19,6 +19,38 @@ export const isValidShorthand = (remoteValue: string): boolean => {
   return validShorthandRegex.test(remoteValue);
 };
 
+/**
+ * Check if a URL is an Azure DevOps repository URL by validating the hostname.
+ * This uses proper URL parsing to avoid security issues with substring matching.
+ */
+const isAzureDevOpsUrl = (remoteValue: string): boolean => {
+  // Handle SSH URLs (e.g., git@ssh.dev.azure.com:v3/org/project/repo)
+  if (remoteValue.startsWith('git@ssh.dev.azure.com:')) {
+    return true;
+  }
+
+  // Handle HTTP(S) URLs
+  try {
+    const url = new URL(remoteValue);
+    const hostname = url.hostname.toLowerCase();
+
+    // Check for exact Azure DevOps hostnames
+    if (hostname === 'dev.azure.com' || hostname === 'ssh.dev.azure.com') {
+      return true;
+    }
+
+    // Check for legacy Visual Studio Team Services (*.visualstudio.com)
+    if (hostname.endsWith('.visualstudio.com')) {
+      return true;
+    }
+
+    return false;
+  } catch {
+    // Not a valid URL, let git-url-parse handle it
+    return false;
+  }
+};
+
 export const parseRemoteValue = (
   remoteValue: string,
   refs: string[] = [],
@@ -27,6 +59,17 @@ export const parseRemoteValue = (
     logger.trace(`Formatting GitHub shorthand: ${remoteValue}`);
     return {
       repoUrl: `https://github.com/${remoteValue}.git`,
+      remoteBranch: undefined,
+    };
+  }
+
+  // Check for Azure DevOps URLs before parsing, as git-url-parse may not handle them correctly
+  // - SSH: git@ssh.dev.azure.com:v3/org/project/repo
+  // - HTTPS: https://dev.azure.com/organization/project/_git/repo
+  // - Legacy: https://org.visualstudio.com/project/_git/repo
+  if (isAzureDevOpsUrl(remoteValue)) {
+    return {
+      repoUrl: remoteValue,
       remoteBranch: undefined,
     };
   }

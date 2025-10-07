@@ -1,4 +1,4 @@
-import type { SyntaxNode } from 'web-tree-sitter';
+import type { Node } from 'web-tree-sitter';
 import type { ParseContext, ParseStrategy } from './ParseStrategy.js';
 
 enum CaptureType {
@@ -16,7 +16,7 @@ type ParseResult = {
 
 export class PythonParseStrategy implements ParseStrategy {
   parseCapture(
-    capture: { node: SyntaxNode; name: string },
+    capture: { node: Node; name: string },
     lines: string[],
     processedChunks: Set<string>,
     _context: ParseContext,

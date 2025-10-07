@@ -100,7 +100,7 @@
     "tiktoken": "^1.0.22",
     "tinypool": "^2.0.0",
     "tree-sitter-wasms": "^0.1.12",
-    "web-tree-sitter": "^0.24.7",
+    "web-tree-sitter": "^0.25.10",
     "zod": "^3.24.3"
   },
   "devDependencies": {

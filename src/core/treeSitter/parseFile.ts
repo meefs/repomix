@@ -38,6 +38,10 @@ export const parseFile = async (fileContent: string, filePath: string, config: R
   try {
     // Parse the file content into an Abstract Syntax Tree (AST)
     const tree = parser.parse(fileContent);
+    if (!tree) {
+      logger.debug(`Failed to parse file: ${filePath}`);
+      return undefined;
+    }
 
     // Get the appropriate parse strategy for the language
     const parseStrategy = createParseStrategy(lang);

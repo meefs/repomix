@@ -1,4 +1,4 @@
-import type { Query, SyntaxNode, Tree } from 'web-tree-sitter';
+import type { Node, Query, Tree } from 'web-tree-sitter';
 import type { RepomixConfigMerged } from '../../../config/configSchema.js';
 import type { SupportedLang } from '../lang2Query.js';
 import { CssParseStrategy } from './CssParseStrategy.js';
@@ -18,7 +18,7 @@ export interface ParseContext {
 
 export interface ParseStrategy {
   parseCapture(
-    capture: { node: SyntaxNode; name: string },
+    capture: { node: Node; name: string },
     lines: string[],
     processedChunks: Set<string>,
     context: ParseContext,

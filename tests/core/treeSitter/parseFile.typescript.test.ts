@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from 'vitest';
-import type { Edit, Language, Point, Query, Range, SyntaxNode, Tree, TreeCursor } from 'web-tree-sitter';
+import type { Edit, Language, Node, Point, Query, Range, Tree, TreeCursor } from 'web-tree-sitter';
 import type { RepomixConfigMerged } from '../../../src/config/configSchema.js';
 import { parseFile } from '../../../src/core/treeSitter/parseFile.js';
 import { TypeScriptParseStrategy } from '../../../src/core/treeSitter/parseStrategies/TypeScriptParseStrategy.js';
@@ -110,12 +110,12 @@ describe('TypeScript File Parsing', () => {
     let mockContext: MockContext;
 
     // Helper function to create a mock capture object
-    const createMockCapture = (name: string, startRow: number, endRow: number): { node: SyntaxNode; name: string } => {
+    const createMockCapture = (name: string, startRow: number, endRow: number): { node: Node; name: string } => {
       return {
         node: {
           startPosition: { row: startRow } as Point,
           endPosition: { row: endRow } as Point,
-        } as SyntaxNode,
+        } as Node,
         name,
       };
     };
@@ -136,7 +136,7 @@ describe('TypeScript File Parsing', () => {
         startIndex: 0,
         endIndex: 0,
         nodeId: 0,
-        currentNode: {} as SyntaxNode,
+        currentNode: {} as Node,
         currentDepth: 0,
         currentDescendantIndex: 0,
         currentFieldId: 0,
@@ -162,18 +162,20 @@ describe('TypeScript File Parsing', () => {
         gotoFirstChildForPosition(_goalPosition: Point): boolean {
           return false;
         },
-        gotoDescendant(_goalDescendantIndex: number): boolean {
-          return false;
-        },
-        reset(): void {},
+        gotoDescendant(_goalDescendantIndex: number): void {},
+        reset(_node: Node): void {},
         resetTo(_cursor: TreeCursor): void {},
+        copy(): TreeCursor {
+          return { ...this } as TreeCursor;
+        },
         delete(): void {},
       };
 
       const mockTree: Tree = {
-        rootNode: {} as SyntaxNode,
-        rootNodeWithOffset(_offsetBytes: number, _offsetExtent: Point): SyntaxNode {
-          return {} as SyntaxNode;
+        language: {} as Language,
+        rootNode: {} as Node,
+        rootNodeWithOffset(_offsetBytes: number, _offsetExtent: Point): Node {
+          return {} as Node;
         },
         getChangedRanges(_other: Tree): Range[] {
           return [];
@@ -186,9 +188,6 @@ describe('TypeScript File Parsing', () => {
         },
         delete() {},
         edit(_delta: Edit) {},
-        getLanguage(): Language {
-          return {} as Language;
-        },
         walk(): TreeCursor {
           return mockCursor;
         },

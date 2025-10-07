@@ -1,14 +1,12 @@
 import fs from 'node:fs/promises';
 import { describe, expect, it, vi } from 'vitest';
-import Parser from 'web-tree-sitter';
+import { Language } from 'web-tree-sitter';
 import { loadLanguage } from '../../../src/core/treeSitter/loadLanguage.js';
 
 vi.mock('node:fs/promises');
 vi.mock('web-tree-sitter', () => ({
-  default: {
-    Language: {
-      load: vi.fn(),
-    },
+  Language: {
+    load: vi.fn(),
   },
 }));
 vi.mock('node:module', () => ({
@@ -27,7 +25,7 @@ describe('loadLanguage', () => {
     mockAccess.mockResolvedValue(undefined);
 
     const mockLoadLanguage = vi.fn().mockResolvedValue({ success: true });
-    Parser.Language.load = mockLoadLanguage;
+    Language.load = mockLoadLanguage;
 
     await loadLanguage('javascript');
 
@@ -49,7 +47,7 @@ describe('loadLanguage', () => {
     mockAccess.mockResolvedValue(undefined);
 
     const mockLoadLanguage = vi.fn().mockRejectedValue(new Error('Load failed'));
-    Parser.Language.load = mockLoadLanguage;
+    Language.load = mockLoadLanguage;
 
     await expect(loadLanguage('javascript')).rejects.toThrow('Failed to load language javascript: Load failed');
   });

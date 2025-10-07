@@ -49,6 +49,48 @@ describe('remoteAction functions', () => {
       });
     });
 
+    test('should handle Azure DevOps SSH URLs', () => {
+      const azureDevOpsUrl = 'git@ssh.dev.azure.com:v3/organization/project/repo';
+      const parsed = parseRemoteValue(azureDevOpsUrl);
+      expect(parsed).toEqual({
+        repoUrl: azureDevOpsUrl,
+        remoteBranch: undefined,
+      });
+    });
+
+    test('should handle Azure DevOps HTTPS URLs', () => {
+      const azureDevOpsUrl = 'https://dev.azure.com/organization/project/_git/repo';
+      const parsed = parseRemoteValue(azureDevOpsUrl);
+      expect(parsed).toEqual({
+        repoUrl: azureDevOpsUrl,
+        remoteBranch: undefined,
+      });
+    });
+
+    test('should handle legacy Visual Studio Team Services URLs', () => {
+      const vstsUrl = 'https://myorg.visualstudio.com/myproject/_git/myrepo';
+      const parsed = parseRemoteValue(vstsUrl);
+      expect(parsed).toEqual({
+        repoUrl: vstsUrl,
+        remoteBranch: undefined,
+      });
+    });
+
+    test('should not treat URLs with Azure DevOps hostnames in path as Azure DevOps URLs', () => {
+      // Security test: Ensure URLs with Azure DevOps keywords in the path are not treated as Azure DevOps
+      const maliciousUrl = 'https://evil.com/dev.azure.com/fake/repo';
+      const parsed = parseRemoteValue(maliciousUrl);
+      // Should be parsed normally (not as Azure DevOps), with .git suffix added
+      expect(parsed.repoUrl).toBe('https://evil.com/dev.azure.com/fake/repo.git');
+    });
+
+    test('should not treat URLs with visualstudio.com in path as Azure DevOps URLs', () => {
+      const maliciousUrl = 'https://evil.com/path/visualstudio.com/fake/repo';
+      const parsed = parseRemoteValue(maliciousUrl);
+      // Should be parsed normally (not as Azure DevOps), with .git suffix added
+      expect(parsed.repoUrl).toBe('https://evil.com/path/visualstudio.com/fake/repo.git');
+    });
+
     test('should get correct branch name from url', () => {
       expect(parseRemoteValue('https://github.com/username/repo/tree/branchname')).toEqual({
         repoUrl: 'https://github.com/username/repo.git',

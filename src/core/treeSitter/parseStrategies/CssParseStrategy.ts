@@ -1,9 +1,9 @@
-import type { SyntaxNode } from 'web-tree-sitter';
+import type { Node } from 'web-tree-sitter';
 import type { ParseContext, ParseStrategy } from './ParseStrategy.js';
 
 export class CssParseStrategy implements ParseStrategy {
   parseCapture(
-    capture: { node: SyntaxNode; name: string },
+    capture: { node: Node; name: string },
     lines: string[],
     processedChunks: Set<string>,
     _context: ParseContext,
