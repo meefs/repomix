@@ -16,15 +16,15 @@
     "@hono/node-server": "^1.19.5",
     "fflate": "^0.8.2",
     "hono": "^4.9.9",
-    "repomix": "^1.4.1",
-    "winston": "^3.18.1",
+    "repomix": "^1.6.0",
+    "winston": "^3.18.3",
     "zod": "^4.1.11"
   },
   "devDependencies": {
-    "@types/node": "^24.6.0",
-    "@typescript/native-preview": "^7.0.0-dev.20250824.1",
+    "@types/node": "^24.6.1",
+    "@typescript/native-preview": "^7.0.0-dev.20251001.1",
     "rimraf": "^6.0.1",
     "tsx": "^4.20.6",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   }
 }
