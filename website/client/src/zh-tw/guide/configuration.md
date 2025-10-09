@@ -133,14 +133,43 @@ Repomix按以下順序尋找設定檔：
 
 命令列選項優先於設定檔設定。
 
+## 包含模式
+
+Repomix支援使用[glob模式](https://github.com/mrmlnc/fast-glob?tab=readme-ov-file#pattern-syntax)指定要包含的檔案。這允許更靈活和強大的檔案選擇：
+
+- 使用`**/*.js`包含任何目錄中的所有JavaScript檔案
+- 使用`src/**/*`包含`src`目錄及其子目錄中的所有檔案
+- 組合多個模式，如`["src/**/*.js", "**/*.md"]`以包含`src`中的JavaScript檔案和所有Markdown檔案
+
+您可以在設定檔中指定包含模式：
+
+```json
+{
+  "include": ["src/**/*", "tests/**/*.test.js"]
+}
+```
+
+或使用`--include`命令列選項進行一次性過濾。
+
 ## 忽略模式
 
-Repomix提供多種方式來指定要忽略的檔案。模式按以下優先順序處理：
+Repomix提供多種方法來設定忽略模式，以在打包過程中排除特定檔案或目錄：
 
-1. CLI選項（`--ignore`）
-2. 專案目錄中的`.repomixignore`檔案
-3. `.gitignore`和`.git/info/exclude`（如果`ignore.useGitignore`為true）
-4. 預設模式（如果`ignore.useDefaultPatterns`為true）
+- **.gitignore**：預設情況下，使用專案的`.gitignore`檔案和`.git/info/exclude`中列出的模式。此行為可以透過`ignore.useGitignore`設定或`--no-gitignore` CLI選項控制。
+- **預設模式**：Repomix包含常見排除檔案和目錄的預設清單（例如node_modules、.git、二進制檔案）。此功能可以透過`ignore.useDefaultPatterns`設定或`--no-default-patterns` CLI選項控制。有關詳細資訊，請參閱[defaultIgnore.ts](https://github.com/yamadashy/repomix/blob/main/src/config/defaultIgnore.ts)。
+- **.repomixignore**：您可以在專案根目錄中建立`.repomixignore`檔案來定義Repomix特定的忽略模式。此檔案遵循與`.gitignore`相同的格式。
+- **自訂模式**：可以使用設定檔中的`ignore.customPatterns`選項指定其他忽略模式。您可以使用`-i, --ignore`命令列選項覆寫此設定。
+
+**優先順序**（從高到低）：
+
+1. 自訂模式（`ignore.customPatterns`）
+2. `.repomixignore`
+3. `.gitignore`和`.git/info/exclude`（如果`ignore.useGitignore`為true且未使用`--no-gitignore`）
+4. 預設模式（如果`ignore.useDefaultPatterns`為true且未使用`--no-default-patterns`）
+
+這種方法允許根據專案需求靈活設定檔案排除。它透過確保排除安全敏感檔案和大型二進制檔案來幫助優化產生的打包檔案的大小，同時防止機密資訊外洩。
+
+**注意：**預設情況下，二進制檔案不包含在打包輸出中，但它們的路徑列在輸出檔案的「倉庫結構」部分。這提供了倉庫結構的完整概覽，同時保持打包檔案高效且基於文字。有關詳細資訊，請參閱[二進制檔案處理](#二進制檔案處理)。
 
 `.repomixignore`範例：
 ```text
@@ -167,6 +196,36 @@ dist/**
 ```
 
 完整列表請參見[defaultIgnore.ts](https://github.com/yamadashy/repomix/blob/main/src/config/defaultIgnore.ts)
+
+## 二進制檔案處理
+
+二進制檔案（如圖像、PDF、編譯的二進制檔案、歸檔檔案等）經過特殊處理以保持高效的基於文字的輸出：
+
+- **檔案內容**：二進制檔案**不包含**在打包輸出中，以保持檔案基於文字且對AI處理高效
+- **目錄結構**：二進制檔案**路徑被列出**在目錄結構部分，提供倉庫的完整概覽
+
+這種方法確保您獲得倉庫結構的完整視圖，同時保持針對AI消費優化的高效的基於文字的輸出。
+
+**範例：**
+
+如果您的倉庫包含`logo.png`和`app.jar`：
+- 它們將出現在目錄結構部分
+- 它們的內容將不會包含在檔案部分
+
+**目錄結構輸出：**
+```
+src/
+  index.ts
+  utils.ts
+assets/
+  logo.png
+build/
+  app.jar
+```
+
+這樣，AI工具可以理解這些二進制檔案存在於您的專案結構中，而無需處理其二進制內容。
+
+**注意：**您可以使用`input.maxFileSize`設定選項（預設值：50MB）控制最大檔案大小閾值。大於此限制的檔案將被完全跳過。
 
 ## 進階功能
 

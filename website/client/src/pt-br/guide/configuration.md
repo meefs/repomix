@@ -133,14 +133,43 @@ O Repomix procura os arquivos de configuração na seguinte ordem:
 
 As opções de linha de comando têm precedência sobre as configurações do arquivo.
 
+## Padrões de inclusão
+
+O Repomix suporta especificar arquivos para incluir usando [padrões glob](https://github.com/mrmlnc/fast-glob?tab=readme-ov-file#pattern-syntax). Isso permite uma seleção de arquivos mais flexível e poderosa:
+
+- Use `**/*.js` para incluir todos os arquivos JavaScript em qualquer diretório
+- Use `src/**/*` para incluir todos os arquivos dentro do diretório `src` e seus subdiretórios
+- Combine múltiplos padrões como `["src/**/*.js", "**/*.md"]` para incluir arquivos JavaScript em `src` e todos os arquivos Markdown
+
+Você pode especificar padrões de inclusão em seu arquivo de configuração:
+
+```json
+{
+  "include": ["src/**/*", "tests/**/*.test.js"]
+}
+```
+
+Ou use a opção de linha de comando `--include` para filtragem única.
+
 ## Padrões de ignorar
 
-O Repomix fornece múltiplas formas de especificar quais arquivos devem ser ignorados. Os padrões são processados na seguinte ordem de prioridade:
+O Repomix oferece múltiplos métodos para definir padrões de ignorar para excluir arquivos ou diretórios específicos durante o processo de empacotamento:
 
-1. Opções de CLI (`--ignore`)
-2. Arquivo `.repomixignore` no diretório do projeto
-3. `.gitignore` e `.git/info/exclude` (se `ignore.useGitignore` for verdadeiro)
-4. Padrões padrão (se `ignore.useDefaultPatterns` for verdadeiro)
+- **.gitignore**: Por padrão, são utilizados os padrões listados nos arquivos `.gitignore` do seu projeto e `.git/info/exclude`. Este comportamento pode ser controlado com a configuração `ignore.useGitignore` ou a opção CLI `--no-gitignore`.
+- **Padrões padrão**: O Repomix inclui uma lista padrão de arquivos e diretórios comumente excluídos (por exemplo, node_modules, .git, arquivos binários). Esta funcionalidade pode ser controlada com a configuração `ignore.useDefaultPatterns` ou a opção CLI `--no-default-patterns`. Por favor, consulte [defaultIgnore.ts](https://github.com/yamadashy/repomix/blob/main/src/config/defaultIgnore.ts) para mais detalhes.
+- **.repomixignore**: Você pode criar um arquivo `.repomixignore` na raiz do seu projeto para definir padrões de ignorar específicos do Repomix. Este arquivo segue o mesmo formato que `.gitignore`.
+- **Padrões personalizados**: Padrões de ignorar adicionais podem ser especificados usando a opção `ignore.customPatterns` no arquivo de configuração. Você pode sobrescrever esta configuração com a opção de linha de comando `-i, --ignore`.
+
+**Ordem de prioridade** (da mais alta para a mais baixa):
+
+1. Padrões personalizados (`ignore.customPatterns`)
+2. `.repomixignore`
+3. `.gitignore` e `.git/info/exclude` (se `ignore.useGitignore` for verdadeiro e `--no-gitignore` não for usado)
+4. Padrões padrão (se `ignore.useDefaultPatterns` for verdadeiro e `--no-default-patterns` não for usado)
+
+Esta abordagem permite uma configuração flexível de exclusão de arquivos com base nas necessidades do seu projeto. Ajuda a otimizar o tamanho do arquivo empacotado gerado, garantindo a exclusão de arquivos sensíveis à segurança e arquivos binários grandes, enquanto previne o vazamento de informações confidenciais.
+
+**Nota:** Os arquivos binários não são incluídos na saída empacotada por padrão, mas seus caminhos são listados na seção "Estrutura do Repositório" do arquivo de saída. Isso fornece uma visão completa da estrutura do repositório enquanto mantém o arquivo empacotado eficiente e baseado em texto. Veja [Tratamento de Arquivos Binários](#tratamento-de-arquivos-binários) para mais detalhes.
 
 Exemplo de `.repomixignore`:
 ```text
@@ -167,6 +196,36 @@ dist/**
 ```
 
 Para a lista completa, veja [defaultIgnore.ts](https://github.com/yamadashy/repomix/blob/main/src/config/defaultIgnore.ts)
+
+## Tratamento de Arquivos Binários
+
+Arquivos binários (como imagens, PDFs, binários compilados, arquivos compactados, etc.) são tratados especialmente para manter uma saída eficiente baseada em texto:
+
+- **Conteúdos de arquivo**: Arquivos binários **não são incluídos** na saída empacotada para manter o arquivo baseado em texto e eficiente para processamento de IA
+- **Estrutura de diretórios**: Caminhos de arquivos binários **são listados** na seção de estrutura de diretórios, fornecendo uma visão completa do seu repositório
+
+Esta abordagem garante que você obtenha uma visão completa da estrutura do seu repositório enquanto mantém uma saída eficiente baseada em texto otimizada para consumo de IA.
+
+**Exemplo:**
+
+Se o seu repositório contém `logo.png` e `app.jar`:
+- Eles aparecerão na seção Estrutura de Diretórios
+- Seus conteúdos não serão incluídos na seção Arquivos
+
+**Saída de Estrutura de Diretórios:**
+```
+src/
+  index.ts
+  utils.ts
+assets/
+  logo.png
+build/
+  app.jar
+```
+
+Dessa forma, as ferramentas de IA podem entender que esses arquivos binários existem na estrutura do seu projeto sem processar seus conteúdos binários.
+
+**Nota:** Você pode controlar o limite de tamanho máximo de arquivo usando a opção de configuração `input.maxFileSize` (padrão: 50MB). Arquivos maiores que esse limite serão completamente ignorados.
 
 ## Recursos avançados
 

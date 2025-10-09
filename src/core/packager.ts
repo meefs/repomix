@@ -118,7 +118,7 @@ export const pack = async (
 
   progressCallback('Generating output...');
   const output = await withMemoryLogging('Generate Output', () =>
-    deps.generateOutput(rootDirs, config, processedFiles, safeFilePaths, gitDiffResult, gitLogResult),
+    deps.generateOutput(rootDirs, config, processedFiles, allFilePaths, gitDiffResult, gitLogResult),
   );
 
   progressCallback('Writing output file...');

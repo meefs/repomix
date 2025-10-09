@@ -133,14 +133,43 @@ Repomix는 다음 순서로 설정 파일을 찾습니다:
 
 명령줄 옵션은 설정 파일의 설정보다 우선합니다.
 
+## 포함 패턴
+
+Repomix는 [glob 패턴](https://github.com/mrmlnc/fast-glob?tab=readme-ov-file#pattern-syntax)을 사용하여 포함할 파일을 지정할 수 있습니다. 이를 통해 더욱 유연하고 강력한 파일 선택이 가능합니다:
+
+- `**/*.js`를 사용하여 모든 디렉토리의 모든 JavaScript 파일 포함
+- `src/**/*`를 사용하여 `src` 디렉토리와 하위 디렉토리 내의 모든 파일 포함
+- `["src/**/*.js", "**/*.md"]`와 같이 여러 패턴을 결합하여 `src`의 JavaScript 파일과 모든 Markdown 파일 포함
+
+설정 파일에서 포함 패턴을 지정할 수 있습니다:
+
+```json
+{
+  "include": ["src/**/*", "tests/**/*.test.js"]
+}
+```
+
+또는 일회성 필터링을 위해 `--include` 명령줄 옵션을 사용합니다.
+
 ## 무시 패턴
 
-Repomix는 무시할 파일을 지정하는 여러 방법을 제공합니다. 패턴은 다음 우선 순위로 처리됩니다:
+Repomix는 패키징 프로세스 중에 특정 파일이나 디렉토리를 제외하기 위한 여러 방법을 제공합니다:
 
-1. CLI 옵션(`--ignore`)
-2. 프로젝트 디렉토리의 `.repomixignore` 파일
-3. `.gitignore` 및 `.git/info/exclude`(`ignore.useGitignore`가 true인 경우)
-4. 기본 패턴(`ignore.useDefaultPatterns`가 true인 경우)
+- **.gitignore**: 기본적으로 프로젝트의 `.gitignore` 파일과 `.git/info/exclude`에 나열된 패턴이 사용됩니다. 이 동작은 `ignore.useGitignore` 설정 또는 `--no-gitignore` CLI 옵션으로 제어할 수 있습니다.
+- **기본 패턴**: Repomix에는 일반적으로 제외되는 파일 및 디렉토리의 기본 목록(예: node_modules, .git, 바이너리 파일)이 포함되어 있습니다. 이 기능은 `ignore.useDefaultPatterns` 설정 또는 `--no-default-patterns` CLI 옵션으로 제어할 수 있습니다. 자세한 내용은 [defaultIgnore.ts](https://github.com/yamadashy/repomix/blob/main/src/config/defaultIgnore.ts)를 참조하세요.
+- **.repomixignore**: 프로젝트 루트에 `.repomixignore` 파일을 생성하여 Repomix 전용 무시 패턴을 정의할 수 있습니다. 이 파일은 `.gitignore`와 동일한 형식을 따릅니다.
+- **사용자 정의 패턴**: 설정 파일의 `ignore.customPatterns` 옵션을 사용하여 추가 무시 패턴을 지정할 수 있습니다. 이 설정은 `-i, --ignore` 명령줄 옵션으로 덮어쓸 수 있습니다.
+
+**우선순위** (높은 순서에서 낮은 순서):
+
+1. 사용자 정의 패턴(`ignore.customPatterns`)
+2. `.repomixignore`
+3. `.gitignore` 및 `.git/info/exclude`(`ignore.useGitignore`가 true이고 `--no-gitignore`가 사용되지 않은 경우)
+4. 기본 패턴(`ignore.useDefaultPatterns`가 true이고 `--no-default-patterns`가 사용되지 않은 경우)
+
+이 접근 방식을 통해 프로젝트의 필요에 따라 유연한 파일 제외 설정이 가능합니다. 보안에 민감한 파일과 대용량 바이너리 파일의 제외를 보장하면서 기밀 정보 유출을 방지하여 생성된 팩 파일의 크기를 최적화하는 데 도움이 됩니다.
+
+**참고:** 바이너리 파일은 기본적으로 패킹된 출력에 포함되지 않지만, 해당 경로는 출력 파일의 "저장소 구조" 섹션에 나열됩니다. 이를 통해 팩 파일을 효율적이고 텍스트 기반으로 유지하면서 저장소 구조의 전체 개요를 제공합니다. 자세한 내용은 [바이너리 파일 처리](#바이너리-파일-처리)를 참조하세요.
 
 `.repomixignore` 예시:
 ```text
@@ -167,6 +196,36 @@ dist/**
 ```
 
 전체 목록은 [defaultIgnore.ts](https://github.com/yamadashy/repomix/blob/main/src/config/defaultIgnore.ts)를 참조하세요.
+
+## 바이너리 파일 처리
+
+바이너리 파일(이미지, PDF, 컴파일된 바이너리, 아카이브 등)은 효율적인 텍스트 기반 출력을 유지하기 위해 특별하게 처리됩니다:
+
+- **파일 내용**: 바이너리 파일은 파일을 텍스트 기반으로 유지하고 AI 처리에 효율적으로 만들기 위해 패킹된 출력에 **포함되지 않습니다**
+- **디렉토리 구조**: 바이너리 파일 **경로는 나열되며** 디렉토리 구조 섹션에 표시되어 저장소의 완전한 개요를 제공합니다
+
+이 접근 방식은 AI 소비에 최적화된 효율적인 텍스트 기반 출력을 유지하면서 저장소 구조의 완전한 보기를 얻을 수 있도록 보장합니다.
+
+**예시:**
+
+저장소에 `logo.png`와 `app.jar`가 포함된 경우:
+- 디렉토리 구조 섹션에 표시됩니다
+- 해당 내용은 파일 섹션에 포함되지 않습니다
+
+**디렉토리 구조 출력:**
+```
+src/
+  index.ts
+  utils.ts
+assets/
+  logo.png
+build/
+  app.jar
+```
+
+이렇게 하면 AI 도구가 바이너리 내용을 처리하지 않고도 프로젝트 구조에 이러한 바이너리 파일이 존재함을 이해할 수 있습니다.
+
+**참고:** `input.maxFileSize` 설정 옵션(기본값: 50MB)을 사용하여 최대 파일 크기 임계값을 제어할 수 있습니다. 이 제한보다 큰 파일은 완전히 건너뜁니다.
 
 ## 고급 기능
 

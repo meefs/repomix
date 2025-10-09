@@ -133,14 +133,43 @@ Repomix sucht in folgender Reihenfolge nach Konfigurationsdateien:
 
 Kommandozeilenoptionen haben Vorrang vor Einstellungen in der Konfigurationsdatei.
 
+## Include-Muster
+
+Repomix unterstützt die Angabe einzuschließender Dateien mittels [Glob-Mustern](https://github.com/mrmlnc/fast-glob?tab=readme-ov-file#pattern-syntax). Dies ermöglicht eine flexiblere und leistungsfähigere Dateiauswahl:
+
+- Verwenden Sie `**/*.js`, um alle JavaScript-Dateien in jedem Verzeichnis einzuschließen
+- Verwenden Sie `src/**/*`, um alle Dateien innerhalb des `src`-Verzeichnisses und seiner Unterverzeichnisse einzuschließen
+- Kombinieren Sie mehrere Muster wie `["src/**/*.js", "**/*.md"]`, um JavaScript-Dateien in `src` und alle Markdown-Dateien einzuschließen
+
+Sie können Include-Muster in Ihrer Konfigurationsdatei angeben:
+
+```json
+{
+  "include": ["src/**/*", "tests/**/*.test.js"]
+}
+```
+
+Oder verwenden Sie die Kommandozeilenoption `--include` für einmaliges Filtern.
+
 ## Ignorier-Muster
 
-Repomix bietet mehrere Möglichkeiten, zu ignorierende Dateien anzugeben. Die Muster werden in folgender Prioritätsreihenfolge verarbeitet:
+Repomix bietet mehrere Methoden zum Festlegen von Ignorier-Mustern, um bestimmte Dateien oder Verzeichnisse während des Packprozesses auszuschließen:
 
-1. CLI-Optionen (`--ignore`)
-2. `.repomixignore`-Datei im Projektverzeichnis
-3. `.gitignore` und `.git/info/exclude` (wenn `ignore.useGitignore` true ist)
-4. Standardmuster (wenn `ignore.useDefaultPatterns` true ist)
+- **.gitignore**: Standardmäßig werden die in den `.gitignore`-Dateien und `.git/info/exclude` Ihres Projekts aufgelisteten Muster verwendet. Dieses Verhalten kann über die Einstellung `ignore.useGitignore` oder die CLI-Option `--no-gitignore` gesteuert werden.
+- **Standardmuster**: Repomix enthält eine Standardliste häufig ausgeschlossener Dateien und Verzeichnisse (z.B. node_modules, .git, Binärdateien). Diese Funktion kann über die Einstellung `ignore.useDefaultPatterns` oder die CLI-Option `--no-default-patterns` gesteuert werden. Weitere Details finden Sie in [defaultIgnore.ts](https://github.com/yamadashy/repomix/blob/main/src/config/defaultIgnore.ts).
+- **.repomixignore**: Sie können eine `.repomixignore`-Datei in Ihrem Projektstamm erstellen, um Repomix-spezifische Ignorier-Muster zu definieren. Diese Datei folgt dem gleichen Format wie `.gitignore`.
+- **Benutzerdefinierte Muster**: Zusätzliche Ignorier-Muster können über die Option `ignore.customPatterns` in der Konfigurationsdatei angegeben werden. Sie können diese Einstellung mit der Kommandozeilenoption `-i, --ignore` überschreiben.
+
+**Prioritätsreihenfolge** (von höchster zu niedrigster):
+
+1. Benutzerdefinierte Muster (`ignore.customPatterns`)
+2. `.repomixignore`
+3. `.gitignore` und `.git/info/exclude` (wenn `ignore.useGitignore` true ist und `--no-gitignore` nicht verwendet wird)
+4. Standardmuster (wenn `ignore.useDefaultPatterns` true ist und `--no-default-patterns` nicht verwendet wird)
+
+Dieser Ansatz ermöglicht eine flexible Konfiguration des Dateiausschlusses basierend auf den Anforderungen Ihres Projekts. Er hilft, die Größe der generierten Packdatei zu optimieren, indem er den Ausschluss sicherheitssensibler Dateien und großer Binärdateien gewährleistet und gleichzeitig die Preisgabe vertraulicher Informationen verhindert.
+
+**Hinweis:** Binärdateien werden standardmäßig nicht in der gepackten Ausgabe enthalten, aber ihre Pfade werden im Abschnitt "Repository-Struktur" der Ausgabedatei aufgelistet. Dies bietet einen vollständigen Überblick über die Repository-Struktur und hält gleichzeitig die gepackte Datei effizient und textbasiert. Weitere Details finden Sie unter [Binärdateiverarbeitung](#binärdateiverarbeitung).
 
 Beispiel für `.repomixignore`:
 ```text
@@ -167,6 +196,36 @@ dist/**
 ```
 
 Die vollständige Liste finden Sie in [defaultIgnore.ts](https://github.com/yamadashy/repomix/blob/main/src/config/defaultIgnore.ts)
+
+## Binärdateiverarbeitung
+
+Binärdateien (wie Bilder, PDFs, kompilierte Binärdateien, Archive usw.) werden speziell behandelt, um eine effiziente, textbasierte Ausgabe zu gewährleisten:
+
+- **Dateiinhalte**: Binärdateien werden **nicht** in die gepackte Ausgabe aufgenommen, um die Datei textbasiert und effizient für die KI-Verarbeitung zu halten
+- **Verzeichnisstruktur**: Binärdateipfade werden im Abschnitt der Verzeichnisstruktur **aufgelistet**, um einen vollständigen Überblick über Ihr Repository zu bieten
+
+Dieser Ansatz stellt sicher, dass Sie eine vollständige Ansicht Ihrer Repository-Struktur erhalten und gleichzeitig eine effiziente, textbasierte Ausgabe beibehalten, die für den KI-Konsum optimiert ist.
+
+**Beispiel:**
+
+Wenn Ihr Repository `logo.png` und `app.jar` enthält:
+- Sie erscheinen im Abschnitt Verzeichnisstruktur
+- Ihre Inhalte werden nicht im Abschnitt Dateien enthalten sein
+
+**Verzeichnisstruktur-Ausgabe:**
+```
+src/
+  index.ts
+  utils.ts
+assets/
+  logo.png
+build/
+  app.jar
+```
+
+Auf diese Weise können KI-Tools verstehen, dass diese Binärdateien in Ihrer Projektstruktur existieren, ohne deren Binärinhalte zu verarbeiten.
+
+**Hinweis:** Sie können den Schwellenwert für die maximale Dateigröße über die Konfigurationsoption `input.maxFileSize` steuern (Standard: 50MB). Dateien, die größer als dieser Grenzwert sind, werden vollständig übersprungen.
 
 ## Erweiterte Funktionen
 

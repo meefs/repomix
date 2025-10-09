@@ -29,7 +29,7 @@ Ou dans `repomix.config.json`:
 
 ## Mesures de sécurité
 
-1. **Exclusion des fichiers binaires**: Les fichiers binaires ne sont pas inclus dans la sortie
+1. **Gestion des fichiers binaires**: Les contenus des fichiers binaires sont exclus de la sortie, mais leurs chemins sont listés dans la structure des répertoires pour une vue d'ensemble complète du dépôt
 2. **Compatible avec Git**: Respecte les motifs `.gitignore`
 3. **Détection automatisée**: Analyse les problèmes de sécurité courants:
     - Identifiants AWS

@@ -133,14 +133,43 @@ Repomix looks for configuration files in the following order:
 
 Command-line options take precedence over configuration file settings.
 
+## Include Patterns
+
+Repomix supports specifying files to include using [glob patterns](https://github.com/mrmlnc/fast-glob?tab=readme-ov-file#pattern-syntax). This allows for more flexible and powerful file selection:
+
+- Use `**/*.js` to include all JavaScript files in any directory
+- Use `src/**/*` to include all files within the `src` directory and its subdirectories
+- Combine multiple patterns like `["src/**/*.js", "**/*.md"]` to include JavaScript files in `src` and all Markdown files
+
+You can specify include patterns in your configuration file:
+
+```json
+{
+  "include": ["src/**/*", "tests/**/*.test.js"]
+}
+```
+
+Or use the `--include` command-line option for one-time filtering.
+
 ## Ignore Patterns
 
-Repomix provides multiple ways to specify which files should be ignored. The patterns are processed in the following priority order:
+Repomix offers multiple methods to set ignore patterns for excluding specific files or directories during the packing process:
 
-1. CLI options (`--ignore`)
-2. `.repomixignore` file in the project directory
-3. `.gitignore` and `.git/info/exclude` (if `ignore.useGitignore` is true)
-4. Default patterns (if `ignore.useDefaultPatterns` is true)
+- **.gitignore**: By default, patterns listed in your project's `.gitignore` files and `.git/info/exclude` are used. This behavior can be controlled with the `ignore.useGitignore` setting or the `--no-gitignore` CLI option.
+- **Default patterns**: Repomix includes a default list of commonly excluded files and directories (e.g., node_modules, .git, binary files). This feature can be controlled with the `ignore.useDefaultPatterns` setting or the `--no-default-patterns` CLI option. Please see [defaultIgnore.ts](https://github.com/yamadashy/repomix/blob/main/src/config/defaultIgnore.ts) for more details.
+- **.repomixignore**: You can create a `.repomixignore` file in your project root to define Repomix-specific ignore patterns. This file follows the same format as `.gitignore`.
+- **Custom patterns**: Additional ignore patterns can be specified using the `ignore.customPatterns` option in the configuration file. You can overwrite this setting with the `-i, --ignore` command line option.
+
+**Priority Order** (from highest to lowest):
+
+1. Custom patterns (`ignore.customPatterns`)
+2. `.repomixignore`
+3. `.gitignore` and `.git/info/exclude` (if `ignore.useGitignore` is true and `--no-gitignore` is not used)
+4. Default patterns (if `ignore.useDefaultPatterns` is true and `--no-default-patterns` is not used)
+
+This approach allows for flexible file exclusion configuration based on your project's needs. It helps optimize the size of the generated pack file by ensuring the exclusion of security-sensitive files and large binary files, while preventing the leakage of confidential information.
+
+**Note:** Binary files are not included in the packed output by default, but their paths are listed in the "Repository Structure" section of the output file. This provides a complete overview of the repository structure while keeping the packed file efficient and text-based. See [Binary Files Handling](#binary-files-handling) for more details.
 
 Example of `.repomixignore`:
 ```text
@@ -167,6 +196,36 @@ dist/**
 ```
 
 For the complete list, see [defaultIgnore.ts](https://github.com/yamadashy/repomix/blob/main/src/config/defaultIgnore.ts)
+
+## Binary Files Handling
+
+Binary files (such as images, PDFs, compiled binaries, archives, etc.) are handled specially to maintain an efficient, text-based output:
+
+- **File Contents**: Binary files are **not included** in the packed output to keep the file text-based and efficient for AI processing
+- **Directory Structure**: Binary file **paths are listed** in the directory structure section, providing a complete overview of your repository
+
+This approach ensures you get a complete view of your repository structure while maintaining an efficient, text-based output optimized for AI consumption.
+
+**Example:**
+
+If your repository contains `logo.png` and `app.jar`:
+- They will appear in the Directory Structure section
+- Their contents will not be included in the Files section
+
+**Directory Structure Output:**
+```
+src/
+  index.ts
+  utils.ts
+assets/
+  logo.png
+build/
+  app.jar
+```
+
+This way, AI tools can understand that these binary files exist in your project structure without processing their binary contents.
+
+**Note:** You can control the maximum file size threshold using the `input.maxFileSize` configuration option (default: 50MB). Files larger than this limit will be skipped entirely.
 
 ## Advanced Features
 
