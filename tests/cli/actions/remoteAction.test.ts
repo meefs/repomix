@@ -205,7 +205,7 @@ describe('remoteAction functions', () => {
   });
 
   describe('copyOutputToCurrentDirectory', () => {
-    test('should copy output file', async () => {
+    test('should copy output file when source and target are different', async () => {
       const sourceDir = '/source/dir';
       const targetDir = '/target/dir';
       const fileName = 'output.txt';
@@ -215,6 +215,34 @@ describe('remoteAction functions', () => {
       await copyOutputToCurrentDirectory(sourceDir, targetDir, fileName);
 
       expect(fs.copyFile).toHaveBeenCalledWith(path.resolve(sourceDir, fileName), path.resolve(targetDir, fileName));
+    });
+
+    test('should skip copy when source and target are the same', async () => {
+      const sourceDir = '/tmp/dir';
+      const targetDir = '/tmp/dir';
+      const fileName = 'output.txt';
+
+      vi.mocked(fs.copyFile).mockResolvedValue();
+
+      await copyOutputToCurrentDirectory(sourceDir, targetDir, fileName);
+
+      // Should not call copyFile when source and target are the same
+      expect(fs.copyFile).not.toHaveBeenCalled();
+    });
+
+    test('should skip copy when absolute path resolves to same location', async () => {
+      const sourceDir = '/tmp/repomix-123';
+      const targetDir = process.cwd();
+      const absolutePath = '/tmp/my_private_dir/output.xml';
+
+      vi.mocked(fs.copyFile).mockResolvedValue();
+
+      await copyOutputToCurrentDirectory(sourceDir, targetDir, absolutePath);
+
+      // When absolute path is used, both source and target resolve to the same path
+      // path.resolve('/tmp/repomix-123', '/tmp/my_private_dir/output.xml') -> '/tmp/my_private_dir/output.xml'
+      // path.resolve(process.cwd(), '/tmp/my_private_dir/output.xml') -> '/tmp/my_private_dir/output.xml'
+      expect(fs.copyFile).not.toHaveBeenCalled();
     });
 
     test('should throw error when copy fails', async () => {

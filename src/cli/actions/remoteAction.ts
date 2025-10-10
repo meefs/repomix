@@ -191,6 +191,13 @@ export const copyOutputToCurrentDirectory = async (
   const sourcePath = path.resolve(sourceDir, outputFileName);
   const targetPath = path.resolve(targetDir, outputFileName);
 
+  // Skip copy if source and target are the same
+  // This can happen when an absolute path is specified for the output file
+  if (sourcePath === targetPath) {
+    logger.trace(`Source and target are the same (${sourcePath}), skipping copy`);
+    return;
+  }
+
   try {
     logger.trace(`Copying output file from: ${sourcePath} to: ${targetPath}`);
 
