@@ -995,11 +995,83 @@ When running as an MCP server, Repomix provides the following tools:
 
 ## ⚙️ Configuration
 
-Create a `repomix.config.json` file in your project root for custom configurations.
+Repomix supports multiple configuration file formats for flexibility and ease of use.
+
+### Configuration File Formats
+
+Repomix will automatically search for configuration files in the following priority order:
+
+1. **TypeScript** (`repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`)
+2. **JavaScript/ES Module** (`repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`)
+3. **JSON** (`repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`)
+
+#### JSON Configuration
+
+Create a `repomix.config.json` file in your project root:
 
 ```bash
 repomix --init
 ```
+
+This will create a `repomix.config.json` file with default settings.
+
+#### TypeScript Configuration
+
+TypeScript configuration files provide the best developer experience with full type checking and IDE support.
+
+**Installation:**
+
+To use TypeScript or JavaScript configuration with `defineConfig`, you need to install Repomix as a dev dependency:
+
+```bash
+npm install -D repomix
+```
+
+**Example:**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+export default defineConfig({
+  output: {
+    filePath: 'output.xml',
+    style: 'xml',
+    removeComments: true,
+  },
+  ignore: {
+    customPatterns: ['**/node_modules/**', '**/dist/**'],
+  },
+});
+```
+
+**Benefits:**
+- ✅ Full TypeScript type checking in your IDE
+- ✅ Excellent IDE autocomplete and IntelliSense
+- ✅ Use dynamic values (timestamps, environment variables, etc.)
+
+**Dynamic Values Example:**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+// Generate timestamp-based filename
+const timestamp = new Date().toISOString().slice(0, 19).replace(/[:.]/g, '-');
+
+export default defineConfig({
+  output: {
+    filePath: `output-${timestamp}.xml`,
+    style: 'xml',
+  },
+});
+```
+
+#### JavaScript Configuration
+
+JavaScript configuration files work the same as TypeScript, supporting `defineConfig` and dynamic values.
+
+### Configuration Options
 
 Here's an explanation of the configuration options:
 
@@ -1041,10 +1113,29 @@ The configuration file supports [JSON5](https://json5.org/) syntax, which allows
 - Unquoted property names
 - More relaxed string syntax
 
+### Schema Validation
+
+You can enable schema validation for your configuration file by adding the `$schema` property:
+
+```json
+{
+  "$schema": "https://repomix.com/schemas/latest/schema.json",
+  "output": {
+    "filePath": "repomix-output.xml",
+    "style": "xml"
+  }
+}
+```
+
+This provides auto-completion and validation in editors that support JSON schema.
+
+### Example Configuration
+
 Example configuration:
 
 ```json5
 {
+  "$schema": "https://repomix.com/schemas/latest/schema.json",
   "input": {
     "maxFileSize": 50000000
   },

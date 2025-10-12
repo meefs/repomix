@@ -1,5 +1,7 @@
 import * as fs from 'node:fs/promises';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { createJiti } from 'jiti';
 import JSON5 from 'json5';
 import pc from 'picocolors';
 import { RepomixError, rethrowValidationErrorIfZodError } from '../shared/errorHandle.js';
@@ -15,7 +17,17 @@ import {
 } from './configSchema.js';
 import { getGlobalDirectory } from './globalDirectory.js';
 
-const defaultConfigPaths = ['repomix.config.json5', 'repomix.config.jsonc', 'repomix.config.json'];
+const defaultConfigPaths = [
+  'repomix.config.ts',
+  'repomix.config.mts',
+  'repomix.config.cts',
+  'repomix.config.js',
+  'repomix.config.mjs',
+  'repomix.config.cjs',
+  'repomix.config.json5',
+  'repomix.config.jsonc',
+  'repomix.config.json',
+];
 
 const getGlobalConfigPaths = () => {
   const globalDir = getGlobalDirectory();
@@ -83,15 +95,51 @@ export const loadFileConfig = async (rootDir: string, argConfigPath: string | nu
   return {};
 };
 
+const getFileExtension = (filePath: string): string => {
+  const match = filePath.match(/\.(ts|mts|cts|js|mjs|cjs|json5|jsonc|json)$/);
+  return match ? match[1] : '';
+};
+
 const loadAndValidateConfig = async (filePath: string): Promise<RepomixConfigFile> => {
   try {
-    const fileContent = await fs.readFile(filePath, 'utf-8');
-    const config = JSON5.parse(fileContent);
+    let config: unknown;
+    const ext = getFileExtension(filePath);
+
+    switch (ext) {
+      case 'ts':
+      case 'mts':
+      case 'cts':
+      case 'js':
+      case 'mjs':
+      case 'cjs': {
+        // Use jiti for TypeScript and JavaScript files
+        // This provides consistent behavior and avoids Node.js module cache issues
+        const jiti = createJiti(import.meta.url, {
+          moduleCache: false, // Disable cache to ensure fresh config loads
+          interopDefault: true, // Automatically use default export
+        });
+        config = await jiti.import(pathToFileURL(filePath).href);
+        break;
+      }
+
+      case 'json5':
+      case 'jsonc':
+      case 'json': {
+        // Use JSON5 for JSON/JSON5/JSONC files
+        const fileContent = await fs.readFile(filePath, 'utf-8');
+        config = JSON5.parse(fileContent);
+        break;
+      }
+
+      default:
+        throw new RepomixError(`Unsupported config file format: ${filePath}`);
+    }
+
     return repomixConfigFileSchema.parse(config);
   } catch (error) {
     rethrowValidationErrorIfZodError(error, 'Invalid config schema');
     if (error instanceof SyntaxError) {
-      throw new RepomixError(`Invalid JSON5 in config file ${filePath}: ${error.message}`);
+      throw new RepomixError(`Invalid syntax in config file ${filePath}: ${error.message}`);
     }
     if (error instanceof Error) {
       throw new RepomixError(`Error loading config from ${filePath}: ${error.message}`);
