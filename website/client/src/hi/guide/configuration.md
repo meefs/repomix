@@ -1,8 +1,18 @@
 # कॉन्फिगरेशन
 
-Repomix को कॉन्फिगरेशन फ़ाइल (`repomix.config.json`) या कमांड-लाइन विकल्पों का उपयोग करके कॉन्फिगर किया जा सकता है। कॉन्फिगरेशन फ़ाइल आपको अपने कोडबेस के प्रसंस्करण और आउटपुट के विभिन्न पहलुओं को अनुकूलित करने की अनुमति देती है।
+Repomix को कॉन्फिगरेशन फ़ाइल या कमांड-लाइन विकल्पों का उपयोग करके कॉन्फिगर किया जा सकता है। कॉन्फिगरेशन फ़ाइल आपको अपने कोडबेस के प्रसंस्करण और आउटपुट के विभिन्न पहलुओं को अनुकूलित करने की अनुमति देती है।
 
-## तुरंत शुरुआत
+## कॉन्फिगरेशन फ़ाइल प्रारूप
+
+Repomix लचीलेपन और उपयोग में आसानी के लिए कई कॉन्फिगरेशन फ़ाइल प्रारूपों का समर्थन करता है।
+
+Repomix स्वचालित रूप से निम्नलिखित प्राथमिकता क्रम में कॉन्फिगरेशन फ़ाइलों को खोजेगा:
+
+1. **TypeScript** (`repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`)
+2. **JavaScript/ES Module** (`repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`)
+3. **JSON** (`repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`)
+
+### JSON कॉन्फिगरेशन
 
 अपनी प्रोजेक्ट डायरेक्टरी में एक कॉन्फिगरेशन फ़ाइल बनाएं:
 ```bash
@@ -14,6 +24,62 @@ repomix --init
 ```bash
 repomix --init --global
 ```
+
+### TypeScript कॉन्फिगरेशन
+
+TypeScript कॉन्फिगरेशन फ़ाइलें पूर्ण टाइप चेकिंग और IDE समर्थन के साथ सर्वोत्तम developer अनुभव प्रदान करती हैं।
+
+**इंस्टॉलेशन:**
+
+TypeScript या JavaScript कॉन्फिगरेशन को `defineConfig` के साथ उपयोग करने के लिए, आपको Repomix को dev dependency के रूप में इंस्टॉल करना होगा:
+
+```bash
+npm install -D repomix
+```
+
+**उदाहरण:**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+export default defineConfig({
+  output: {
+    filePath: 'output.xml',
+    style: 'xml',
+    removeComments: true,
+  },
+  ignore: {
+    customPatterns: ['**/node_modules/**', '**/dist/**'],
+  },
+});
+```
+
+**लाभ:**
+- ✅ आपके IDE में पूर्ण TypeScript टाइप चेकिंग
+- ✅ उत्कृष्ट IDE autocomplete और IntelliSense
+- ✅ गतिशील मान का उपयोग करें (timestamps, environment variables, आदि)
+
+**गतिशील मान उदाहरण:**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+// Timestamp-आधारित फ़ाइल नाम generate करें
+const timestamp = new Date().toISOString().slice(0, 19).replace(/[:.]/g, '-');
+
+export default defineConfig({
+  output: {
+    filePath: `output-${timestamp}.xml`,
+    style: 'xml',
+  },
+});
+```
+
+### JavaScript कॉन्फिगरेशन
+
+JavaScript कॉन्फिगरेशन फ़ाइलें TypeScript की तरह ही काम करती हैं, `defineConfig` और गतिशील मानों का समर्थन करती हैं।
 
 ## कॉन्फिगरेशन विकल्प
 
@@ -126,10 +192,19 @@ repomix --init --global
 ## कॉन्फिगरेशन फ़ाइल स्थान
 
 Repomix निम्नलिखित क्रम में कॉन्फिगरेशन फ़ाइलों की तलाश करता है:
-1. वर्तमान डायरेक्टरी में स्थानीय कॉन्फिगरेशन फ़ाइल (`repomix.config.json`)
-2. ग्लोबल कॉन्फिगरेशन फ़ाइल:
-   - Windows: `%LOCALAPPDATA%\Repomix\repomix.config.json`
-   - macOS/Linux: `~/.config/repomix/repomix.config.json`
+1. वर्तमान डायरेक्टरी में स्थानीय कॉन्फिगरेशन फ़ाइल (प्राथमिकता क्रम: TS > JS > JSON)
+   - TypeScript: `repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`
+   - JavaScript: `repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`
+   - JSON: `repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`
+2. ग्लोबल कॉन्फिगरेशन फ़ाइल (प्राथमिकता क्रम: TS > JS > JSON)
+   - Windows:
+     - TypeScript: `%LOCALAPPDATA%\Repomix\repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript: `%LOCALAPPDATA%\Repomix\repomix.config.js`, `.mjs`, `.cjs`
+     - JSON: `%LOCALAPPDATA%\Repomix\repomix.config.json5`, `.jsonc`, `.json`
+   - macOS/Linux:
+     - TypeScript: `~/.config/repomix/repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript: `~/.config/repomix/repomix.config.js`, `.mjs`, `.cjs`
+     - JSON: `~/.config/repomix/repomix.config.json5`, `.jsonc`, `.json`
 
 कमांड-लाइन विकल्प कॉन्फिगरेशन फ़ाइल सेटिंग्स से प्राथमिकता रखते हैं।
 

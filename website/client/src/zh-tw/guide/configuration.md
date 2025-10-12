@@ -1,8 +1,18 @@
 # 設定
 
-Repomix可以透過設定檔（`repomix.config.json`）或命令列選項進行設定。設定檔允許您自訂程式碼庫的處理和輸出方式。
+Repomix可以透過設定檔或命令列選項進行設定。設定檔允許您自訂程式碼庫的處理和輸出方式。
 
-## 快速開始
+## 設定檔格式
+
+Repomix支援多種設定檔格式，以提供靈活性和易用性。
+
+Repomix將按以下優先順序自動搜尋設定檔：
+
+1. **TypeScript** (`repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`)
+2. **JavaScript/ES Module** (`repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`)
+3. **JSON** (`repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`)
+
+### JSON設定
 
 在專案目錄中建立設定檔：
 ```bash
@@ -14,6 +24,62 @@ repomix --init
 ```bash
 repomix --init --global
 ```
+
+### TypeScript設定
+
+TypeScript設定檔提供最佳的開發體驗，具有完整的型別檢查和IDE支援。
+
+**安裝：**
+
+要使用帶有`defineConfig`的TypeScript或JavaScript設定，您需要將Repomix安裝為開發依賴：
+
+```bash
+npm install -D repomix
+```
+
+**範例：**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+export default defineConfig({
+  output: {
+    filePath: 'output.xml',
+    style: 'xml',
+    removeComments: true,
+  },
+  ignore: {
+    customPatterns: ['**/node_modules/**', '**/dist/**'],
+  },
+});
+```
+
+**優勢：**
+- ✅ IDE中的完整TypeScript型別檢查
+- ✅ 出色的IDE自動完成和IntelliSense
+- ✅ 使用動態值（時間戳記、環境變數等）
+
+**動態值範例：**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+// 產生基於時間戳記的檔案名稱
+const timestamp = new Date().toISOString().slice(0, 19).replace(/[:.]/g, '-');
+
+export default defineConfig({
+  output: {
+    filePath: `output-${timestamp}.xml`,
+    style: 'xml',
+  },
+});
+```
+
+### JavaScript設定
+
+JavaScript設定檔的工作方式與TypeScript相同，支援`defineConfig`和動態值。
 
 ## 設定選項
 
@@ -126,10 +192,19 @@ repomix --init --global
 ## 設定檔位置
 
 Repomix按以下順序尋找設定檔：
-1. 當前目錄中的本地設定檔（`repomix.config.json`）
-2. 全域設定檔：
-   - Windows：`%LOCALAPPDATA%\Repomix\repomix.config.json`
-   - macOS/Linux：`~/.config/repomix/repomix.config.json`
+1. 當前目錄中的本地設定檔（優先順序：TS > JS > JSON）
+   - TypeScript: `repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`
+   - JavaScript: `repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`
+   - JSON: `repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`
+2. 全域設定檔（優先順序：TS > JS > JSON）
+   - Windows：
+     - TypeScript: `%LOCALAPPDATA%\Repomix\repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript: `%LOCALAPPDATA%\Repomix\repomix.config.js`, `.mjs`, `.cjs`
+     - JSON: `%LOCALAPPDATA%\Repomix\repomix.config.json5`, `.jsonc`, `.json`
+   - macOS/Linux：
+     - TypeScript: `~/.config/repomix/repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript: `~/.config/repomix/repomix.config.js`, `.mjs`, `.cjs`
+     - JSON: `~/.config/repomix/repomix.config.json5`, `.jsonc`, `.json`
 
 命令列選項優先於設定檔設定。
 

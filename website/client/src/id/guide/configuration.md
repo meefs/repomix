@@ -1,8 +1,18 @@
 # Konfigurasi
 
-Repomix dapat dikonfigurasi menggunakan file konfigurasi (`repomix.config.json`) atau opsi baris perintah. File konfigurasi memungkinkan Anda untuk menyesuaikan berbagai aspek cara pemrosesan dan output codebase Anda.
+Repomix dapat dikonfigurasi menggunakan file konfigurasi atau opsi baris perintah. File konfigurasi memungkinkan Anda untuk menyesuaikan berbagai aspek cara pemrosesan dan output codebase Anda.
 
-## Memulai Cepat
+## Format File Konfigurasi
+
+Repomix mendukung beberapa format file konfigurasi untuk fleksibilitas dan kemudahan penggunaan.
+
+Repomix akan secara otomatis mencari file konfigurasi dalam urutan prioritas berikut:
+
+1. **TypeScript** (`repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`)
+2. **JavaScript/ES Module** (`repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`)
+3. **JSON** (`repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`)
+
+### Konfigurasi JSON
 
 Buat file konfigurasi di direktori proyek Anda:
 ```bash
@@ -14,6 +24,62 @@ Ini akan membuat file `repomix.config.json` dengan pengaturan default. Anda juga
 ```bash
 repomix --init --global
 ```
+
+### Konfigurasi TypeScript
+
+File konfigurasi TypeScript memberikan pengalaman developer terbaik dengan pengecekan tipe lengkap dan dukungan IDE.
+
+**Instalasi:**
+
+Untuk menggunakan konfigurasi TypeScript atau JavaScript dengan `defineConfig`, Anda perlu menginstal Repomix sebagai dev dependency:
+
+```bash
+npm install -D repomix
+```
+
+**Contoh:**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+export default defineConfig({
+  output: {
+    filePath: 'output.xml',
+    style: 'xml',
+    removeComments: true,
+  },
+  ignore: {
+    customPatterns: ['**/node_modules/**', '**/dist/**'],
+  },
+});
+```
+
+**Manfaat:**
+- ✅ Pengecekan tipe TypeScript lengkap di IDE Anda
+- ✅ Autocomplete dan IntelliSense IDE yang sangat baik
+- ✅ Gunakan nilai dinamis (timestamp, environment variables, dll.)
+
+**Contoh Nilai Dinamis:**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+// Generate nama file berbasis timestamp
+const timestamp = new Date().toISOString().slice(0, 19).replace(/[:.]/g, '-');
+
+export default defineConfig({
+  output: {
+    filePath: `output-${timestamp}.xml`,
+    style: 'xml',
+  },
+});
+```
+
+### Konfigurasi JavaScript
+
+File konfigurasi JavaScript bekerja sama seperti TypeScript, mendukung `defineConfig` dan nilai dinamis.
 
 ## Opsi Konfigurasi
 
@@ -126,10 +192,19 @@ Berikut adalah contoh file konfigurasi lengkap (`repomix.config.json`):
 ## Lokasi File Konfigurasi
 
 Repomix mencari file konfigurasi dalam urutan berikut:
-1. File konfigurasi lokal (`repomix.config.json`) di direktori saat ini
-2. File konfigurasi global:
-   - Windows: `%LOCALAPPDATA%\Repomix\repomix.config.json`
-   - macOS/Linux: `~/.config/repomix/repomix.config.json`
+1. File konfigurasi lokal di direktori saat ini (urutan prioritas: TS > JS > JSON)
+   - TypeScript: `repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`
+   - JavaScript: `repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`
+   - JSON: `repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`
+2. File konfigurasi global (urutan prioritas: TS > JS > JSON)
+   - Windows:
+     - TypeScript: `%LOCALAPPDATA%\Repomix\repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript: `%LOCALAPPDATA%\Repomix\repomix.config.js`, `.mjs`, `.cjs`
+     - JSON: `%LOCALAPPDATA%\Repomix\repomix.config.json5`, `.jsonc`, `.json`
+   - macOS/Linux:
+     - TypeScript: `~/.config/repomix/repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript: `~/.config/repomix/repomix.config.js`, `.mjs`, `.cjs`
+     - JSON: `~/.config/repomix/repomix.config.json5`, `.jsonc`, `.json`
 
 Opsi baris perintah memiliki prioritas lebih tinggi daripada pengaturan file konfigurasi.
 

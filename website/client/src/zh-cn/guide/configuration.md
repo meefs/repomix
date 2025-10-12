@@ -1,8 +1,18 @@
 # 配置
 
-Repomix可以通过配置文件（`repomix.config.json`）或命令行选项进行配置。配置文件允许您自定义代码库的处理和输出方式。
+Repomix可以通过配置文件或命令行选项进行配置。配置文件允许您自定义代码库的处理和输出方式。
 
-## 快速开始
+## 配置文件格式
+
+Repomix支持多种配置文件格式，以提供灵活性和易用性。
+
+Repomix将按以下优先级自动搜索配置文件：
+
+1. **TypeScript** (`repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`)
+2. **JavaScript/ES Module** (`repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`)
+3. **JSON** (`repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`)
+
+### JSON配置
 
 在项目目录中创建配置文件：
 ```bash
@@ -14,6 +24,62 @@ repomix --init
 ```bash
 repomix --init --global
 ```
+
+### TypeScript配置
+
+TypeScript配置文件提供最佳的开发体验，具有完整的类型检查和IDE支持。
+
+**安装：**
+
+要使用带有`defineConfig`的TypeScript或JavaScript配置，您需要将Repomix安装为开发依赖：
+
+```bash
+npm install -D repomix
+```
+
+**示例：**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+export default defineConfig({
+  output: {
+    filePath: 'output.xml',
+    style: 'xml',
+    removeComments: true,
+  },
+  ignore: {
+    customPatterns: ['**/node_modules/**', '**/dist/**'],
+  },
+});
+```
+
+**优势：**
+- ✅ IDE中的完整TypeScript类型检查
+- ✅ 出色的IDE自动完成和IntelliSense
+- ✅ 使用动态值（时间戳、环境变量等）
+
+**动态值示例：**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+// 生成基于时间戳的文件名
+const timestamp = new Date().toISOString().slice(0, 19).replace(/[:.]/g, '-');
+
+export default defineConfig({
+  output: {
+    filePath: `output-${timestamp}.xml`,
+    style: 'xml',
+  },
+});
+```
+
+### JavaScript配置
+
+JavaScript配置文件的工作方式与TypeScript相同，支持`defineConfig`和动态值。
 
 ## 配置选项
 
@@ -126,10 +192,19 @@ repomix --init --global
 ## 配置文件位置
 
 Repomix按以下顺序查找配置文件：
-1. 当前目录中的本地配置文件（`repomix.config.json`）
-2. 全局配置文件：
-   - Windows：`%LOCALAPPDATA%\Repomix\repomix.config.json`
-   - macOS/Linux：`~/.config/repomix/repomix.config.json`
+1. 当前目录中的本地配置文件（优先级：TS > JS > JSON）
+   - TypeScript: `repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`
+   - JavaScript: `repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`
+   - JSON: `repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`
+2. 全局配置文件（优先级：TS > JS > JSON）
+   - Windows：
+     - TypeScript: `%LOCALAPPDATA%\Repomix\repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript: `%LOCALAPPDATA%\Repomix\repomix.config.js`, `.mjs`, `.cjs`
+     - JSON: `%LOCALAPPDATA%\Repomix\repomix.config.json5`, `.jsonc`, `.json`
+   - macOS/Linux：
+     - TypeScript: `~/.config/repomix/repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript: `~/.config/repomix/repomix.config.js`, `.mjs`, `.cjs`
+     - JSON: `~/.config/repomix/repomix.config.json5`, `.jsonc`, `.json`
 
 命令行选项优先于配置文件设置。
 

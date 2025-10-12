@@ -1,8 +1,18 @@
 # Configuración
 
-Repomix puede configurarse mediante un archivo de configuración (`repomix.config.json`) o opciones de línea de comandos. El archivo de configuración le permite personalizar varios aspectos de cómo se procesa y genera la salida de su base de código.
+Repomix puede configurarse mediante un archivo de configuración o opciones de línea de comandos. El archivo de configuración le permite personalizar varios aspectos de cómo se procesa y genera la salida de su base de código.
 
-## Inicio rápido
+## Formatos de archivos de configuración
+
+Repomix admite múltiples formatos de archivos de configuración para mayor flexibilidad y facilidad de uso.
+
+Repomix buscará automáticamente archivos de configuración en el siguiente orden de prioridad:
+
+1. **TypeScript** (`repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`)
+2. **JavaScript/ES Module** (`repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`)
+3. **JSON** (`repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`)
+
+### Configuración JSON
 
 Cree un archivo de configuración en el directorio de su proyecto:
 ```bash
@@ -14,6 +24,62 @@ Esto creará un archivo `repomix.config.json` con la configuración predetermina
 ```bash
 repomix --init --global
 ```
+
+### Configuración TypeScript
+
+Los archivos de configuración TypeScript ofrecen la mejor experiencia de desarrollo con verificación completa de tipos y soporte IDE.
+
+**Instalación:**
+
+Para usar la configuración TypeScript o JavaScript con `defineConfig`, debe instalar Repomix como dependencia de desarrollo:
+
+```bash
+npm install -D repomix
+```
+
+**Ejemplo:**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+export default defineConfig({
+  output: {
+    filePath: 'output.xml',
+    style: 'xml',
+    removeComments: true,
+  },
+  ignore: {
+    customPatterns: ['**/node_modules/**', '**/dist/**'],
+  },
+});
+```
+
+**Ventajas:**
+- ✅ Verificación completa de tipos TypeScript en su IDE
+- ✅ Excelente autocompletado e IntelliSense del IDE
+- ✅ Uso de valores dinámicos (marcas de tiempo, variables de entorno, etc.)
+
+**Ejemplo de valores dinámicos:**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+// Generar nombre de archivo basado en marca de tiempo
+const timestamp = new Date().toISOString().slice(0, 19).replace(/[:.]/g, '-');
+
+export default defineConfig({
+  output: {
+    filePath: `output-${timestamp}.xml`,
+    style: 'xml',
+  },
+});
+```
+
+### Configuración JavaScript
+
+Los archivos de configuración JavaScript funcionan igual que TypeScript, admitiendo `defineConfig` y valores dinámicos.
 
 ## Opciones de configuración
 
@@ -126,10 +192,19 @@ Aquí hay un ejemplo de un archivo de configuración completo (`repomix.config.j
 ## Ubicaciones de los archivos de configuración
 
 Repomix busca los archivos de configuración en el siguiente orden:
-1. Archivo de configuración local (`repomix.config.json`) en el directorio actual
-2. Archivo de configuración global:
-   - Windows: `%LOCALAPPDATA%\Repomix\repomix.config.json`
-   - macOS/Linux: `~/.config/repomix/repomix.config.json`
+1. Archivo de configuración local en el directorio actual (orden de prioridad: TS > JS > JSON)
+   - TypeScript: `repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`
+   - JavaScript: `repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`
+   - JSON: `repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`
+2. Archivo de configuración global (orden de prioridad: TS > JS > JSON)
+   - Windows:
+     - TypeScript: `%LOCALAPPDATA%\Repomix\repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript: `%LOCALAPPDATA%\Repomix\repomix.config.js`, `.mjs`, `.cjs`
+     - JSON: `%LOCALAPPDATA%\Repomix\repomix.config.json5`, `.jsonc`, `.json`
+   - macOS/Linux:
+     - TypeScript: `~/.config/repomix/repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript: `~/.config/repomix/repomix.config.js`, `.mjs`, `.cjs`
+     - JSON: `~/.config/repomix/repomix.config.json5`, `.jsonc`, `.json`
 
 Las opciones de línea de comandos tienen prioridad sobre la configuración del archivo.
 

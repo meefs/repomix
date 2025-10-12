@@ -1,8 +1,18 @@
 # 설정
 
-Repomix는 설정 파일(`repomix.config.json`) 또는 명령줄 옵션을 사용하여 설정할 수 있습니다. 설정 파일을 사용하면 코드베이스의 처리 및 출력 방식을 사용자 정의할 수 있습니다.
+Repomix는 설정 파일 또는 명령줄 옵션을 사용하여 설정할 수 있습니다. 설정 파일을 사용하면 코드베이스의 처리 및 출력 방식을 사용자 정의할 수 있습니다.
 
-## 빠른 시작
+## 설정 파일 형식
+
+Repomix는 유연성과 사용 편의성을 위해 여러 설정 파일 형식을 지원합니다.
+
+Repomix는 다음 우선순위 순서로 설정 파일을 자동으로 검색합니다:
+
+1. **TypeScript** (`repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`)
+2. **JavaScript/ES Module** (`repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`)
+3. **JSON** (`repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`)
+
+### JSON 설정
 
 프로젝트 디렉토리에 설정 파일을 생성합니다:
 ```bash
@@ -14,6 +24,62 @@ repomix --init
 ```bash
 repomix --init --global
 ```
+
+### TypeScript 설정
+
+TypeScript 설정 파일은 완전한 타입 검사 및 IDE 지원으로 최고의 개발자 경험을 제공합니다.
+
+**설치:**
+
+`defineConfig`와 함께 TypeScript 또는 JavaScript 설정을 사용하려면 Repomix를 dev dependency로 설치해야 합니다:
+
+```bash
+npm install -D repomix
+```
+
+**예제:**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+export default defineConfig({
+  output: {
+    filePath: 'output.xml',
+    style: 'xml',
+    removeComments: true,
+  },
+  ignore: {
+    customPatterns: ['**/node_modules/**', '**/dist/**'],
+  },
+});
+```
+
+**장점:**
+- ✅ IDE에서 완전한 TypeScript 타입 검사
+- ✅ 탁월한 IDE 자동 완성 및 IntelliSense
+- ✅ 동적 값 사용 가능 (타임스탬프, 환경 변수 등)
+
+**동적 값 예제:**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+// 타임스탬프 기반 파일명 생성
+const timestamp = new Date().toISOString().slice(0, 19).replace(/[:.]/g, '-');
+
+export default defineConfig({
+  output: {
+    filePath: `output-${timestamp}.xml`,
+    style: 'xml',
+  },
+});
+```
+
+### JavaScript 설정
+
+JavaScript 설정 파일은 TypeScript와 동일하게 작동하며 `defineConfig` 및 동적 값을 지원합니다.
 
 ## 설정 옵션
 
@@ -126,10 +192,19 @@ repomix --init --global
 ## 설정 파일 위치
 
 Repomix는 다음 순서로 설정 파일을 찾습니다:
-1. 현재 디렉토리의 로컬 설정 파일(`repomix.config.json`)
-2. 전역 설정 파일:
-   - Windows: `%LOCALAPPDATA%\Repomix\repomix.config.json`
-   - macOS/Linux: `~/.config/repomix/repomix.config.json`
+1. 현재 디렉토리의 로컬 설정 파일 (우선순위: TS > JS > JSON)
+   - TypeScript: `repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`
+   - JavaScript: `repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`
+   - JSON: `repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`
+2. 전역 설정 파일 (우선순위: TS > JS > JSON)
+   - Windows:
+     - TypeScript: `%LOCALAPPDATA%\Repomix\repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript: `%LOCALAPPDATA%\Repomix\repomix.config.js`, `.mjs`, `.cjs`
+     - JSON: `%LOCALAPPDATA%\Repomix\repomix.config.json5`, `.jsonc`, `.json`
+   - macOS/Linux:
+     - TypeScript: `~/.config/repomix/repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript: `~/.config/repomix/repomix.config.js`, `.mjs`, `.cjs`
+     - JSON: `~/.config/repomix/repomix.config.json5`, `.jsonc`, `.json`
 
 명령줄 옵션은 설정 파일의 설정보다 우선합니다.
 

@@ -1,8 +1,18 @@
 # Configuration
 
-Repomix peut être configuré à l'aide d'un fichier de configuration (`repomix.config.json`) ou d'options en ligne de commande. Le fichier de configuration vous permet de personnaliser divers aspects du traitement et de la sortie de votre base de code.
+Repomix peut être configuré à l'aide d'un fichier de configuration ou d'options en ligne de commande. Le fichier de configuration vous permet de personnaliser divers aspects du traitement et de la sortie de votre base de code.
 
-## Démarrage rapide
+## Formats de fichiers de configuration
+
+Repomix prend en charge plusieurs formats de fichiers de configuration pour plus de flexibilité et de facilité d'utilisation.
+
+Repomix recherchera automatiquement les fichiers de configuration dans l'ordre de priorité suivant :
+
+1. **TypeScript** (`repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`)
+2. **JavaScript/ES Module** (`repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`)
+3. **JSON** (`repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`)
+
+### Configuration JSON
 
 Créez un fichier de configuration dans votre répertoire de projet :
 ```bash
@@ -14,6 +24,62 @@ Cela créera un fichier `repomix.config.json` avec les paramètres par défaut. 
 ```bash
 repomix --init --global
 ```
+
+### Configuration TypeScript
+
+Les fichiers de configuration TypeScript offrent la meilleure expérience de développement avec une vérification complète des types et un support IDE.
+
+**Installation :**
+
+Pour utiliser la configuration TypeScript ou JavaScript avec `defineConfig`, vous devez installer Repomix en tant que dépendance de développement :
+
+```bash
+npm install -D repomix
+```
+
+**Exemple :**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+export default defineConfig({
+  output: {
+    filePath: 'output.xml',
+    style: 'xml',
+    removeComments: true,
+  },
+  ignore: {
+    customPatterns: ['**/node_modules/**', '**/dist/**'],
+  },
+});
+```
+
+**Avantages :**
+- ✅ Vérification complète des types TypeScript dans votre IDE
+- ✅ Excellente autocomplétion et IntelliSense de l'IDE
+- ✅ Utilisation de valeurs dynamiques (horodatages, variables d'environnement, etc.)
+
+**Exemple de valeurs dynamiques :**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+// Générer un nom de fichier basé sur l'horodatage
+const timestamp = new Date().toISOString().slice(0, 19).replace(/[:.]/g, '-');
+
+export default defineConfig({
+  output: {
+    filePath: `output-${timestamp}.xml`,
+    style: 'xml',
+  },
+});
+```
+
+### Configuration JavaScript
+
+Les fichiers de configuration JavaScript fonctionnent de la même manière que TypeScript, en prenant en charge `defineConfig` et les valeurs dynamiques.
 
 ## Options de configuration
 
@@ -126,10 +192,19 @@ Voici un exemple de fichier de configuration complet (`repomix.config.json`) :
 ## Emplacements des fichiers de configuration
 
 Repomix recherche les fichiers de configuration dans l'ordre suivant :
-1. Fichier de configuration local (`repomix.config.json`) dans le répertoire courant
-2. Fichier de configuration global :
-   - Windows : `%LOCALAPPDATA%\Repomix\repomix.config.json`
-   - macOS/Linux : `~/.config/repomix/repomix.config.json`
+1. Fichier de configuration local dans le répertoire courant (ordre de priorité : TS > JS > JSON)
+   - TypeScript : `repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`
+   - JavaScript : `repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`
+   - JSON : `repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`
+2. Fichier de configuration global (ordre de priorité : TS > JS > JSON)
+   - Windows :
+     - TypeScript : `%LOCALAPPDATA%\Repomix\repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript : `%LOCALAPPDATA%\Repomix\repomix.config.js`, `.mjs`, `.cjs`
+     - JSON : `%LOCALAPPDATA%\Repomix\repomix.config.json5`, `.jsonc`, `.json`
+   - macOS/Linux :
+     - TypeScript : `~/.config/repomix/repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript : `~/.config/repomix/repomix.config.js`, `.mjs`, `.cjs`
+     - JSON : `~/.config/repomix/repomix.config.json5`, `.jsonc`, `.json`
 
 Les options en ligne de commande ont la priorité sur les paramètres du fichier de configuration.
 

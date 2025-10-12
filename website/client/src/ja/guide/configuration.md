@@ -1,8 +1,18 @@
 # 設定
 
-Repomixは設定ファイル（`repomix.config.json`）またはコマンドラインオプションを使用して設定できます。設定ファイルを使用することで、コードベースの処理と出力方法をカスタマイズできます。
+Repomixは設定ファイルまたはコマンドラインオプションを使用して設定できます。設定ファイルを使用することで、コードベースの処理と出力方法をカスタマイズできます。
 
-## クイックスタート
+## 設定ファイルの形式
+
+Repomixは柔軟性と使いやすさのために、複数の設定ファイル形式をサポートしています。
+
+Repomixは以下の優先順位で設定ファイルを自動的に検索します：
+
+1. **TypeScript** (`repomix.config.ts`、`repomix.config.mts`、`repomix.config.cts`)
+2. **JavaScript/ES Module** (`repomix.config.js`、`repomix.config.mjs`、`repomix.config.cjs`)
+3. **JSON** (`repomix.config.json5`、`repomix.config.jsonc`、`repomix.config.json`)
+
+### JSON設定
 
 プロジェクトディレクトリに設定ファイルを作成します：
 ```bash
@@ -14,6 +24,62 @@ repomix --init
 ```bash
 repomix --init --global
 ```
+
+### TypeScript設定
+
+TypeScript設定ファイルは、完全な型チェックとIDEサポートにより、最高の開発者体験を提供します。
+
+**インストール:**
+
+`defineConfig`を使用してTypeScriptまたはJavaScript設定を使用するには、Repomixをdev dependencyとしてインストールする必要があります：
+
+```bash
+npm install -D repomix
+```
+
+**例:**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+export default defineConfig({
+  output: {
+    filePath: 'output.xml',
+    style: 'xml',
+    removeComments: true,
+  },
+  ignore: {
+    customPatterns: ['**/node_modules/**', '**/dist/**'],
+  },
+});
+```
+
+**利点:**
+- ✅ IDEでの完全なTypeScript型チェック
+- ✅ 優れたIDE自動補完とIntelliSense
+- ✅ 動的な値（タイムスタンプ、環境変数など）の使用
+
+**動的な値の例:**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+// タイムスタンプベースのファイル名を生成
+const timestamp = new Date().toISOString().slice(0, 19).replace(/[:.]/g, '-');
+
+export default defineConfig({
+  output: {
+    filePath: `output-${timestamp}.xml`,
+    style: 'xml',
+  },
+});
+```
+
+### JavaScript設定
+
+JavaScript設定ファイルはTypeScriptと同様に機能し、`defineConfig`と動的な値をサポートしています。
 
 ## 設定オプション
 
@@ -126,10 +192,19 @@ repomix --init --global
 ## 設定ファイルの場所
 
 Repomixは以下の順序で設定ファイルを探します：
-1. カレントディレクトリのローカル設定ファイル（`repomix.config.json`）
-2. グローバル設定ファイル：
-   - Windows: `%LOCALAPPDATA%\Repomix\repomix.config.json`
-   - macOS/Linux: `~/.config/repomix/repomix.config.json`
+1. カレントディレクトリのローカル設定ファイル（優先順位: TS > JS > JSON）
+   - TypeScript: `repomix.config.ts`、`repomix.config.mts`、`repomix.config.cts`
+   - JavaScript: `repomix.config.js`、`repomix.config.mjs`、`repomix.config.cjs`
+   - JSON: `repomix.config.json5`、`repomix.config.jsonc`、`repomix.config.json`
+2. グローバル設定ファイル（優先順位: TS > JS > JSON）
+   - Windows:
+     - TypeScript: `%LOCALAPPDATA%\Repomix\repomix.config.ts`、`.mts`、`.cts`
+     - JavaScript: `%LOCALAPPDATA%\Repomix\repomix.config.js`、`.mjs`、`.cjs`
+     - JSON: `%LOCALAPPDATA%\Repomix\repomix.config.json5`、`.jsonc`、`.json`
+   - macOS/Linux:
+     - TypeScript: `~/.config/repomix/repomix.config.ts`、`.mts`、`.cts`
+     - JavaScript: `~/.config/repomix/repomix.config.js`、`.mjs`、`.cjs`
+     - JSON: `~/.config/repomix/repomix.config.json5`、`.jsonc`、`.json`
 
 コマンドラインオプションは設定ファイルの設定よりも優先されます。
 

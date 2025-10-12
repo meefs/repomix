@@ -1,8 +1,18 @@
 # Configuração
 
-O Repomix pode ser configurado usando um arquivo de configuração (`repomix.config.json`) ou opções de linha de comando. O arquivo de configuração permite que você personalize vários aspectos de como seu código-fonte é processado e gerado.
+O Repomix pode ser configurado usando um arquivo de configuração ou opções de linha de comando. O arquivo de configuração permite que você personalize vários aspectos de como seu código-fonte é processado e gerado.
 
-## Início rápido
+## Formatos de arquivos de configuração
+
+O Repomix suporta múltiplos formatos de arquivos de configuração para flexibilidade e facilidade de uso.
+
+O Repomix buscará automaticamente arquivos de configuração na seguinte ordem de prioridade:
+
+1. **TypeScript** (`repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`)
+2. **JavaScript/ES Module** (`repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`)
+3. **JSON** (`repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`)
+
+### Configuração JSON
 
 Crie um arquivo de configuração no diretório do seu projeto:
 ```bash
@@ -14,6 +24,62 @@ Isso criará um arquivo `repomix.config.json` com as configurações padrão. Vo
 ```bash
 repomix --init --global
 ```
+
+### Configuração TypeScript
+
+Os arquivos de configuração TypeScript oferecem a melhor experiência de desenvolvimento com verificação completa de tipos e suporte IDE.
+
+**Instalação:**
+
+Para usar a configuração TypeScript ou JavaScript com `defineConfig`, você precisa instalar o Repomix como dependência de desenvolvimento:
+
+```bash
+npm install -D repomix
+```
+
+**Exemplo:**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+export default defineConfig({
+  output: {
+    filePath: 'output.xml',
+    style: 'xml',
+    removeComments: true,
+  },
+  ignore: {
+    customPatterns: ['**/node_modules/**', '**/dist/**'],
+  },
+});
+```
+
+**Vantagens:**
+- ✅ Verificação completa de tipos TypeScript em seu IDE
+- ✅ Excelente autocompletar e IntelliSense do IDE
+- ✅ Uso de valores dinâmicos (timestamps, variáveis de ambiente, etc.)
+
+**Exemplo de valores dinâmicos:**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+// Gerar nome de arquivo baseado em timestamp
+const timestamp = new Date().toISOString().slice(0, 19).replace(/[:.]/g, '-');
+
+export default defineConfig({
+  output: {
+    filePath: `output-${timestamp}.xml`,
+    style: 'xml',
+  },
+});
+```
+
+### Configuração JavaScript
+
+Os arquivos de configuração JavaScript funcionam da mesma forma que TypeScript, suportando `defineConfig` e valores dinâmicos.
 
 ## Opções de configuração
 
@@ -126,10 +192,19 @@ Aqui está um exemplo de um arquivo de configuração completo (`repomix.config.
 ## Locais dos arquivos de configuração
 
 O Repomix procura os arquivos de configuração na seguinte ordem:
-1. Arquivo de configuração local (`repomix.config.json`) no diretório atual
-2. Arquivo de configuração global:
-   - Windows: `%LOCALAPPDATA%\Repomix\repomix.config.json`
-   - macOS/Linux: `~/.config/repomix/repomix.config.json`
+1. Arquivo de configuração local no diretório atual (ordem de prioridade: TS > JS > JSON)
+   - TypeScript: `repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`
+   - JavaScript: `repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`
+   - JSON: `repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`
+2. Arquivo de configuração global (ordem de prioridade: TS > JS > JSON)
+   - Windows:
+     - TypeScript: `%LOCALAPPDATA%\Repomix\repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript: `%LOCALAPPDATA%\Repomix\repomix.config.js`, `.mjs`, `.cjs`
+     - JSON: `%LOCALAPPDATA%\Repomix\repomix.config.json5`, `.jsonc`, `.json`
+   - macOS/Linux:
+     - TypeScript: `~/.config/repomix/repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript: `~/.config/repomix/repomix.config.js`, `.mjs`, `.cjs`
+     - JSON: `~/.config/repomix/repomix.config.json5`, `.jsonc`, `.json`
 
 As opções de linha de comando têm precedência sobre as configurações do arquivo.
 

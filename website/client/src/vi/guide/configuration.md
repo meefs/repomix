@@ -1,8 +1,18 @@
 # Cấu hình
 
-Repomix có thể được cấu hình bằng file cấu hình (`repomix.config.json`) hoặc các tùy chọn dòng lệnh. File cấu hình cho phép bạn tùy chỉnh các khía cạnh khác nhau về cách xử lý và xuất ra codebase của bạn.
+Repomix có thể được cấu hình bằng file cấu hình hoặc các tùy chọn dòng lệnh. File cấu hình cho phép bạn tùy chỉnh các khía cạnh khác nhau về cách xử lý và xuất ra codebase của bạn.
 
-## Bắt đầu nhanh
+## Các định dạng file cấu hình
+
+Repomix hỗ trợ nhiều định dạng file cấu hình để mang lại sự linh hoạt và dễ sử dụng.
+
+Repomix sẽ tự động tìm kiếm các file cấu hình theo thứ tự ưu tiên sau:
+
+1. **TypeScript** (`repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`)
+2. **JavaScript/ES Module** (`repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`)
+3. **JSON** (`repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`)
+
+### Cấu hình JSON
 
 Tạo file cấu hình trong thư mục dự án của bạn:
 ```bash
@@ -14,6 +24,62 @@ repomix --init
 ```bash
 repomix --init --global
 ```
+
+### Cấu hình TypeScript
+
+File cấu hình TypeScript cung cấp trải nghiệm developer tốt nhất với kiểm tra kiểu đầy đủ và hỗ trợ IDE.
+
+**Cài đặt:**
+
+Để sử dụng cấu hình TypeScript hoặc JavaScript với `defineConfig`, bạn cần cài đặt Repomix như một dev dependency:
+
+```bash
+npm install -D repomix
+```
+
+**Ví dụ:**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+export default defineConfig({
+  output: {
+    filePath: 'output.xml',
+    style: 'xml',
+    removeComments: true,
+  },
+  ignore: {
+    customPatterns: ['**/node_modules/**', '**/dist/**'],
+  },
+});
+```
+
+**Lợi ích:**
+- ✅ Kiểm tra kiểu TypeScript đầy đủ trong IDE của bạn
+- ✅ Autocomplete và IntelliSense tuyệt vời trong IDE
+- ✅ Sử dụng các giá trị động (timestamps, biến môi trường, v.v.)
+
+**Ví dụ về giá trị động:**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+// Tạo tên file dựa trên timestamp
+const timestamp = new Date().toISOString().slice(0, 19).replace(/[:.]/g, '-');
+
+export default defineConfig({
+  output: {
+    filePath: `output-${timestamp}.xml`,
+    style: 'xml',
+  },
+});
+```
+
+### Cấu hình JavaScript
+
+File cấu hình JavaScript hoạt động tương tự như TypeScript, hỗ trợ `defineConfig` và các giá trị động.
 
 ## Các tùy chọn cấu hình
 
@@ -126,10 +192,19 @@ Bạn có thể bật xác thực schema cho file cấu hình của mình bằng
 ## Vị trí File Cấu hình
 
 Repomix tìm kiếm file cấu hình theo thứ tự sau:
-1. File cấu hình cục bộ (`repomix.config.json`) trong thư mục hiện tại
-2. File cấu hình toàn cục:
-   - Windows: `%LOCALAPPDATA%\Repomix\repomix.config.json`
-   - macOS/Linux: `~/.config/repomix/repomix.config.json`
+1. File cấu hình cục bộ trong thư mục hiện tại (thứ tự ưu tiên: TS > JS > JSON)
+   - TypeScript: `repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`
+   - JavaScript: `repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`
+   - JSON: `repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`
+2. File cấu hình toàn cục (thứ tự ưu tiên: TS > JS > JSON)
+   - Windows:
+     - TypeScript: `%LOCALAPPDATA%\Repomix\repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript: `%LOCALAPPDATA%\Repomix\repomix.config.js`, `.mjs`, `.cjs`
+     - JSON: `%LOCALAPPDATA%\Repomix\repomix.config.json5`, `.jsonc`, `.json`
+   - macOS/Linux:
+     - TypeScript: `~/.config/repomix/repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript: `~/.config/repomix/repomix.config.js`, `.mjs`, `.cjs`
+     - JSON: `~/.config/repomix/repomix.config.json5`, `.jsonc`, `.json`
 
 Các tùy chọn dòng lệnh có ưu tiên cao hơn cài đặt file cấu hình.
 

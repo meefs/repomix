@@ -1,8 +1,18 @@
 # Konfiguration
 
-Repomix kann über eine Konfigurationsdatei (`repomix.config.json`) oder Kommandozeilenoptionen konfiguriert werden. Die Konfigurationsdatei ermöglicht es Ihnen, die Verarbeitung und Ausgabe Ihres Codes anzupassen.
+Repomix kann über eine Konfigurationsdatei oder Kommandozeilenoptionen konfiguriert werden. Die Konfigurationsdatei ermöglicht es Ihnen, die Verarbeitung und Ausgabe Ihres Codes anzupassen.
 
-## Schnellstart
+## Konfigurationsdateiformate
+
+Repomix unterstützt mehrere Konfigurationsdateiformate für Flexibilität und Benutzerfreundlichkeit.
+
+Repomix sucht automatisch nach Konfigurationsdateien in der folgenden Prioritätsreihenfolge:
+
+1. **TypeScript** (`repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`)
+2. **JavaScript/ES Module** (`repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`)
+3. **JSON** (`repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`)
+
+### JSON-Konfiguration
 
 Erstellen Sie eine Konfigurationsdatei in Ihrem Projektverzeichnis:
 ```bash
@@ -14,6 +24,62 @@ Dies erstellt eine `repomix.config.json`-Datei mit Standardeinstellungen. Sie k�
 ```bash
 repomix --init --global
 ```
+
+### TypeScript-Konfiguration
+
+TypeScript-Konfigurationsdateien bieten die beste Entwicklererfahrung mit vollständiger Typüberprüfung und IDE-Unterstützung.
+
+**Installation:**
+
+Um TypeScript- oder JavaScript-Konfiguration mit `defineConfig` zu verwenden, müssen Sie Repomix als Entwicklungsabhängigkeit installieren:
+
+```bash
+npm install -D repomix
+```
+
+**Beispiel:**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+export default defineConfig({
+  output: {
+    filePath: 'output.xml',
+    style: 'xml',
+    removeComments: true,
+  },
+  ignore: {
+    customPatterns: ['**/node_modules/**', '**/dist/**'],
+  },
+});
+```
+
+**Vorteile:**
+- ✅ Vollständige TypeScript-Typüberprüfung in Ihrer IDE
+- ✅ Hervorragende IDE-Autovervollständigung und IntelliSense
+- ✅ Verwendung dynamischer Werte (Zeitstempel, Umgebungsvariablen usw.)
+
+**Beispiel für dynamische Werte:**
+
+```typescript
+// repomix.config.ts
+import { defineConfig } from 'repomix';
+
+// Zeitstempel-basierten Dateinamen generieren
+const timestamp = new Date().toISOString().slice(0, 19).replace(/[:.]/g, '-');
+
+export default defineConfig({
+  output: {
+    filePath: `output-${timestamp}.xml`,
+    style: 'xml',
+  },
+});
+```
+
+### JavaScript-Konfiguration
+
+JavaScript-Konfigurationsdateien funktionieren genauso wie TypeScript und unterstützen `defineConfig` und dynamische Werte.
 
 ## Konfigurationsoptionen
 
@@ -126,10 +192,19 @@ Hier ist ein Beispiel einer vollständigen Konfigurationsdatei (`repomix.config.
 ## Speicherorte der Konfigurationsdatei
 
 Repomix sucht in folgender Reihenfolge nach Konfigurationsdateien:
-1. Lokale Konfigurationsdatei (`repomix.config.json`) im aktuellen Verzeichnis
-2. Globale Konfigurationsdatei:
-   - Windows: `%LOCALAPPDATA%\Repomix\repomix.config.json`
-   - macOS/Linux: `~/.config/repomix/repomix.config.json`
+1. Lokale Konfigurationsdatei im aktuellen Verzeichnis (Priorität: TS > JS > JSON)
+   - TypeScript: `repomix.config.ts`, `repomix.config.mts`, `repomix.config.cts`
+   - JavaScript: `repomix.config.js`, `repomix.config.mjs`, `repomix.config.cjs`
+   - JSON: `repomix.config.json5`, `repomix.config.jsonc`, `repomix.config.json`
+2. Globale Konfigurationsdatei (Priorität: TS > JS > JSON)
+   - Windows:
+     - TypeScript: `%LOCALAPPDATA%\Repomix\repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript: `%LOCALAPPDATA%\Repomix\repomix.config.js`, `.mjs`, `.cjs`
+     - JSON: `%LOCALAPPDATA%\Repomix\repomix.config.json5`, `.jsonc`, `.json`
+   - macOS/Linux:
+     - TypeScript: `~/.config/repomix/repomix.config.ts`, `.mts`, `.cts`
+     - JavaScript: `~/.config/repomix/repomix.config.js`, `.mjs`, `.cjs`
+     - JSON: `~/.config/repomix/repomix.config.json5`, `.jsonc`, `.json`
 
 Kommandozeilenoptionen haben Vorrang vor Einstellungen in der Konfigurationsdatei.
 
