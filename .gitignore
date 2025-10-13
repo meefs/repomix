@@ -44,7 +44,7 @@ repomix-output.json
 .repomix/
 
 # Agent
-.mcp.json
+/.mcp.json
 .agents/local/
 
 # serena
