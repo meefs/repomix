@@ -74,6 +74,8 @@ repomix --mcp
 claude mcp add repomix -- npx -y repomix --mcp
 ```
 
+或者，您可以使用**官方Repomix外掛**獲得更便捷的體驗。外掛提供自然語言指令和更簡單的設定。詳情請參閱[Claude Code外掛](/zh-tw/guide/claude-code-plugins)文件。
+
 ### 使用 Docker 代替 npx
 
 您可以使用 Docker 代替 npx 來運行 Repomix 作為 MCP 伺服器：

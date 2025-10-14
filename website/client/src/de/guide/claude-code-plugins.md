@@ -1,0 +1,112 @@
+# Claude Code Plugins
+
+Repomix bietet offizielle Plugins für [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview), die sich nahtlos in die KI-gestützte Entwicklungsumgebung integrieren. Diese Plugins ermöglichen es Ihnen, Codebases direkt innerhalb von Claude Code mithilfe natürlichsprachlicher Befehle zu analysieren und zu verpacken.
+
+## Verfügbare Plugins
+
+### 1. repomix-mcp (MCP-Server-Plugin)
+
+Basis-Plugin, das KI-gestützte Codebase-Analyse durch MCP-Server-Integration bereitstellt.
+
+**Funktionen:**
+- Lokale und entfernte Repositories verpacken
+- Verpackte Ausgaben durchsuchen
+- Dateien mit integriertem Sicherheitsscan lesen ([Secretlint](https://github.com/secretlint/secretlint))
+- Automatische Tree-sitter-Kompression (ca. 70% Token-Reduktion)
+
+### 2. repomix-commands (Slash-Befehls-Plugin)
+
+Bietet praktische Slash-Befehle mit Unterstützung für natürliche Sprache.
+
+**Verfügbare Befehle:**
+- `/repomix-commands:pack-local` - Lokale Codebase mit verschiedenen Optionen verpacken
+- `/repomix-commands:pack-remote` - Entfernte GitHub-Repositories verpacken und analysieren
+
+## Installation
+
+### 1. Repomix-Plugin-Marktplatz hinzufügen
+
+Fügen Sie zunächst den Repomix-Plugin-Marktplatz zu Claude Code hinzu:
+
+```text
+/plugin marketplace add yamadashy/repomix
+```
+
+### 2. Plugins installieren
+
+Installieren Sie die Plugins mit den folgenden Befehlen:
+
+```text
+# MCP-Server-Plugin installieren (empfohlene Basis)
+/plugin install repomix-mcp@repomix
+
+# Befehls-Plugin installieren (erweitert Funktionalität)
+/plugin install repomix-commands@repomix
+```
+
+::: tip Plugin-Beziehung
+Das `repomix-mcp`-Plugin wird als Basis empfohlen, und `repomix-commands` erweitert es mit praktischen Slash-Befehlen. Obwohl Sie sie unabhängig installieren können, bietet die Verwendung beider die umfassendste Erfahrung.
+:::
+
+### Alternative: Interaktive Installation
+
+Sie können auch das interaktive Plugin-Installationsprogramm verwenden:
+
+```text
+/plugin
+```
+
+Dies öffnet eine interaktive Oberfläche, in der Sie verfügbare Plugins durchsuchen und installieren können.
+
+## Verwendungsbeispiele
+
+### Lokale Codebase verpacken
+
+Verwenden Sie den Befehl `/repomix-commands:pack-local` mit natürlichsprachlichen Anweisungen:
+
+```text
+/repomix-commands:pack-local
+Dieses Projekt im Markdown-Format mit Kompression verpacken
+```
+
+Weitere Beispiele:
+- "Nur das src-Verzeichnis verpacken"
+- "TypeScript-Dateien mit Zeilennummern verpacken"
+- "Ausgabe im JSON-Format generieren"
+
+### Entferntes Repository verpacken
+
+Verwenden Sie den Befehl `/repomix-commands:pack-remote`, um GitHub-Repositories zu analysieren:
+
+```text
+/repomix-commands:pack-remote yamadashy/repomix
+Nur TypeScript-Dateien aus dem Repository yamadashy/repomix verpacken
+```
+
+Weitere Beispiele:
+- "Main-Branch mit Kompression verpacken"
+- "Nur Dokumentationsdateien einschließen"
+- "Bestimmte Verzeichnisse verpacken"
+
+## Verwandte Ressourcen
+
+- [MCP-Server-Dokumentation](/guide/mcp-server) - Erfahren Sie mehr über den zugrunde liegenden MCP-Server
+- [Konfiguration](/guide/configuration) - Repomix-Verhalten anpassen
+- [Sicherheit](/guide/security) - Sicherheitsfunktionen verstehen
+- [Befehlszeilenoptionen](/guide/command-line-options) - Verfügbare CLI-Optionen
+
+## Plugin-Quellcode
+
+Der Plugin-Quellcode ist im Repomix-Repository verfügbar:
+
+- [Plugin-Marktplatz](https://github.com/yamadashy/repomix/tree/main/.claude-plugin)
+- [MCP-Plugin](https://github.com/yamadashy/repomix/tree/main/.claude/plugins/repomix-mcp)
+- [Befehls-Plugin](https://github.com/yamadashy/repomix/tree/main/.claude/plugins/repomix-commands)
+
+## Feedback und Support
+
+Wenn Sie Probleme haben oder Vorschläge für die Claude Code Plugins haben:
+
+- [Issue auf GitHub öffnen](https://github.com/yamadashy/repomix/issues)
+- [Unserer Discord-Community beitreten](https://discord.gg/wNYzTwZFku)
+- [Bestehende Diskussionen ansehen](https://github.com/yamadashy/repomix/discussions)

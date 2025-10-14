@@ -39,6 +39,7 @@ export const configJa = defineConfig({
           text: '高度な使い方',
           items: [
             { text: 'MCPサーバー', link: '/ja/guide/mcp-server' },
+            { text: 'Claude Codeプラグイン', link: '/ja/guide/claude-code-plugins' },
             { text: 'GitHub Actions', link: '/ja/guide/github-actions' },
             { text: 'ライブラリとしての使用', link: '/ja/guide/development/using-repomix-as-a-library' },
             { text: 'AI支援開発のヒント', link: '/ja/guide/tips/best-practices' },

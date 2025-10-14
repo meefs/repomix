@@ -74,6 +74,8 @@ Cursorでは、`Cursor Settings` > `MCP` > `+ Add new global MCP server`からCl
 claude mcp add repomix -- npx -y repomix --mcp
 ```
 
+または、より便利な体験のために**公式Repomixプラグイン**を使用することもできます。プラグインは自然言語コマンドと簡単なセットアップを提供します。詳細は[Claude Codeプラグイン](/ja/guide/claude-code-plugins)のドキュメントをご覧ください。
+
 ### npxの代わりにDockerを使用
 
 Dockerを使用してRepomixをMCPサーバーとして実行できます：

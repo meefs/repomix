@@ -74,6 +74,8 @@ Um Repomix als MCP-Server in [Claude Code](https://docs.anthropic.com/en/docs/cl
 claude mcp add repomix -- npx -y repomix --mcp
 ```
 
+Alternativ können Sie die **offiziellen Repomix-Plugins** für ein komfortableres Erlebnis verwenden. Die Plugins bieten natürlichsprachliche Befehle und eine einfachere Einrichtung. Weitere Informationen finden Sie in der Dokumentation [Claude Code Plugins](/de/guide/claude-code-plugins).
+
 ### Docker anstelle von npx verwenden
 
 Anstatt npx zu verwenden, können Sie auch Docker verwenden, um Repomix als MCP-Server auszuführen:

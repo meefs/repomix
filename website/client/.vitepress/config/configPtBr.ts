@@ -41,6 +41,7 @@ export const configPtBr = defineConfig({
           text: 'Avançado',
           items: [
             { text: 'Servidor MCP', link: '/pt-br/guide/mcp-server' },
+            { text: 'Plugins do Claude Code', link: '/pt-br/guide/claude-code-plugins' },
             { text: 'GitHub Actions', link: '/pt-br/guide/github-actions' },
             { text: 'Usando Repomix como Biblioteca', link: '/pt-br/guide/development/using-repomix-as-a-library' },
             { text: 'Dicas de Desenvolvimento Assistido por IA', link: '/pt-br/guide/tips/best-practices' },

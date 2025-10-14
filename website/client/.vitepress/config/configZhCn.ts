@@ -38,6 +38,7 @@ export const configZhCn = defineConfig({
           text: '高级',
           items: [
             { text: 'MCP 服务器', link: '/zh-cn/guide/mcp-server' },
+            { text: 'Claude Code 插件', link: '/zh-cn/guide/claude-code-plugins' },
             { text: 'GitHub Actions', link: '/zh-cn/guide/github-actions' },
             { text: '作为库使用 Repomix', link: '/zh-cn/guide/development/using-repomix-as-a-library' },
             { text: 'AI辅助开发技巧', link: '/zh-cn/guide/tips/best-practices' },

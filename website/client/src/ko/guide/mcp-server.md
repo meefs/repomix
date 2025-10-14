@@ -74,6 +74,8 @@ Cline의 구성과 유사하게 `claude_desktop_config.json` 파일을 편집하
 claude mcp add repomix -- npx -y repomix --mcp
 ```
 
+또는 더 편리한 경험을 위해 **공식 Repomix 플러그인**을 사용할 수 있습니다. 플러그인은 자연어 명령과 더 쉬운 설정을 제공합니다. 자세한 내용은 [Claude Code 플러그인](/ko/guide/claude-code-plugins) 문서를 참조하세요.
+
 ### npx 대신 Docker 사용
 
 npx 대신 Docker를 사용하여 Repomix를 MCP 서버로 실행할 수 있습니다:

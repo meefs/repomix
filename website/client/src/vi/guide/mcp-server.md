@@ -74,6 +74,8 @@ Chỉnh sửa file `claude_desktop_config.json` với cấu hình tương tự n
 claude mcp add repomix -- npx -y repomix --mcp
 ```
 
+Hoặc, bạn có thể sử dụng **plugin Repomix chính thức** để có trải nghiệm thuận tiện hơn. Các plugin cung cấp lệnh ngôn ngữ tự nhiên và thiết lập dễ dàng hơn. Xem tài liệu [Plugin Claude Code](/vi/guide/claude-code-plugins) để biết chi tiết.
+
 ### Sử dụng Docker thay vì npx
 
 Thay vì sử dụng npx, bạn có thể sử dụng Docker để chạy Repomix như một máy chủ MCP:
