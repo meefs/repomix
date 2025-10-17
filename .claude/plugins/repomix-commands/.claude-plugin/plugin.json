@@ -1,12 +1,10 @@
 {
   "name": "repomix-commands",
   "description": "Slash commands for quick Repomix operations. Pack local and remote repositories with simple commands like /pack-local and /pack-remote.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "yamadashy"
   },
   "keywords": ["repomix", "commands", "pack", "productivity"],
-  "category": "productivity",
-  "license": "MIT",
-  "requires": ["repomix-mcp"]
+  "license": "MIT"
 }

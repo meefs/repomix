@@ -1,11 +1,10 @@
 {
   "name": "repomix-mcp",
   "description": "Repomix MCP server for AI-powered codebase analysis. Pack local/remote repositories, search outputs, and read files with built-in security scanning. Foundation plugin that enables all Repomix features in Claude Code.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "yamadashy"
   },
   "keywords": ["repomix", "mcp", "codebase-analysis", "ai", "github"],
-  "category": "integration",
   "license": "MIT"
 }
