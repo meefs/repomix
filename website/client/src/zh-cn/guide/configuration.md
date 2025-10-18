@@ -102,6 +102,7 @@ JavaScript配置文件的工作方式与TypeScript相同，支持`defineConfig`�
 | `output.copyToClipboard`         | 是否除了保存文件外还将输出复制到系统剪贴板                                                                                 | `false`                |
 | `output.topFilesLength`          | 在摘要中显示的顶部文件数量。如果设置为0，则不显示摘要                                                                      | `5`                    |
 | `output.includeEmptyDirectories` | 是否在仓库结构中包含空目录                                                                                                 | `false`                |
+| `output.includeFullDirectoryStructure` | 使用`include`模式时，是否显示完整的目录树（遵守ignore模式）同时仅处理包含的文件。为AI分析提供完整的仓库上下文 | `false`                |
 | `output.git.sortByChanges`       | 是否按Git更改次数对文件进行排序。更改较多的文件显示在底部                                                                 | `true`                 |
 | `output.git.sortByChangesMaxCommits` | 分析Git更改时要分析的最大提交数。限制历史深度以提高性能                                                               | `100`                  |
 | `output.git.includeDiffs`        | 是否在输出中包含Git差异。分别显示工作树和暂存区的更改                                                                     | `false`                |

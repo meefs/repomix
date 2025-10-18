@@ -102,6 +102,7 @@ File cấu hình JavaScript hoạt động tương tự như TypeScript, hỗ tr
 | `output.copyToClipboard`         | Có nên sao chép đầu ra vào clipboard hệ thống ngoài việc lưu file hay không                                                | `false`                |
 | `output.topFilesLength`          | Số file hàng đầu để hiển thị trong tóm tắt. Nếu đặt thành 0, sẽ không hiển thị tóm tắt                                     | `5`                    |
 | `output.includeEmptyDirectories` | Có nên bao gồm các thư mục trống trong cấu trúc repository hay không                                                       | `false`                |
+| `output.includeFullDirectoryStructure` | Khi sử dụng mẫu `include`, có nên hiển thị cây thư mục hoàn chỉnh (tuân theo mẫu ignore) trong khi vẫn chỉ xử lý các file được bao gồm hay không. Cung cấp ngữ cảnh repository đầy đủ cho phân tích AI | `false`                |
 | `output.git.sortByChanges`       | Có nên sắp xếp file theo số lượng thay đổi git hay không. Các file có nhiều thay đổi hơn xuất hiện ở cuối                 | `true`                 |
 | `output.git.sortByChangesMaxCommits` | Số lượng commit tối đa để phân tích khi đếm các thay đổi git. Giới hạn độ sâu lịch sử để cải thiện hiệu suất         | `100`                  |
 | `output.git.includeDiffs`        | Có nên bao gồm các sự khác biệt git trong đầu ra hay không. Hiển thị riêng biệt các thay đổi work tree và staged         | `false`                |

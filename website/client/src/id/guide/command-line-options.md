@@ -27,6 +27,7 @@
 - `--header-text <text>`: Teks kustom untuk disertakan dalam header file
 - `--instruction-file-path <path>`: Jalur ke file yang berisi instruksi kustom terperinci
 - `--include-empty-directories`: Menyertakan direktori kosong dalam output
+- `--include-full-directory-structure`: Menampilkan pohon repositori lengkap di bagian Struktur Direktori, bahkan saat menggunakan pola --include
 - `--include-diffs`: Menyertakan diff git dalam output (menyertakan perubahan pohon kerja dan perubahan staged secara terpisah)
 - `--include-logs`: Menyertakan log git dalam output (menyertakan riwayat commit dengan tanggal, pesan, dan jalur file)
 - `--include-logs-count <count>`: Jumlah commit log git yang akan disertakan (default: 50)

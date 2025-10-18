@@ -27,6 +27,7 @@
 - `--header-text <text>`: 出力の冒頭に含めるカスタムテキスト
 - `--instruction-file-path <path>`: 出力に含めるカスタム指示を含むファイルのパス
 - `--include-empty-directories`: ディレクトリ構造にファイルのないフォルダを含める
+- `--include-full-directory-structure`: --includeパターンを使用する場合でも、ディレクトリ構造セクションにリポジトリ全体のツリーを表示
 - `--no-git-sort-by-changes`: Git変更頻度によるファイルのソートをしない（デフォルト：最も変更の多いファイルを優先）
 - `--include-diffs`: ワークツリーとステージングされた変更を示すgit diffセクションを追加
 - `--include-logs`: メッセージと変更されたファイルを含むgitコミット履歴を追加

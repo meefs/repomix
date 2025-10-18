@@ -27,6 +27,7 @@
 - `--header-text <text>`: Văn bản tùy chỉnh để bao gồm trong tiêu đề tệp
 - `--instruction-file-path <path>`: Đường dẫn đến tệp chứa hướng dẫn tùy chỉnh chi tiết
 - `--include-empty-directories`: Bao gồm các thư mục trống trong đầu ra
+- `--include-full-directory-structure`: Hiển thị cây kho lưu trữ đầy đủ trong phần Cấu trúc Thư mục, ngay cả khi sử dụng các mẫu --include
 - `--include-diffs`: Bao gồm các diff git trong đầu ra (bao gồm các thay đổi cây làm việc và các thay đổi đã staged riêng biệt)
 - `--include-logs`: Bao gồm nhật ký git trong đầu ra (bao gồm lịch sử commit với ngày tháng, thông điệp và đường dẫn tệp)
 - `--include-logs-count <count>`: Số lượng commit git logs để bao gồm (mặc định: 50)

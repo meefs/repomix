@@ -27,6 +27,7 @@
 - `--header-text <text>`: Texto personalizado para incluir no cabeçalho do arquivo
 - `--instruction-file-path <path>`: Caminho para um arquivo contendo instruções personalizadas detalhadas
 - `--include-empty-directories`: Incluir diretórios vazios na saída
+- `--include-full-directory-structure`: Mostrar a árvore completa do repositório na seção Estrutura de Diretórios, mesmo ao usar padrões --include
 - `--include-diffs`: Incluir diffs do git na saída (inclui mudanças da árvore de trabalho e mudanças em stage separadamente)
 - `--include-logs`: Incluir logs do git na saída (inclui histórico de commits com datas, mensagens e caminhos de arquivos)
 - `--include-logs-count <count>`: Número de commits do log do git para incluir (padrão: 50)

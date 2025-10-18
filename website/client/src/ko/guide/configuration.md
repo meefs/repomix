@@ -102,6 +102,7 @@ JavaScript 설정 파일은 TypeScript와 동일하게 작동하며 `defineConfi
 | `output.copyToClipboard`         | 파일 저장 외에도 출력을 시스템 클립보드에 복사할지 여부                                                                    | `false`                |
 | `output.topFilesLength`          | 요약에 표시할 상위 파일 수. 0으로 설정하면 요약이 표시되지 않습니다                                                        | `5`                    |
 | `output.includeEmptyDirectories` | 저장소 구조에 빈 디렉토리를 포함할지 여부                                                                                  | `false`                |
+| `output.includeFullDirectoryStructure` | `include` 패턴 사용 시, 포함된 파일만 처리하면서 완전한 디렉토리 트리(무시 패턴 준수)를 표시할지 여부. AI 분석을 위한 전체 저장소 컨텍스트 제공 | `false`                |
 | `output.git.sortByChanges`       | Git 변경 횟수로 파일을 정렬할지 여부. 변경이 많은 파일이 하단에 표시됩니다                                               | `true`                 |
 | `output.git.sortByChangesMaxCommits` | Git 변경을 분석할 때 분석할 최대 커밋 수. 성능을 위해 이력 깊이를 제한합니다                                         | `100`                  |
 | `output.git.includeDiffs`        | 출력에 Git 차이를 포함할지 여부. 작업 트리와 스테이징된 변경 사항을 별도로 표시합니다                                    | `false`                |

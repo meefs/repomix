@@ -102,6 +102,7 @@ JavaScript設定檔的工作方式與TypeScript相同，支援`defineConfig`和�
 | `output.copyToClipboard`         | 是否除了儲存檔案外還將輸出複製到系統剪貼簿                                                                                 | `false`                |
 | `output.topFilesLength`          | 在摘要中顯示的頂部檔案數量。如果設定為0，則不顯示摘要                                                                      | `5`                    |
 | `output.includeEmptyDirectories` | 是否在儲存庫結構中包含空目錄                                                                                               | `false`                |
+| `output.includeFullDirectoryStructure` | 使用`include`模式時，是否顯示完整的目錄樹（遵守ignore模式）同時僅處理包含的檔案。為AI分析提供完整的儲存庫上下文 | `false`                |
 | `output.git.sortByChanges`       | 是否按Git更改次數對檔案進行排序。更改較多的檔案顯示在底部                                                                 | `true`                 |
 | `output.git.sortByChangesMaxCommits` | 分析Git更改時要分析的最大提交數。限制歷史深度以提高效能                                                               | `100`                  |
 | `output.git.includeDiffs`        | 是否在輸出中包含Git差異。分別顯示工作樹和暫存區的更改                                                                     | `false`                |

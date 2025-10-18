@@ -102,6 +102,7 @@ Os arquivos de configuração JavaScript funcionam da mesma forma que TypeScript
 | `output.copyToClipboard`         | Indica se deve copiar a saída para a área de transferência do sistema além de salvar o arquivo                           | `false`                |
 | `output.topFilesLength`          | Número de arquivos principais para exibir no resumo. Se definido como 0, nenhum resumo será exibido                      | `5`                    |
 | `output.includeEmptyDirectories` | Indica se deve incluir diretórios vazios na estrutura do repositório                                                     | `false`                |
+| `output.includeFullDirectoryStructure` | Ao usar padrões `include`, indica se deve exibir a árvore de diretórios completa (respeitando os padrões ignore) enquanto processa apenas os arquivos incluídos. Fornece contexto completo do repositório para análise de IA | `false`                |
 | `output.git.sortByChanges`       | Indica se deve ordenar arquivos por número de alterações git. Arquivos com mais alterações aparecem no final            | `true`                 |
 | `output.git.sortByChangesMaxCommits` | Número máximo de commits para analisar ao contar alterações git. Limita a profundidade do histórico por desempenho  | `100`                  |
 | `output.git.includeDiffs`        | Indica se deve incluir as diferenças git na saída. Mostra separadamente as alterações da árvore de trabalho e as alterações preparadas | `false`                |

@@ -102,6 +102,7 @@ Les fichiers de configuration JavaScript fonctionnent de la même manière que T
 | `output.copyToClipboard`         | Indique s'il faut copier la sortie dans le presse-papiers système en plus de sauvegarder le fichier                         | `false`                |
 | `output.topFilesLength`          | Nombre de fichiers principaux à afficher dans le résumé. Si défini à 0, aucun résumé ne sera affiché                        | `5`                    |
 | `output.includeEmptyDirectories` | Indique s'il faut inclure les répertoires vides dans la structure du dépôt                                                   | `false`                |
+| `output.includeFullDirectoryStructure` | Lors de l'utilisation de motifs `include`, indique s'il faut afficher l'arbre de répertoires complet (en respectant les motifs ignore) tout en ne traitant que les fichiers inclus. Fournit un contexte complet du dépôt pour l'analyse IA | `false`                |
 | `output.git.sortByChanges`       | Indique s'il faut trier les fichiers par nombre de modifications git. Les fichiers avec plus de modifications apparaissent en bas | `true`                 |
 | `output.git.sortByChangesMaxCommits` | Nombre maximum de commits à analyser pour les modifications git. Limite la profondeur de l'historique pour les performances | `100`                  |
 | `output.git.includeDiffs`        | Indique s'il faut inclure les différences git dans la sortie. Montre séparément les modifications de l'arborescence de travail et les modifications indexées | `false`                |

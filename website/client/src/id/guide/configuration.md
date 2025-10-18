@@ -102,6 +102,7 @@ File konfigurasi JavaScript bekerja sama seperti TypeScript, mendukung `defineCo
 | `output.copyToClipboard`         | Apakah akan menyalin output ke clipboard sistem selain menyimpan file                                                       | `false`                |
 | `output.topFilesLength`          | Jumlah file teratas untuk ditampilkan dalam ringkasan. Jika diset ke 0, tidak akan ada ringkasan yang ditampilkan         | `5`                    |
 | `output.includeEmptyDirectories` | Apakah akan menyertakan direktori kosong dalam struktur repository                                                          | `false`                |
+| `output.includeFullDirectoryStructure` | Saat menggunakan pola `include`, apakah akan menampilkan pohon direktori lengkap (sesuai dengan pola ignore) sambil tetap hanya memproses file yang disertakan. Menyediakan konteks repository lengkap untuk analisis AI | `false`                |
 | `output.git.sortByChanges`       | Apakah akan mengurutkan file berdasarkan jumlah perubahan git. File dengan lebih banyak perubahan muncul di bagian bawah  | `true`                 |
 | `output.git.sortByChangesMaxCommits` | Jumlah maksimum commit untuk dianalisis saat menghitung perubahan git. Membatasi kedalaman riwayat untuk performa     | `100`                  |
 | `output.git.includeDiffs`        | Apakah akan menyertakan perbedaan git dalam output. Menampilkan perubahan work tree dan staged secara terpisah            | `false`                |

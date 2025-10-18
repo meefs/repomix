@@ -27,6 +27,7 @@
 - `--header-text <text>`: 要包含在檔案標頭中的自訂文字
 - `--instruction-file-path <path>`: 包含詳細自訂指令的檔案路徑
 - `--include-empty-directories`: 在輸出中包含空目錄
+- `--include-full-directory-structure`: 即使使用 --include 模式，也在目錄結構部分顯示完整的儲存庫樹
 - `--include-diffs`: 在輸出中包含git差異（分別包含工作樹和暫存的變更）
 - `--include-logs`: 在輸出中包含git記錄（包含提交歷史，包括日期、訊息和檔案路徑）
 - `--include-logs-count <count>`: 要包含的git記錄提交數量（預設：50）

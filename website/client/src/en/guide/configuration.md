@@ -102,6 +102,7 @@ JavaScript configuration files work the same as TypeScript, supporting `defineCo
 | `output.copyToClipboard`         | Whether to copy the output to system clipboard in addition to saving the file                                                | `false`                |
 | `output.topFilesLength`          | Number of top files to display in the summary. If set to 0, no summary will be displayed                                     | `5`                    |
 | `output.includeEmptyDirectories` | Whether to include empty directories in the repository structure                                                             | `false`                |
+| `output.includeFullDirectoryStructure` | When using `include` patterns, whether to display the complete directory tree (respecting ignore patterns) while still processing only the included files. Provides full repository context for AI analysis | `false`                |
 | `output.git.sortByChanges`       | Whether to sort files by git change count. Files with more changes appear at the bottom                                      | `true`                 |
 | `output.git.sortByChangesMaxCommits` | Maximum number of commits to analyze for git changes. Limits the history depth for performance                           | `100`                  |
 | `output.git.includeDiffs`        | Whether to include git diffs in the output. Shows both work tree and staged changes separately                               | `false`                |

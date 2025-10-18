@@ -27,6 +27,7 @@
 - `--header-text <text>`: Benutzerdefinierten Text im Dateikopf einschließen
 - `--instruction-file-path <path>`: Pfad zu einer Datei mit detaillierten benutzerdefinierten Anweisungen
 - `--include-empty-directories`: Leere Verzeichnisse in die Ausgabe einschließen
+- `--include-full-directory-structure`: Gesamten Repository-Baum im Verzeichnisstruktur-Abschnitt anzeigen, auch bei Verwendung von --include-Mustern
 - `--include-diffs`: Git-Diffs in die Ausgabe einschließen (beinhaltet Arbeitsbaum- und gestufte Änderungen separat)
 - `--include-logs`: Git-Logs in die Ausgabe einschließen (beinhaltet Commit-Historie mit Daten, Nachrichten und Dateipfaden)
 - `--include-logs-count <count>`: Anzahl der Git-Log-Commits, die eingeschlossen werden sollen (Standard: 50)

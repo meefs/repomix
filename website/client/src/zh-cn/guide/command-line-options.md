@@ -27,6 +27,7 @@
 - `--header-text <text>`: 在输出开头包含的自定义文本
 - `--instruction-file-path <path>`: 包含要在输出中包含的自定义指令的文件路径
 - `--include-empty-directories`: 在目录结构中包含没有文件的文件夹
+- `--include-full-directory-structure`: 即使使用 --include 模式，也在目录结构部分显示完整的仓库树
 - `--no-git-sort-by-changes`: 不按git更改频率排序文件（默认：最常更改的文件优先）
 - `--include-diffs`: 添加显示工作树和暂存更改的git diff部分
 - `--include-logs`: 添加包含消息和更改文件的git提交历史

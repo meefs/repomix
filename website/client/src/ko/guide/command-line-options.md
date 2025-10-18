@@ -27,6 +27,7 @@
 - `--header-text <text>`: 파일 헤더에 포함할 사용자 정의 텍스트
 - `--instruction-file-path <path>`: 상세한 사용자 정의 지침이 포함된 파일 경로
 - `--include-empty-directories`: 출력에 빈 디렉토리 포함
+- `--include-full-directory-structure`: --include 패턴 사용 시에도 디렉토리 구조 섹션에 전체 저장소 트리 표시
 - `--include-diffs`: 출력에 git 차이점 포함 (작업 트리와 스테이징된 변경사항을 별도로 포함)
 - `--include-logs`: 출력에 git 로그 포함 (날짜, 메시지, 파일 경로를 포함한 커밋 히스토리)
 - `--include-logs-count <count>`: 포함할 git 로그 커밋 수 (기본값: 50)

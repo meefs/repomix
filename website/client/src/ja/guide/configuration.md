@@ -102,6 +102,7 @@ JavaScript設定ファイルはTypeScriptと同様に機能し、`defineConfig`�
 | `output.copyToClipboard`         | ファイルの保存に加えて、出力をシステムクリップボードにコピーするかどうか                                                   | `false`                |
 | `output.topFilesLength`          | 要約に表示するトップファイルの数。0に設定すると、要約は表示されません                                                       | `5`                    |
 | `output.includeEmptyDirectories` | リポジトリ構造に空のディレクトリを含めるかどうか                                                                           | `false`                |
+| `output.includeFullDirectoryStructure` | `include`パターンを使用する際、includeされたファイルのみを処理しながら、完全なディレクトリツリー（ignoreパターンに従う）を表示するかどうか。AI分析のための完全なリポジトリコンテキストを提供します | `false`                |
 | `output.git.sortByChanges`       | Gitの変更回数でファイルをソートするかどうか。変更が多いファイルが下部に表示されます                                       | `true`                 |
 | `output.git.sortByChangesMaxCommits` | Gitの変更を分析する最大コミット数。パフォーマンスのために履歴の深さを制限します                                       | `100`                  |
 | `output.git.includeDiffs`        | 出力にGitの差分を含めるかどうか。作業ツリーとステージング済みの変更を別々に表示します                                     | `false`                |

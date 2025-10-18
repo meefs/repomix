@@ -102,6 +102,7 @@ JavaScript-Konfigurationsdateien funktionieren genauso wie TypeScript und unters
 | `output.copyToClipboard`         | Ob die Ausgabe zusätzlich zum Speichern in die Zwischenablage kopiert werden soll                                        | `false`                |
 | `output.topFilesLength`          | Anzahl der in der Zusammenfassung anzuzeigenden Top-Dateien. Bei 0 wird keine Zusammenfassung angezeigt                  | `5`                    |
 | `output.includeEmptyDirectories` | Ob leere Verzeichnisse in der Repository-Struktur enthalten sein sollen                                                   | `false`                |
+| `output.includeFullDirectoryStructure` | Bei Verwendung von `include`-Mustern, ob der vollständige Verzeichnisbaum (unter Beachtung von Ignorier-Mustern) angezeigt werden soll, während nur die inkludierten Dateien verarbeitet werden. Bietet vollständigen Repository-Kontext für die KI-Analyse | `false`                |
 | `output.git.sortByChanges`       | Ob Dateien nach Git-Änderungen sortiert werden sollen. Häufiger geänderte Dateien erscheinen am Ende                     | `true`                 |
 | `output.git.sortByChangesMaxCommits` | Maximale Anzahl zu analysierender Commits für Git-Änderungen. Begrenzt die Historien-Tiefe für bessere Performance   | `100`                  |
 | `output.git.includeDiffs`        | Ob Git-Unterschiede in der Ausgabe enthalten sein sollen. Zeigt Arbeitsverzeichnis- und Stage-Änderungen separat an     | `false`                |
