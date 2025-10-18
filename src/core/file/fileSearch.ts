@@ -304,8 +304,8 @@ export const getIgnorePatterns = async (rootDir: string, config: RepomixConfigMe
 
   // Add patterns from .git/info/exclude if useGitignore is enabled
   if (config.ignore.useGitignore) {
+    // Read .git/info/exclude file
     const excludeFilePath = path.join(rootDir, '.git', 'info', 'exclude');
-
     try {
       const excludeFileContent = await fs.readFile(excludeFilePath, 'utf8');
       const excludePatterns = parseIgnoreContent(excludeFileContent);
@@ -320,4 +320,94 @@ export const getIgnorePatterns = async (rootDir: string, config: RepomixConfigMe
   }
 
   return Array.from(ignorePatterns);
+};
+
+/**
+ * Lists all directories in the given root directory, respecting ignore patterns.
+ * This function does not apply include patterns - it returns the full directory set subject to ignore rules.
+ *
+ * @param rootDir The root directory to scan
+ * @param config The merged configuration
+ * @returns Array of directory paths relative to rootDir
+ */
+export const listDirectories = async (rootDir: string, config: RepomixConfigMerged): Promise<string[]> => {
+  const [ignorePatterns, ignoreFilePatterns] = await Promise.all([
+    getIgnorePatterns(rootDir, config),
+    getIgnoreFilePatterns(config),
+  ]);
+
+  // Normalize ignore patterns to handle trailing slashes consistently
+  const normalizedIgnorePatterns = ignorePatterns.map(normalizeGlobPattern);
+
+  // Check if .git is a worktree reference
+  const gitPath = path.join(rootDir, '.git');
+  const isWorktree = await isGitWorktreeRef(gitPath);
+
+  // Modify ignore patterns for git worktree
+  const adjustedIgnorePatterns = [...normalizedIgnorePatterns];
+  if (isWorktree) {
+    // Remove '.git/**' pattern and add '.git' to ignore the reference file
+    const gitIndex = adjustedIgnorePatterns.indexOf('.git/**');
+    if (gitIndex !== -1) {
+      adjustedIgnorePatterns.splice(gitIndex, 1);
+      adjustedIgnorePatterns.push('.git');
+    }
+  }
+
+  const directories = await globby(['**/*'], {
+    cwd: rootDir,
+    onlyDirectories: true,
+    absolute: false,
+    dot: true,
+    followSymbolicLinks: false,
+    ignore: [...adjustedIgnorePatterns],
+    ignoreFiles: [...ignoreFilePatterns],
+  });
+
+  return sortPaths(directories);
+};
+
+/**
+ * Lists all files in the given root directory, respecting ignore patterns.
+ * This function does not apply include patterns - it returns the full file set subject to ignore rules.
+ *
+ * @param rootDir The root directory to scan
+ * @param config The merged configuration
+ * @returns Array of file paths relative to rootDir
+ */
+export const listFiles = async (rootDir: string, config: RepomixConfigMerged): Promise<string[]> => {
+  const [ignorePatterns, ignoreFilePatterns] = await Promise.all([
+    getIgnorePatterns(rootDir, config),
+    getIgnoreFilePatterns(config),
+  ]);
+
+  // Normalize ignore patterns to handle trailing slashes consistently
+  const normalizedIgnorePatterns = ignorePatterns.map(normalizeGlobPattern);
+
+  // Check if .git is a worktree reference
+  const gitPath = path.join(rootDir, '.git');
+  const isWorktree = await isGitWorktreeRef(gitPath);
+
+  // Modify ignore patterns for git worktree
+  const adjustedIgnorePatterns = [...normalizedIgnorePatterns];
+  if (isWorktree) {
+    // Remove '.git/**' pattern and add '.git' to ignore the reference file
+    const gitIndex = adjustedIgnorePatterns.indexOf('.git/**');
+    if (gitIndex !== -1) {
+      adjustedIgnorePatterns.splice(gitIndex, 1);
+      adjustedIgnorePatterns.push('.git');
+    }
+  }
+
+  const files = await globby(['**/*'], {
+    cwd: rootDir,
+    onlyFiles: true,
+    absolute: false,
+    dot: true,
+    followSymbolicLinks: false,
+    ignore: [...adjustedIgnorePatterns],
+    ignoreFiles: [...ignoreFilePatterns],
+  });
+
+  return sortPaths(files);
 };

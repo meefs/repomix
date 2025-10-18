@@ -41,6 +41,7 @@ describe('calculateGitDiffMetrics', () => {
       truncateBase64: false,
       copyToClipboard: false,
       includeEmptyDirectories: false,
+      includeFullDirectoryStructure: false,
       tokenCountTree: false,
       git: {
         sortByChanges: true,

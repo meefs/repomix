@@ -27,4 +27,5 @@ export const ext2Lang = {
   swift: 'swift',
   css: 'css',
   sol: 'solidity',
+  dart: 'dart',
 };

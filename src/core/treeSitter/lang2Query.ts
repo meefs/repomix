@@ -2,6 +2,7 @@ import { queryC } from './queries/queryC.js';
 import { queryCpp } from './queries/queryCpp.js';
 import { queryCSharp } from './queries/queryCSharp.js';
 import { queryCss } from './queries/queryCss.js';
+import { queryDart } from './queries/queryDart.js';
 import { queryGo } from './queries/queryGo.js';
 import { queryJava } from './queries/queryJava.js';
 import { queryJavascript } from './queries/queryJavascript.js';
@@ -30,6 +31,7 @@ export const lang2Query = {
   solidity: querySolidity,
   css: queryCss,
   vue: queryVue,
+  dart: queryDart,
 };
 
 export type SupportedLang = keyof typeof lang2Query;

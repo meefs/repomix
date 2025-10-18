@@ -118,6 +118,10 @@ export const run = async () => {
       .option('--instruction-file-path <path>', 'Path to file containing custom instructions to include in output')
       .option('--include-empty-directories', 'Include folders with no files in directory structure')
       .option(
+        '--include-full-directory-structure',
+        'Show entire repository tree in the Directory Structure section, even when using --include patterns',
+      )
+      .option(
         '--no-git-sort-by-changes',
         "Don't sort files by git change frequency (default: most changed files first)",
       )

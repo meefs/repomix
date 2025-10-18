@@ -23,6 +23,7 @@ const createMockConfig = (overrides: Partial<RepomixConfigMerged> = {}): Repomix
     truncateBase64: false,
     copyToClipboard: false,
     includeEmptyDirectories: false,
+    includeFullDirectoryStructure: false,
     tokenCountTree: false,
     git: {
       sortByChanges: false,

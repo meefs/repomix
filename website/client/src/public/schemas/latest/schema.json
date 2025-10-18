@@ -71,6 +71,9 @@
         "includeEmptyDirectories": {
           "type": "boolean"
         },
+        "includeFullDirectoryStructure": {
+          "type": "boolean"
+        },
         "tokenCountTree": {
           "type": [
             "boolean",

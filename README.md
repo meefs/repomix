@@ -627,6 +627,7 @@ Instruction
 - `--header-text <text>`: Custom text to include at the beginning of the output
 - `--instruction-file-path <path>`: Path to file containing custom instructions to include in output
 - `--include-empty-directories`: Include folders with no files in directory structure
+- `--include-full-directory-structure`: Show complete directory tree in output, including files not matched by --include patterns
 - `--no-git-sort-by-changes`: Don't sort files by git change frequency (default: most changed files first)
 - `--include-diffs`: Add git diff section showing working tree and staged changes
 - `--include-logs`: Add git commit history with messages and changed files

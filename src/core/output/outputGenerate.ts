@@ -4,7 +4,7 @@ import { XMLBuilder } from 'fast-xml-parser';
 import Handlebars from 'handlebars';
 import type { RepomixConfigMerged } from '../../config/configSchema.js';
 import { RepomixError } from '../../shared/errorHandle.js';
-import { type FileSearchResult, searchFiles } from '../file/fileSearch.js';
+import { type FileSearchResult, listDirectories, listFiles, searchFiles } from '../file/fileSearch.js';
 import { generateTreeString } from '../file/fileTreeGenerate.js';
 import type { ProcessedFile } from '../file/fileTypes.js';
 import type { GitDiffResult } from '../git/gitDiffHandle.js';
@@ -268,6 +268,11 @@ export const buildOutputGeneratorContext = async (
   processedFiles: ProcessedFile[],
   gitDiffResult: GitDiffResult | undefined = undefined,
   gitLogResult: GitLogResult | undefined = undefined,
+  deps = {
+    listDirectories,
+    listFiles,
+    searchFiles,
+  },
 ): Promise<OutputGeneratorContext> => {
   let repositoryInstruction = '';
 
@@ -280,10 +285,44 @@ export const buildOutputGeneratorContext = async (
     }
   }
 
-  let emptyDirPaths: string[] = [];
-  if (config.output.includeEmptyDirectories) {
+  // Determine if full-tree mode applies (only when directory structure is rendered)
+  const shouldUseFullTree =
+    config.output.directoryStructure === true &&
+    !!config.output.includeFullDirectoryStructure &&
+    (config.include?.length ?? 0) > 0;
+
+  // Paths to include in the directory tree visualization
+  let directoryPathsForTree: string[] = [];
+  let filePathsForTree: string[] = allFilePaths;
+
+  if (shouldUseFullTree) {
     try {
-      emptyDirPaths = (await Promise.all(rootDirs.map((rootDir) => searchFiles(rootDir, config)))).reduce(
+      // Collect all directories and all files from all roots
+      const [allDirectoriesByRoot, allFilesByRoot] = await Promise.all([
+        Promise.all(rootDirs.map((rootDir) => deps.listDirectories(rootDir, config))),
+        Promise.all(rootDirs.map((rootDir) => deps.listFiles(rootDir, config))),
+      ]);
+
+      // Merge, deduplicate, and sort for deterministic output
+      const allDirectories = Array.from(new Set(allDirectoriesByRoot.flat())).sort();
+      const allRepoFiles = Array.from(new Set(allFilesByRoot.flat()));
+
+      // Merge in any files that weren't part of the included files so they appear in the tree
+      const includedSet = new Set(allFilePaths);
+      const additionalFiles = allRepoFiles.filter((p) => !includedSet.has(p));
+
+      directoryPathsForTree = allDirectories;
+      filePathsForTree = Array.from(new Set([...allFilePaths, ...additionalFiles]));
+    } catch (error) {
+      throw new RepomixError(
+        `Failed to build full directory structure: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? { cause: error } : undefined,
+      );
+    }
+  } else if (config.output.directoryStructure && config.output.includeEmptyDirectories) {
+    // Default behavior: include empty directories only
+    try {
+      const merged = (await Promise.all(rootDirs.map((rootDir) => deps.searchFiles(rootDir, config)))).reduce(
         (acc: FileSearchResult, curr: FileSearchResult) =>
           ({
             filePaths: [...acc.filePaths, ...curr.filePaths],
@@ -291,16 +330,18 @@ export const buildOutputGeneratorContext = async (
           }) as FileSearchResult,
         { filePaths: [], emptyDirPaths: [] },
       ).emptyDirPaths;
+      directoryPathsForTree = [...new Set(merged)].sort();
     } catch (error) {
-      if (error instanceof Error) {
-        throw new RepomixError(`Failed to search for empty directories: ${error.message}`);
-      }
+      throw new RepomixError(
+        `Failed to search for empty directories: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? { cause: error } : undefined,
+      );
     }
   }
 
   return {
     generationDate: new Date().toISOString(),
-    treeString: generateTreeString(allFilePaths, emptyDirPaths),
+    treeString: generateTreeString(filePathsForTree, directoryPathsForTree),
     processedFiles,
     config,
     instruction: repositoryInstruction,

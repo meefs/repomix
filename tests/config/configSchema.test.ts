@@ -113,6 +113,7 @@ describe('configSchema', () => {
           showLineNumbers: false,
           truncateBase64: true,
           copyToClipboard: true,
+          includeFullDirectoryStructure: false,
           tokenCountTree: '100',
           git: {
             sortByChanges: true,
@@ -211,6 +212,7 @@ describe('configSchema', () => {
           showLineNumbers: true,
           truncateBase64: true,
           copyToClipboard: false,
+          includeFullDirectoryStructure: false,
           tokenCountTree: false,
           git: {
             sortByChanges: true,

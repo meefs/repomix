@@ -234,6 +234,13 @@ export const buildCliConfig = (options: CliOptions): RepomixConfigCli => {
     };
   }
 
+  if (options.includeFullDirectoryStructure) {
+    cliConfig.output = {
+      ...cliConfig.output,
+      includeFullDirectoryStructure: options.includeFullDirectoryStructure,
+    };
+  }
+
   // Only apply gitSortByChanges setting if explicitly set to false
   if (options.gitSortByChanges === false) {
     cliConfig.output = {
