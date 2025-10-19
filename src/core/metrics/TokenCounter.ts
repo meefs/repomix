@@ -18,7 +18,12 @@ export class TokenCounter {
 
   public countTokens(content: string, filePath?: string): number {
     try {
-      return this.encoding.encode(content).length;
+      // Disable special token validation to handle files that may contain
+      // special token sequences (e.g., tokenizer configs with <|endoftext|>).
+      // This treats special tokens as ordinary text rather than control tokens,
+      // which is appropriate for general code/text analysis where we're not
+      // actually sending the content to an LLM API.
+      return this.encoding.encode(content, [], []).length;
     } catch (error) {
       let message = '';
       if (error instanceof Error) {

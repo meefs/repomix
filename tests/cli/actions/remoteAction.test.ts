@@ -256,5 +256,33 @@ describe('remoteAction functions', () => {
         'Failed to copy output file',
       );
     });
+
+    test('should throw helpful error message for EPERM permission errors', async () => {
+      const sourceDir = '/tmp/repomix-123';
+      const targetDir = 'C:\\Windows\\System32';
+      const fileName = 'output.xml';
+
+      const epermError = new Error('operation not permitted') as NodeJS.ErrnoException;
+      epermError.code = 'EPERM';
+      vi.mocked(fs.copyFile).mockRejectedValue(epermError);
+
+      await expect(copyOutputToCurrentDirectory(sourceDir, targetDir, fileName)).rejects.toThrow(
+        /Permission denied.*protected.*--output.*--stdout/s,
+      );
+    });
+
+    test('should throw helpful error message for EACCES permission errors', async () => {
+      const sourceDir = '/tmp/repomix-123';
+      const targetDir = '/protected/dir';
+      const fileName = 'output.xml';
+
+      const eaccesError = new Error('permission denied') as NodeJS.ErrnoException;
+      eaccesError.code = 'EACCES';
+      vi.mocked(fs.copyFile).mockRejectedValue(eaccesError);
+
+      await expect(copyOutputToCurrentDirectory(sourceDir, targetDir, fileName)).rejects.toThrow(
+        /Permission denied.*protected.*--output.*--stdout/s,
+      );
+    });
   });
 });

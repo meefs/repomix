@@ -47,7 +47,7 @@ describe('TokenCounter', () => {
     const count = tokenCounter.countTokens(text);
 
     expect(count).toBe(3); // Length of mockTokens
-    expect(mockEncoder.encode).toHaveBeenCalledWith(text);
+    expect(mockEncoder.encode).toHaveBeenCalledWith(text, [], []);
   });
 
   test('should handle empty string', () => {
@@ -56,7 +56,7 @@ describe('TokenCounter', () => {
     const count = tokenCounter.countTokens('');
 
     expect(count).toBe(0);
-    expect(mockEncoder.encode).toHaveBeenCalledWith('');
+    expect(mockEncoder.encode).toHaveBeenCalledWith('', [], []);
   });
 
   test('should handle multi-line text', () => {
@@ -67,7 +67,7 @@ describe('TokenCounter', () => {
     const count = tokenCounter.countTokens(text);
 
     expect(count).toBe(6);
-    expect(mockEncoder.encode).toHaveBeenCalledWith(text);
+    expect(mockEncoder.encode).toHaveBeenCalledWith(text, [], []);
   });
 
   test('should handle special characters', () => {
@@ -78,7 +78,7 @@ describe('TokenCounter', () => {
     const count = tokenCounter.countTokens(text);
 
     expect(count).toBe(3);
-    expect(mockEncoder.encode).toHaveBeenCalledWith(text);
+    expect(mockEncoder.encode).toHaveBeenCalledWith(text, [], []);
   });
 
   test('should handle unicode characters', () => {
@@ -89,7 +89,7 @@ describe('TokenCounter', () => {
     const count = tokenCounter.countTokens(text);
 
     expect(count).toBe(4);
-    expect(mockEncoder.encode).toHaveBeenCalledWith(text);
+    expect(mockEncoder.encode).toHaveBeenCalledWith(text, [], []);
   });
 
   test('should handle code snippets', () => {
@@ -104,7 +104,7 @@ describe('TokenCounter', () => {
     const count = tokenCounter.countTokens(text);
 
     expect(count).toBe(10);
-    expect(mockEncoder.encode).toHaveBeenCalledWith(text);
+    expect(mockEncoder.encode).toHaveBeenCalledWith(text, [], []);
   });
 
   test('should handle markdown text', () => {
@@ -122,7 +122,7 @@ describe('TokenCounter', () => {
     const count = tokenCounter.countTokens(text);
 
     expect(count).toBe(15);
-    expect(mockEncoder.encode).toHaveBeenCalledWith(text);
+    expect(mockEncoder.encode).toHaveBeenCalledWith(text, [], []);
   });
 
   test('should handle very long text', () => {
@@ -133,7 +133,7 @@ describe('TokenCounter', () => {
     const count = tokenCounter.countTokens(text);
 
     expect(count).toBe(100);
-    expect(mockEncoder.encode).toHaveBeenCalledWith(text);
+    expect(mockEncoder.encode).toHaveBeenCalledWith(text, [], []);
   });
 
   test('should properly handle encoding errors without file path', () => {

@@ -46,7 +46,9 @@ jobs:
             - Performance considerations
             - Security concerns
             - Test coverage
-            
+
+            Perform a premortem analysis: identify potential failure scenarios (e.g., edge cases, integration issues, deployment risks) and suggest mitigations.
+
             Use the repository's CLAUDE.md for guidance on style and conventions. Be constructive and helpful in your feedback.
 
             Use `gh pr comment` with your Bash tool to leave your review as a comment on the PR.
