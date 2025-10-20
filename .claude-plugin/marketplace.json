@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Official Repomix plugins for Claude Code",
-    "version": "1.0.1"
+    "version": "1.0.2"
   },
   "plugins": [
     {
@@ -25,11 +25,24 @@
       "name": "repomix-commands",
       "source": "./.claude/plugins/repomix-commands",
       "description": "Slash commands for quick Repomix operations. Pack local and remote repositories with simple commands like /pack-local and /pack-remote.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": {
         "name": "yamadashy"
       },
       "keywords": ["repomix", "commands", "pack", "productivity"],
+      "category": "productivity",
+      "license": "MIT",
+      "strict": false
+    },
+    {
+      "name": "repository-explorer",
+      "source": "./.claude/plugins/repository-explorer",
+      "description": "AI-powered repository analysis agent using Repomix CLI. Analyzes local and remote repositories intelligently by running repomix commands, then reading and searching the generated output files to answer questions about code structure, patterns, and content.",
+      "version": "1.0.0",
+      "author": {
+        "name": "yamadashy"
+      },
+      "keywords": ["repomix", "agent", "repository-analysis", "code-exploration", "ai"],
       "category": "productivity",
       "license": "MIT",
       "strict": false

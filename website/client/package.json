@@ -11,13 +11,13 @@
   },
   "dependencies": {
     "fflate": "^0.8.2",
-    "lucide-vue-next": "^0.544.0",
+    "lucide-vue-next": "^0.545.0",
     "vue3-ace-editor": "^2.2.4"
   },
   "devDependencies": {
     "@types/gtag.js": "^0.0.20",
-    "@types/node": "^24.7.0",
-    "@typescript/native-preview": "^7.0.0-dev.20251006.1",
+    "@types/node": "^24.7.2",
+    "@typescript/native-preview": "^7.0.0-dev.20251013.1",
     "rollup-plugin-visualizer": "^6.0.4",
     "vite-plugin-pwa": "^1.0.3",
     "vitepress": "^1.6.4"

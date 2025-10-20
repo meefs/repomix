@@ -22,6 +22,25 @@ Repomix 为 [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overvie
 - `/repomix-commands:pack-local` - 使用各种选项打包本地代码库
 - `/repomix-commands:pack-remote` - 打包和分析远程 GitHub 仓库
 
+### 3. repository-explorer（AI 分析代理插件）
+
+AI 驱动的仓库分析代理，使用 Repomix CLI 智能探索代码库。
+
+**功能：**
+- 自然语言代码库探索和分析
+- 智能模式发现和代码结构理解
+- 使用 grep 和定向文件读取进行增量分析
+- 大型仓库的自动上下文管理
+
+**可用命令：**
+- `/repository-explorer:explore-local` - 使用 AI 辅助分析本地代码库
+- `/repository-explorer:explore-remote` - 使用 AI 辅助分析远程 GitHub 仓库
+
+**工作原理：**
+1. 运行 `npx repomix@latest` 打包仓库
+2. 使用 Grep 和 Read 工具高效搜索输出
+3. 提供全面分析而不消耗过多上下文
+
 ## 安装
 
 ### 1. 添加 Repomix 插件市场
@@ -42,10 +61,13 @@ Repomix 为 [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overvie
 
 # 安装命令插件（扩展功能）
 /plugin install repomix-commands@repomix
+
+# 安装仓库探索器插件（AI 驱动分析）
+/plugin install repository-explorer@repomix
 ```
 
 ::: tip 插件关系
-推荐将 `repomix-mcp` 插件作为基础，`repomix-commands` 通过便捷的斜杠命令扩展功能。虽然可以独立安装，但同时使用两者可获得最全面的体验。
+推荐将 `repomix-mcp` 插件作为基础。`repomix-commands` 插件提供便捷的斜杠命令，而 `repository-explorer` 添加 AI 驱动的分析功能。虽然可以独立安装，但同时使用三者可获得最全面的体验。
 :::
 
 ### 替代方案：交互式安装
@@ -88,6 +110,34 @@ Repomix 为 [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overvie
 - "仅包含文档文件"
 - "打包特定目录"
 
+### 使用 AI 探索本地代码库
+
+使用 `/repository-explorer:explore-local` 命令进行 AI 驱动的分析：
+
+```text
+/repository-explorer:explore-local ./src
+查找所有与认证相关的代码
+```
+
+其他示例：
+- "分析这个项目的结构"
+- "显示主要组件"
+- "查找所有 API 端点"
+
+### 使用 AI 探索远程仓库
+
+使用 `/repository-explorer:explore-remote` 命令分析 GitHub 仓库：
+
+```text
+/repository-explorer:explore-remote facebook/react
+显示主要组件架构
+```
+
+其他示例：
+- "查找仓库中的所有 React hooks"
+- "解释项目结构"
+- "错误边界在哪里定义？"
+
 ## 相关资源
 
 - [MCP 服务器文档](/guide/mcp-server) - 了解底层 MCP 服务器
@@ -102,6 +152,7 @@ Repomix 为 [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overvie
 - [插件市场](https://github.com/yamadashy/repomix/tree/main/.claude-plugin)
 - [MCP 插件](https://github.com/yamadashy/repomix/tree/main/.claude/plugins/repomix-mcp)
 - [命令插件](https://github.com/yamadashy/repomix/tree/main/.claude/plugins/repomix-commands)
+- [仓库探索器插件](https://github.com/yamadashy/repomix/tree/main/.claude/plugins/repository-explorer)
 
 ## 反馈和支持
 

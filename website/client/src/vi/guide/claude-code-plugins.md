@@ -22,6 +22,25 @@ Cung cấp các lệnh slash tiện lợi với hỗ trợ ngôn ngữ tự nhi�
 - `/repomix-commands:pack-local` - Đóng gói codebase cục bộ với nhiều tùy chọn
 - `/repomix-commands:pack-remote` - Đóng gói và phân tích repository GitHub từ xa
 
+### 3. repository-explorer (Plugin Agent Phân Tích AI)
+
+Agent phân tích repository được hỗ trợ bởi AI khám phá codebase một cách thông minh sử dụng Repomix CLI.
+
+**Tính năng:**
+- Khám phá và phân tích codebase bằng ngôn ngữ tự nhiên
+- Phát hiện mẫu thông minh và hiểu cấu trúc code
+- Phân tích tăng dần sử dụng grep và đọc file có mục tiêu
+- Quản lý ngữ cảnh tự động cho repository lớn
+
+**Lệnh Có Sẵn:**
+- `/repository-explorer:explore-local` - Phân tích codebase cục bộ với hỗ trợ AI
+- `/repository-explorer:explore-remote` - Phân tích repository GitHub từ xa với hỗ trợ AI
+
+**Cách hoạt động:**
+1. Chạy `npx repomix@latest` để đóng gói repository
+2. Sử dụng công cụ Grep và Read để tìm kiếm đầu ra hiệu quả
+3. Cung cấp phân tích toàn diện mà không tiêu thụ quá nhiều ngữ cảnh
+
 ## Cài Đặt
 
 ### 1. Thêm Repomix Plugin Marketplace
@@ -42,10 +61,13 @@ Cài đặt các plugin bằng các lệnh sau:
 
 # Cài đặt plugin lệnh (mở rộng chức năng)
 /plugin install repomix-commands@repomix
+
+# Cài đặt plugin khám phá repository (phân tích hỗ trợ AI)
+/plugin install repository-explorer@repomix
 ```
 
 ::: tip Mối Quan Hệ Plugin
-Plugin `repomix-mcp` được khuyến nghị làm nền tảng, và `repomix-commands` mở rộng nó với các lệnh slash tiện lợi. Mặc dù bạn có thể cài đặt chúng độc lập, việc sử dụng cả hai sẽ mang lại trải nghiệm toàn diện nhất.
+Plugin `repomix-mcp` được khuyến nghị làm nền tảng. Plugin `repomix-commands` cung cấp các lệnh slash tiện lợi, trong khi `repository-explorer` thêm khả năng phân tích hỗ trợ AI. Mặc dù bạn có thể cài đặt chúng độc lập, việc sử dụng cả ba sẽ mang lại trải nghiệm toàn diện nhất.
 :::
 
 ### Thay Thế: Cài Đặt Tương Tác
@@ -88,6 +110,34 @@ Các ví dụ khác:
 - "Chỉ bao gồm file tài liệu"
 - "Đóng gói thư mục cụ thể"
 
+### Khám Phá Codebase Cục Bộ với AI
+
+Sử dụng lệnh `/repository-explorer:explore-local` để phân tích hỗ trợ AI:
+
+```text
+/repository-explorer:explore-local ./src
+Tìm tất cả code liên quan đến xác thực
+```
+
+Các ví dụ khác:
+- "Phân tích cấu trúc của dự án này"
+- "Cho tôi xem các component chính"
+- "Tìm tất cả các endpoint API"
+
+### Khám Phá Repository Từ Xa với AI
+
+Sử dụng lệnh `/repository-explorer:explore-remote` để phân tích repository GitHub:
+
+```text
+/repository-explorer:explore-remote facebook/react
+Cho tôi xem kiến trúc component chính
+```
+
+Các ví dụ khác:
+- "Tìm tất cả React hooks trong repository"
+- "Giải thích cấu trúc dự án"
+- "Các error boundaries được định nghĩa ở đâu?"
+
 ## Tài Nguyên Liên Quan
 
 - [Tài Liệu MCP Server](/guide/mcp-server) - Tìm hiểu về MCP server cơ bản
@@ -102,6 +152,7 @@ Mã nguồn plugin có sẵn trong repository Repomix:
 - [Plugin Marketplace](https://github.com/yamadashy/repomix/tree/main/.claude-plugin)
 - [MCP Plugin](https://github.com/yamadashy/repomix/tree/main/.claude/plugins/repomix-mcp)
 - [Commands Plugin](https://github.com/yamadashy/repomix/tree/main/.claude/plugins/repomix-commands)
+- [Repository Explorer Plugin](https://github.com/yamadashy/repomix/tree/main/.claude/plugins/repository-explorer)
 
 ## Phản Hồi và Hỗ Trợ
 

@@ -1,0 +1,10 @@
+{
+  "name": "repository-explorer",
+  "description": "AI-powered repository analysis agent using Repomix CLI. Analyzes local and remote repositories intelligently by running repomix commands, then reading and searching the generated output files to answer questions about code structure, patterns, and content.",
+  "version": "1.0.0",
+  "author": {
+    "name": "yamadashy"
+  },
+  "keywords": ["repomix", "agent", "repository-analysis", "code-exploration", "ai"],
+  "license": "MIT"
+}

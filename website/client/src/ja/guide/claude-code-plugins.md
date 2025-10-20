@@ -22,6 +22,25 @@ MCP サーバー統合によるAI駆動のコードベース分析を提供す�
 - `/repomix-commands:pack-local` - 様々なオプションでローカルコードベースをパッキング
 - `/repomix-commands:pack-remote` - リモートGitHubリポジトリをパッキング・分析
 
+### 3. repository-explorer（AI分析エージェントプラグイン）
+
+Repomix CLIを使用してコードベースをインテリジェントに探索するAI駆動のリポジトリ分析エージェントです。
+
+**機能:**
+- 自然言語によるコードベースの探索と分析
+- インテリジェントなパターン発見とコード構造の理解
+- grepとターゲットファイル読み込みによる段階的分析
+- 大規模リポジトリの自動コンテキスト管理
+
+**利用可能なコマンド:**
+- `/repository-explorer:explore-local` - AIアシスタントによるローカルコードベースの分析
+- `/repository-explorer:explore-remote` - AIアシスタントによるリモートGitHubリポジトリの分析
+
+**動作方法:**
+1. `npx repomix@latest`を実行してリポジトリをパッキング
+2. GrepとReadツールを使用して効率的に出力を検索
+3. 過度なコンテキスト消費なしで包括的な分析を提供
+
 ## インストール
 
 ### 1. Repomixプラグインマーケットプレースの追加
@@ -42,10 +61,13 @@ MCP サーバー統合によるAI駆動のコードベース分析を提供す�
 
 # コマンドプラグインをインストール（機能拡張）
 /plugin install repomix-commands@repomix
+
+# リポジトリエクスプローラープラグインをインストール（AI駆動分析）
+/plugin install repository-explorer@repomix
 ```
 
 ::: tip プラグインの関係
-`repomix-mcp`プラグインは基盤として推奨され、`repomix-commands`は便利なスラッシュコマンドで機能を拡張します。独立してインストールすることもできますが、両方を使用することで最も包括的な体験が得られます。
+`repomix-mcp`プラグインは基盤として推奨されます。`repomix-commands`プラグインは便利なスラッシュコマンドを提供し、`repository-explorer`はAI駆動の分析機能を追加します。独立してインストールすることもできますが、3つすべてを使用することで最も包括的な体験が得られます。
 :::
 
 ### 代替: インタラクティブインストール
@@ -88,6 +110,34 @@ yamadashy/repomixリポジトリからTypeScriptファイルのみをパッキ�
 - "ドキュメントファイルのみを含める"
 - "特定のディレクトリをパッキング"
 
+### AIによるローカルコードベースの探索
+
+`/repository-explorer:explore-local`コマンドを使用してAI駆動の分析を実行します：
+
+```text
+/repository-explorer:explore-local ./src
+認証関連のコードをすべて見つけて
+```
+
+その他の例：
+- "このプロジェクトの構造を分析して"
+- "主要なコンポーネントを見せて"
+- "すべてのAPIエンドポイントを見つけて"
+
+### AIによるリモートリポジトリの探索
+
+`/repository-explorer:explore-remote`コマンドを使用してGitHubリポジトリを分析します：
+
+```text
+/repository-explorer:explore-remote facebook/react
+主要なコンポーネントアーキテクチャを見せて
+```
+
+その他の例：
+- "リポジトリ内のすべてのReactフックを見つけて"
+- "プロジェクト構造を説明して"
+- "エラーバウンダリーはどこで定義されている？"
+
 ## 関連リソース
 
 - [MCPサーバードキュメント](/guide/mcp-server) - 基盤となるMCPサーバーについて学ぶ
@@ -102,6 +152,7 @@ yamadashy/repomixリポジトリからTypeScriptファイルのみをパッキ�
 - [プラグインマーケットプレース](https://github.com/yamadashy/repomix/tree/main/.claude-plugin)
 - [MCPプラグイン](https://github.com/yamadashy/repomix/tree/main/.claude/plugins/repomix-mcp)
 - [コマンドプラグイン](https://github.com/yamadashy/repomix/tree/main/.claude/plugins/repomix-commands)
+- [リポジトリエクスプローラープラグイン](https://github.com/yamadashy/repomix/tree/main/.claude/plugins/repository-explorer)
 
 ## フィードバックとサポート
 

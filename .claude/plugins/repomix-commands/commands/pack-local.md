@@ -62,10 +62,38 @@ npx repomix@latest --copy
 npx repomix@latest --include-diffs --include-logs
 ```
 
+## Analyzing the Output
+
+**IMPORTANT**: The generated output file can be very large and consume significant context.
+
+If the user wants to analyze or explore the generated output:
+- **DO NOT read the entire output file directly**
+- **USE an appropriate sub-agent** to analyze the output
+- The sub-agent will efficiently search and read specific sections using grep and incremental reading
+
+**Agent Selection Strategy**:
+1. If `repository-explorer` agent is available, use it (optimized for repomix output analysis)
+2. Otherwise, use the `general-purpose` agent or another suitable sub-agent
+3. The sub-agent should use Grep and Read tools to analyze incrementally
+
+Example:
+```text
+User: "Pack this codebase and analyze it"
+
+Your workflow:
+1. Run: npx repomix@latest
+2. Note the output file location (e.g., repomix-output.xml)
+3. Launch an appropriate sub-agent with task:
+   "Analyze the repomix output file at ./repomix-output.xml.
+   Use Grep tool to search for patterns and Read tool to examine specific sections.
+   Provide an overview of the codebase structure and main components.
+   Do NOT read the entire file at once."
+```
+
 ## Help and Documentation
 
 If you need more information about available options or encounter any issues:
 - Run `npx repomix@latest -h` or `npx repomix@latest --help` to see all available options
 - Check the official documentation at https://github.com/yamadashy/repomix
 
-Remember: Parse the user's natural language request and translate it into the appropriate repomix command.
+Remember: Parse the user's natural language request and translate it into the appropriate repomix command. For analysis tasks, delegate to appropriate sub-agents to avoid consuming excessive context.
