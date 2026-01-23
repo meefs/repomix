@@ -5,26 +5,30 @@
   "scripts": {
     "dev": "PORT=8080 tsx watch src/index.ts",
     "build": "tsc",
+    "bundle": "node scripts/bundle.mjs",
     "lint": "npm run lint-tsc",
     "lint-tsc": "tsgo --noEmit",
     "start": "node dist/index.js",
-    "clean": "rimraf dist",
+    "start:bundle": "node dist-bundled/server.mjs",
+    "clean": "rimraf dist dist-bundled",
     "cloud-deploy": "gcloud builds submit --config=cloudbuild.yaml ."
   },
   "dependencies": {
-    "@google-cloud/logging-winston": "^6.0.1",
-    "@hono/node-server": "^1.19.7",
+    "@hono/node-server": "^1.19.8",
     "fflate": "^0.8.2",
-    "hono": "^4.11.1",
+    "hono": "^4.11.4",
     "repomix": "github:yamadashy/repomix#main",
     "winston": "^3.19.0",
-    "zod": "^4.2.1"
+    "zod": "^4.3.5"
   },
   "devDependencies": {
-    "@types/node": "^24.10.4",
-    "@typescript/native-preview": "^7.0.0-dev.20251223.1",
+    "@swc/core": "^1.15.8",
+    "@types/node": "^24.10.6",
+    "@typescript/native-preview": "^7.0.0-dev.20260109.1",
     "rimraf": "^6.1.2",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "rolldown": "^1.0.0-beta.59",
+    "rollup-plugin-swc3": "^0.12.1"
   }
 }

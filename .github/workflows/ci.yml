@@ -86,12 +86,43 @@ jobs:
         with:
           node-version-file: .tool-versions
           cache: npm
+      - name: Build and link local repomix
+        run: |
+          npm ci
+          npm run build
+          npm link
       - name: Install website server dependencies
         working-directory: website/server
-        run: npm ci
+        run: |
+          npm ci
+          npm link repomix
       - name: Lint website server
         working-directory: website/server
         run: npm run lint
+
+  bundle-website-server:
+    name: Bundle Website Server
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version-file: .tool-versions
+          cache: npm
+      - name: Build and link local repomix
+        run: |
+          npm ci
+          npm run build
+          npm link
+      - name: Install website server dependencies
+        working-directory: website/server
+        run: |
+          npm ci
+          npm link repomix
+      - name: Bundle website server
+        working-directory: website/server
+        run: npm run bundle
 
   lint-browser:
     name: Lint Browser Extension
@@ -118,7 +149,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-      - uses: rhysd/actionlint@a443f344ff32813837fa49f7aa6cbc478d770e62 # v1.7.9
+      - uses: rhysd/actionlint@0933c147c9d6587653d45fdcb4c497c57a65f9af # v1.7.10
         with:
           args: "-color"
 
@@ -127,7 +158,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-      - uses: crate-ci/typos@2d0ce569feab1f8752f1dde43cc2f2aa53236e06 # v1.40.0
+      - uses: crate-ci/typos@bb4666ad77b539a6b4ce4eda7ebb6de553704021 # v1.42.0
 
   test:
     name: Test
@@ -158,7 +189,7 @@ jobs:
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: Setup Bun ${{ matrix.bun-version }}
-        uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2.0.2
+        uses: oven-sh/setup-bun@b7a1c7ccf290d58743029c4f6903da283811b979 # v2.1.0
         with:
           bun-version: ${{ matrix.bun-version }}
       - run: bun install
@@ -247,7 +278,7 @@ jobs:
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: Setup Bun ${{ matrix.bun-version }}
-        uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2.0.2
+        uses: oven-sh/setup-bun@b7a1c7ccf290d58743029c4f6903da283811b979 # v2.1.0
         with:
           bun-version: ${{ matrix.bun-version }}
       - run: bun install

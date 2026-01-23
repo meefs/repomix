@@ -1193,6 +1193,38 @@ repomix --skill-generate --compress
 repomix --remote yamadashy/repomix --skill-generate
 ```
 
+### Repomix Explorer Skill (Agent Skills)
+
+Repomix provides a ready-to-use **Repomix Explorer** skill that enables AI coding assistants to analyze and explore codebases using Repomix CLI. This skill is designed to work with various AI tools including Claude Code, Cursor, Codex, GitHub Copilot, and more.
+
+#### Quick Install
+
+```bash
+npx add-skill yamadashy/repomix --skill repomix-explorer
+```
+
+This command installs the skill to your AI assistant's skills directory (e.g., `.claude/skills/`), making it immediately available.
+
+#### What It Does
+
+Once installed, you can analyze codebases with natural language instructions.
+
+Analyze remote repositories:
+
+```text
+"What's the structure of this repo?
+https://github.com/facebook/react"
+```
+
+Explore local codebases:
+
+```text
+"What's in this project?
+~/projects/my-app"
+```
+
+This is useful not only for understanding codebases, but also when you want to implement features by referencing your other repositories.
+
 ## ⚙️ Configuration
 
 Repomix supports multiple configuration file formats for flexibility and ease of use.
@@ -1732,6 +1764,20 @@ async function analyzeFiles(directory) {
 ```
 
 For more examples, check the source code at [website/server/src/remoteRepo.ts](https://github.com/yamadashy/repomix/blob/main/website/server/src/remoteRepo.ts) which demonstrates how repomix.com uses the library.
+
+### Bundling
+
+When bundling repomix with tools like Rolldown or esbuild, some dependencies must remain external and WASM files need to be copied:
+
+**External dependencies (cannot be bundled):**
+- `tinypool` - Spawns worker threads using file paths
+- `tiktoken` - Loads WASM files dynamically at runtime
+
+**WASM files to copy:**
+- `web-tree-sitter.wasm` → Same directory as bundled JS (required for code compression feature)
+- Tree-sitter language files → Directory specified by `REPOMIX_WASM_DIR` environment variable
+
+For a working example, see [website/server/scripts/bundle.mjs](https://github.com/yamadashy/repomix/blob/main/website/server/scripts/bundle.mjs).
 
 ## 🤝 Contribution
 
