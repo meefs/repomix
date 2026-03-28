@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1774702401295,
+  "lastUpdate": 1774714755174,
   "repoUrl": "https://github.com/meefs/repomix",
   "entries": {
     "Repomix Performance": [
@@ -129,6 +129,49 @@ window.BENCHMARK_DATA = {
             "range": "±51",
             "unit": "ms",
             "extra": "Median of 10 runs\nQ1: 3866ms, Q3: 3917ms\nAll times: 3836, 3856, 3866, 3867, 3877, 3879, 3895, 3917, 3930, 4058ms"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "meefs-bot@rackhelp.com",
+            "name": "GitHub Actions"
+          },
+          "committer": {
+            "email": "meefs-bot@rackhelp.com",
+            "name": "GitHub Actions"
+          },
+          "distinct": true,
+          "id": "1087040d7bab56937d2ecc87ef95a1baa6ba3b80",
+          "message": "Merged by GitHub Actions",
+          "timestamp": "2026-03-28T15:37:07Z",
+          "tree_id": "8ad0594f4a86709501927134692ba41264f68038",
+          "url": "https://github.com/meefs/repomix/commit/1087040d7bab56937d2ecc87ef95a1baa6ba3b80"
+        },
+        "date": 1774714754690,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Repomix Pack (macOS)",
+            "value": 1896,
+            "range": "±457",
+            "unit": "ms",
+            "extra": "Median of 30 runs\nQ1: 1647ms, Q3: 2104ms\nAll times: 1542, 1567, 1581, 1590, 1594, 1620, 1635, 1647, 1655, 1681, 1700, 1716, 1730, 1808, 1828, 1896, 1914, 1993, 2057, 2058, 2059, 2084, 2104, 2130, 2134, 2138, 2168, 2195, 2258, 2390ms"
+          },
+          {
+            "name": "Repomix Pack (Linux)",
+            "value": 2708,
+            "range": "±47",
+            "unit": "ms",
+            "extra": "Median of 20 runs\nQ1: 2694ms, Q3: 2741ms\nAll times: 2673, 2676, 2679, 2680, 2685, 2694, 2697, 2698, 2704, 2706, 2708, 2710, 2718, 2718, 2735, 2741, 2744, 2757, 2757, 2818ms"
+          },
+          {
+            "name": "Repomix Pack (Windows)",
+            "value": 3223,
+            "range": "±156",
+            "unit": "ms",
+            "extra": "Median of 20 runs\nQ1: 3167ms, Q3: 3323ms\nAll times: 3126, 3152, 3152, 3160, 3166, 3167, 3183, 3188, 3192, 3205, 3223, 3227, 3239, 3244, 3304, 3323, 3326, 3350, 3357, 3360ms"
           }
         ]
       }
