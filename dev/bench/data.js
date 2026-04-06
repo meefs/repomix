@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1775478250172,
+  "lastUpdate": 1775495235496,
   "repoUrl": "https://github.com/meefs/repomix",
   "entries": {
     "Repomix Performance": [
@@ -860,6 +860,49 @@ window.BENCHMARK_DATA = {
             "range": "±39",
             "unit": "ms",
             "extra": "Median of 20 runs\nQ1: 2435ms, Q3: 2474ms\nAll times: 2387, 2406, 2408, 2431, 2433, 2435, 2437, 2444, 2452, 2457, 2459, 2460, 2463, 2465, 2473, 2474, 2475, 2480, 2480, 2491ms"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "meefs-bot@rackhelp.com",
+            "name": "GitHub Actions"
+          },
+          "committer": {
+            "email": "meefs-bot@rackhelp.com",
+            "name": "GitHub Actions"
+          },
+          "distinct": true,
+          "id": "81931e9fc25c1726ea50d410400c3ce63ee24c2d",
+          "message": "Merged by GitHub Actions",
+          "timestamp": "2026-04-06T15:57:23Z",
+          "tree_id": "3e3ee81faa66146af8c044cb92dd333b58169701",
+          "url": "https://github.com/meefs/repomix/commit/81931e9fc25c1726ea50d410400c3ce63ee24c2d"
+        },
+        "date": 1775495235149,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Repomix Pack (macOS)",
+            "value": 1634,
+            "range": "±299",
+            "unit": "ms",
+            "extra": "Median of 30 runs\nQ1: 1572ms, Q3: 1871ms\nAll times: 1250, 1317, 1340, 1398, 1403, 1499, 1557, 1572, 1573, 1577, 1589, 1597, 1598, 1630, 1632, 1634, 1650, 1746, 1799, 1836, 1847, 1856, 1871, 1878, 1884, 1917, 1920, 1942, 2058, 2230ms"
+          },
+          {
+            "name": "Repomix Pack (Linux)",
+            "value": 1801,
+            "range": "±36",
+            "unit": "ms",
+            "extra": "Median of 20 runs\nQ1: 1792ms, Q3: 1828ms\nAll times: 1760, 1772, 1778, 1778, 1787, 1792, 1794, 1797, 1798, 1800, 1801, 1801, 1804, 1813, 1826, 1828, 1838, 1839, 1839, 1851ms"
+          },
+          {
+            "name": "Repomix Pack (Windows)",
+            "value": 2376,
+            "range": "±39",
+            "unit": "ms",
+            "extra": "Median of 20 runs\nQ1: 2365ms, Q3: 2404ms\nAll times: 2321, 2348, 2356, 2361, 2364, 2365, 2371, 2372, 2373, 2374, 2376, 2377, 2382, 2385, 2390, 2404, 2404, 2416, 2427, 2447ms"
           }
         ]
       }
