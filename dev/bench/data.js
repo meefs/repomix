@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1780655357201,
+  "lastUpdate": 1780702869036,
   "repoUrl": "https://github.com/meefs/repomix",
   "entries": {
     "Repomix Performance": [
@@ -2080,6 +2080,51 @@ window.BENCHMARK_DATA = {
             "range": "±13",
             "unit": "ms",
             "extra": "Median of 20 runs\nQ1: 1101ms, Q3: 1114ms\nAll times: 1076, 1086, 1091, 1098, 1099, 1101, 1102, 1104, 1104, 1106, 1106, 1106, 1107, 1110, 1112, 1114, 1114, 1125, 1126, 1136ms"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "koukun0120@gmail.com",
+            "name": "Kazuki Yamada",
+            "username": "yamadashy"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "edbe25eaa4a8f10d0ef68fc07e55881d13a4d3e8",
+          "message": "Merge pull request #1621 from yamadashy/feat/token-budget-1616\n\nfeat(cli): Add --token-budget guard for CI/agent context limits",
+          "timestamp": "2026-06-05T22:26:45+09:00",
+          "tree_id": "38e4ced9ab1fb4008cfba49300e440d5f6901de0",
+          "url": "https://github.com/meefs/repomix/commit/edbe25eaa4a8f10d0ef68fc07e55881d13a4d3e8"
+        },
+        "date": 1780702868703,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Repomix Pack (macOS)",
+            "value": 984,
+            "range": "±256",
+            "unit": "ms",
+            "extra": "Median of 30 runs\nQ1: 812ms, Q3: 1068ms\nAll times: 706, 727, 740, 744, 746, 773, 812, 812, 847, 858, 874, 907, 914, 914, 924, 984, 1002, 1026, 1044, 1045, 1045, 1055, 1068, 1073, 1091, 1137, 1188, 1218, 1361, 1386ms"
+          },
+          {
+            "name": "Repomix Pack (Linux)",
+            "value": 804,
+            "range": "±12",
+            "unit": "ms",
+            "extra": "Median of 20 runs\nQ1: 799ms, Q3: 811ms\nAll times: 788, 793, 795, 796, 799, 799, 800, 801, 803, 804, 804, 809, 810, 810, 811, 811, 814, 814, 834, 842ms"
+          },
+          {
+            "name": "Repomix Pack (Windows)",
+            "value": 1139,
+            "range": "±157",
+            "unit": "ms",
+            "extra": "Median of 20 runs\nQ1: 1130ms, Q3: 1287ms\nAll times: 1104, 1116, 1127, 1128, 1129, 1130, 1131, 1132, 1135, 1135, 1139, 1167, 1195, 1197, 1271, 1287, 1303, 1313, 1454, 1701ms"
           }
         ]
       }
