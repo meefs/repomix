@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1780702869036,
+  "lastUpdate": 1780828456773,
   "repoUrl": "https://github.com/meefs/repomix",
   "entries": {
     "Repomix Performance": [
@@ -2125,6 +2125,51 @@ window.BENCHMARK_DATA = {
             "range": "±157",
             "unit": "ms",
             "extra": "Median of 20 runs\nQ1: 1130ms, Q3: 1287ms\nAll times: 1104, 1116, 1127, 1128, 1129, 1130, 1131, 1132, 1135, 1135, 1139, 1167, 1195, 1197, 1271, 1287, 1303, 1313, 1454, 1701ms"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "koukun0120@gmail.com",
+            "name": "Kazuki Yamada",
+            "username": "yamadashy"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dac7643587e10b14d364a3601ff3032c476bfcaa",
+          "message": "Merge pull request #1630 from yamadashy/renovate/redis-8.x\n\nchore(deps): update redis docker tag to v8",
+          "timestamp": "2026-06-07T17:23:33+09:00",
+          "tree_id": "a0b4e8a42d653c24580a329fa57a8048cf0a1463",
+          "url": "https://github.com/meefs/repomix/commit/dac7643587e10b14d364a3601ff3032c476bfcaa"
+        },
+        "date": 1780828456019,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Repomix Pack (macOS)",
+            "value": 740,
+            "range": "±137",
+            "unit": "ms",
+            "extra": "Median of 30 runs\nQ1: 677ms, Q3: 814ms\nAll times: 505, 568, 573, 645, 647, 666, 674, 677, 681, 683, 690, 704, 726, 727, 739, 740, 745, 752, 762, 772, 772, 814, 814, 866, 889, 890, 907, 924, 938, 1100ms"
+          },
+          {
+            "name": "Repomix Pack (Linux)",
+            "value": 836,
+            "range": "±18",
+            "unit": "ms",
+            "extra": "Median of 20 runs\nQ1: 829ms, Q3: 847ms\nAll times: 818, 821, 823, 824, 825, 829, 831, 834, 834, 835, 836, 836, 837, 839, 842, 847, 848, 872, 873, 884ms"
+          },
+          {
+            "name": "Repomix Pack (Windows)",
+            "value": 890,
+            "range": "±15",
+            "unit": "ms",
+            "extra": "Median of 20 runs\nQ1: 883ms, Q3: 898ms\nAll times: 875, 879, 880, 880, 882, 883, 884, 888, 889, 889, 890, 891, 891, 892, 897, 898, 899, 910, 917, 935ms"
           }
         ]
       }
