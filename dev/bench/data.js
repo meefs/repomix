@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1781447458220,
+  "lastUpdate": 1781754720017,
   "repoUrl": "https://github.com/meefs/repomix",
   "entries": {
     "Repomix Performance": [
@@ -2350,6 +2350,51 @@ window.BENCHMARK_DATA = {
             "range": "±23",
             "unit": "ms",
             "extra": "Median of 20 runs\nQ1: 1147ms, Q3: 1170ms\nAll times: 1118, 1128, 1136, 1139, 1145, 1147, 1147, 1149, 1154, 1156, 1158, 1160, 1161, 1163, 1163, 1170, 1188, 1196, 1218, 1251ms"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "koukun0120@gmail.com",
+            "name": "Kazuki Yamada",
+            "username": "yamadashy"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f3741808966bdea4dda82e4e270433de8ace0a66",
+          "message": "Merge pull request #1643 from yamadashy/feat/file-watch-option\n\nfeat(cli): add --watch / -w option to auto re-pack on file changes",
+          "timestamp": "2026-06-18T00:13:07+09:00",
+          "tree_id": "cdefc0641fa153bbef64c3f76568e7f8ed075223",
+          "url": "https://github.com/meefs/repomix/commit/f3741808966bdea4dda82e4e270433de8ace0a66"
+        },
+        "date": 1781754719444,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Repomix Pack (macOS)",
+            "value": 521,
+            "range": "±40",
+            "unit": "ms",
+            "extra": "Median of 30 runs\nQ1: 508ms, Q3: 548ms\nAll times: 489, 503, 504, 504, 505, 506, 507, 508, 509, 510, 510, 512, 515, 516, 516, 521, 523, 528, 529, 532, 534, 539, 548, 558, 559, 562, 575, 590, 596, 613ms"
+          },
+          {
+            "name": "Repomix Pack (Linux)",
+            "value": 797,
+            "range": "±18",
+            "unit": "ms",
+            "extra": "Median of 20 runs\nQ1: 796ms, Q3: 814ms\nAll times: 789, 790, 791, 795, 796, 796, 796, 796, 797, 797, 797, 802, 804, 806, 811, 814, 815, 820, 830, 831ms"
+          },
+          {
+            "name": "Repomix Pack (Windows)",
+            "value": 1152,
+            "range": "±53",
+            "unit": "ms",
+            "extra": "Median of 20 runs\nQ1: 1134ms, Q3: 1187ms\nAll times: 1121, 1122, 1122, 1125, 1130, 1134, 1136, 1150, 1150, 1150, 1152, 1158, 1159, 1161, 1178, 1187, 1187, 1213, 1318, 1425ms"
           }
         ]
       }
